@@ -46,9 +46,8 @@ c
       use mpih
       use decomp_2d
       use param
-#ifdef OPENMP
-      use omp_lib
-#endif
+!$    use omp_lib
+
       implicit none
       character(len=4) :: dummy
       integer :: tfini,tfin,n,ns,nthreads
@@ -95,16 +94,15 @@ c
 
       if (nrank .eq. 0)write(6,*) 'MPI tasks=', nproc
 
-#ifdef OPENMP
-      if (nrank .eq. 0) then 
+!$    if (nrank .eq. 0) then 
 !$OMP PARALLEL
 !$OMP MASTER
-      nthreads = omp_get_num_threads()
+!$        nthreads = omp_get_num_threads()
 !$OMP END MASTER
 !$OMP END PARALLEL
-          write(6,*) 'OMP threads=', nthreads
-      end if
-#endif
+!$        write(6,*) 'OMP threads=', nthreads
+!$    end if
+
 cm============================================
 cm************ End of input file**************
 cm============================================
