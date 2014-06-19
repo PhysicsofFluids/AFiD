@@ -120,8 +120,7 @@ decomp_2d_fft.o: decomp_2d_fft.f90
 #============================================================================
 
 clean :
-	rm *.o  
-	rm *.mod
+	rm $(PROGRAM) *.o *.mod  
 
 veryclean :
-	rm *.o *.mod *.out *.h5 stats/*.h5 dati/* boutnp
+	rm *.o *.mod *.out *.h5 stats/*.h5 dati/* $(PROGRAM)
