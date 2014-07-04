@@ -58,7 +58,7 @@ c
       call solrok
 
 
-      write(*,*) dens(1,:,:)
+!      write(*,*) dens(1,:,:)
        dens(1,xstart(2):xend(2),xstart(3):xend(3)) 
      4    = denbs(xstart(2):xend(2),xstart(3):xend(3))
        dens(n3,xstart(2):xend(2),xstart(3):xend(3)) 
