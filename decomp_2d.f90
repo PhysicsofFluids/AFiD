@@ -100,7 +100,10 @@ module decomp_2d
 
      ! how each dimension is distributed along pencils
      integer, allocatable, dimension(:) :: &
-          x1dist, y1dist, y2dist, z2dist, x2dist, z1dist
+          x1dist, y1dist, y2dist, z2dist, x2dist, z1dist, &
+          x1st, y1st, y2st, z2st, x2st, z1st, &
+          x1en, y1en, y2en, z2en, x2en, z1en
+
 
      ! send/receive buffer counts and displacements for MPI_ALLTOALLV
      integer, allocatable, dimension(:) :: &
@@ -484,6 +487,12 @@ contains
     allocate(decomp%x1dist(0:dims(1)-1),decomp%y1dist(0:dims(1)-1), &
          decomp%y2dist(0:dims(2)-1),decomp%z2dist(0:dims(2)-1), &
          decomp%x2dist(0:dims(2)-1),decomp%z1dist(0:dims(1)-1))
+    allocate(decomp%x1st(0:dims(1)-1),decomp%x1en(0:dims(1)-1), &
+         decomp%y1st(0:dims(1)-1),decomp%y1en(0:dims(1)-1), &
+         decomp%z1st(0:dims(1)-1),decomp%z1en(0:dims(1)-1))
+    allocate(decomp%x2st(0:dims(2)-1),decomp%x2en(0:dims(2)-1), &
+         decomp%y2st(0:dims(2)-1),decomp%y2en(0:dims(2)-1), &
+         decomp%z2st(0:dims(2)-1),decomp%z2en(0:dims(2)-1))
     call get_dist(nx,ny,nz,decomp)
     
     ! generate partition information - starting/ending index etc.
@@ -545,6 +554,10 @@ contains
 
     deallocate(decomp%x1dist,decomp%y1dist,decomp%y2dist,decomp%z2dist)
     deallocate(decomp%z1dist,decomp%x2dist)
+    deallocate(decomp%x1st,decomp%y1st,decomp%y2st,decomp%z2st)
+    deallocate(decomp%z1st,decomp%x2st)
+    deallocate(decomp%x1en,decomp%y1en,decomp%y2en,decomp%z2en)
+    deallocate(decomp%z1en,decomp%x2en)
     deallocate(decomp%x1cnts,decomp%y1cnts,decomp%y2cnts,decomp%z2cnts)
     deallocate(decomp%z1cnts,decomp%x2cnts)
     deallocate(decomp%x1disp,decomp%y1disp,decomp%y2disp,decomp%z2disp)
@@ -666,21 +679,21 @@ contains
     TYPE(DECOMP_INFO), intent(INOUT) :: decomp
     integer, allocatable, dimension(:) :: st,en
 
-    allocate(st(0:dims(1)-1))
-    allocate(en(0:dims(1)-1))
-    call distribute(nx,dims(1),st,en,decomp%x1dist)
-    call distribute(ny,dims(1),st,en,decomp%y1dist)
+!JD    allocate(st(0:dims(1)-1))
+!JD    allocate(en(0:dims(1)-1))
+    call distribute(nx,dims(1),decomp%x1st,decomp%x1en,decomp%x1dist)
+    call distribute(ny,dims(1),decomp%y1st,decomp%y1en,decomp%y1dist)
 !EP X to Z
-    call distribute(nz,dims(1),st,en,decomp%z1dist)
-    deallocate(st,en)
+    call distribute(nz,dims(1),decomp%z1st,decomp%z1en,decomp%z1dist)
+!JD    deallocate(st,en)
 
-    allocate(st(0:dims(2)-1))
-    allocate(en(0:dims(2)-1))
-    call distribute(ny,dims(2),st,en,decomp%y2dist)
-    call distribute(nz,dims(2),st,en,decomp%z2dist)
+!JD    allocate(st(0:dims(2)-1))
+!JD    allocate(en(0:dims(2)-1))
+    call distribute(ny,dims(2),decomp%y2st,decomp%y2en,decomp%y2dist)
+    call distribute(nz,dims(2),decomp%z2st,decomp%z2en,decomp%z2dist)
 !EP X to Z
-    call distribute(nx,dims(2),st,en,decomp%x2dist)
-    deallocate(st,en)
+    call distribute(nx,dims(2),decomp%x2st,decomp%x2en,decomp%x2dist)
+!JD    deallocate(st,en)
 
 
     return

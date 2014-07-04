@@ -19,8 +19,13 @@ c
       integer :: n2mh
       real,allocatable,dimension(:,:,:) :: ry1,rz1
       complex,allocatable,dimension(:,:,:) :: cy1,cz1,dphc
+      logical,save:: printed=.false.
 
       integer ic,jc,kc
+
+      integer,dimension(2)::dims,dummy_periods,dummy_coords
+      integer ierror
+
 
 !RO   Stuff for unoptimized FFTW
 
@@ -83,6 +88,50 @@ c
 !EP   Normalize. FFT does not do this
       cz1 = cz1 / (n1m*n2m)
 
+      if (.not.printed)then
+        call MPI_CART_GET(DECOMP_2D_COMM_CART_X, 2, 
+     &    dims, dummy_periods, dummy_coords, ierror)
+         printed=.true.
+         do kc=0,dims(1)-1
+         do ic=0,dims(2)-1
+!JD no checks on x- or z-dimension, since we transform from z- into x-pencils, so these always overlap.
+           if (sp%zst(2).le.sp%y1en(kc) .and. 
+     &          sp%zen(2).ge.sp%y1st(kc)) then
+!JD send to process with x-pencil defined by (kc,ic)
+!JD x-bounds are taken from the z-pencils
+!             send: sp%zst(1):sp%zen(1)
+!JD y-bounds are the overlapping region of both pencils.
+!                   max(sp%zst(2),sp%y1st(kc)):min(sp%zen(2),sp%y1en(kc))
+!JD z-bounds are taken from the x-pencils.
+!                   sp%z2st(ic):sp%z2en(ic)
+             write(*,'(a,i4,i4)')'kc,ic=',kc,ic
+             write(*,'(a,i4,i4)')'sp%zst(1):sp%zen(1)=',sp%zst(1),sp%zen(1)
+             write(*,'(a,i4,i4)')'max(sp%zst(2),sp%y1st(kc)):min(sp%zen(2),sp%y1en(kc))=',
+     &         max(sp%zst(2),sp%y1st(kc)),min(sp%zen(2),sp%y1en(kc))
+             write(*,'(a,i4,i4)')'sp%z2st(ic):sp%z2en(ic)=',sp%z2st(ic),sp%z2en(ic)
+             write(*,'(a,i4,i4,i4,i4,i4,i4)')'cz1(:,:,:)=',sp%zst(1),sp%zen(1),sp%zst(2),sp%zen(2),sp%zst(3),sp%zen(3)
+           endif
+!JD      Recvs:
+!JD no checks on x- or z-dimension, since we transform from z- into x-pencils, so these always overlap.
+           if (sp%xst(2).le.sp%y2en(ic) .and. 
+     &          sp%xen(2).ge.sp%y2st(ic)) then
+!JD recv from process with z-pencil defined by (kc,ic)
+!JD x-bounds are taken from the z-pencils
+!             send: sp%x1st(kc):sp%x1en(kc)
+!JD y-bounds are the overlapping region of both pencils.
+!                   max(sp%xst(2),sp%y2st(ic)):min(sp%xen(2),sp%y2en(ic))
+!JD z-bounds are taken from the x-pencils.
+!                   sp%xst(3):sp%xen(3)
+             write(*,'(a,i4,i4)')'kc,ic=',kc,ic
+             write(*,'(a,i4,i4)')'sp%x1st(kc):sp%x1en(kc)=',sp%x1st(kc),sp%x1en(kc)
+             write(*,'(a,i4,i4)')'max(sp%xst(2),sp%y2st(ic)):min(sp%xen(2),sp%y2en(ic))=',
+     &         max(sp%xst(2),sp%y2st(ic)),min(sp%xen(2),sp%y2en(ic))
+             write(*,'(a,i4,i4)')'sp%xst(3):sp%xen(3)=',sp%xst(3),sp%xen(3)
+             write(*,'(a,i4,i4,i4,i4,i4,i4)')'dphc(:,:,:)=',sp%xst(1),sp%xen(1),sp%xst(2),sp%xen(2),sp%xst(3),sp%xen(3)
+           endif
+         enddo
+         enddo
+      endif
       call transpose_z_to_y(cz1,cy1,sp)
       call transpose_y_to_x(cy1,dphc,sp)
 
