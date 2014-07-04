@@ -111,13 +111,13 @@ c
 !JD no checks on x- or z-dimension, since we transform from z- into x-pencils, so these always overlap.
            if (sp%zst(2).le.sp%y1en(kc) .and. 
      &          sp%zen(2).ge.sp%y1st(kc)) then
-             sendcnts(rank_z+1)=1
+             sendcnts(rank_x+1)=1
              subsize_y=min(sp%zen(2),sp%y1en(kc))-max(sp%zst(2),sp%y1st(kc))+1
              offset_y =max(sp%zst(2),sp%y1st(kc))-sp%zst(2)
              call MPI_Type_create_subarray(3,sp%zsz,(/sp%zsz(1),subsize_y,sp%z2dist(ic)/),
      &         (/0,offset_y,sp%z2st(ic)-sp%zst(3)/),MPI_ORDER_FORTRAN,real_type,
-     &         sendtypes(rank_z+1),ierror)
-             call MPI_Type_commit(sendtypes(rank_z+1),ierror)
+     &         sendtypes(rank_x+1),ierror)
+             call MPI_Type_commit(sendtypes(rank_x+1),ierror)
 !JD send to process with x-pencil defined by (kc,ic)
 !JD x-bounds are taken from the z-pencils
 !             send: sp%zst(1):sp%zen(1)
@@ -136,13 +136,13 @@ c
 !JD no checks on x- or z-dimension, since we transform from z- into x-pencils, so these always overlap.
            if (sp%xst(2).le.sp%y2en(ic) .and. 
      &          sp%xen(2).ge.sp%y2st(ic)) then
-             recvcnts(rank_x+1)=1
+             recvcnts(rank_z+1)=1
              subsize_y=min(sp%xen(2),sp%y2en(ic))-max(sp%xst(2),sp%y2st(ic))+1
              offset_y =max(sp%xst(2),sp%y2st(ic))-sp%xst(2)
              call MPI_Type_create_subarray(3,sp%xsz,(/sp%x1dist(kc),subsize_y,sp%xsz(3)/),
      &         (/sp%x1st(kc)-sp%xst(1),offset_y,0/),MPI_ORDER_FORTRAN,real_type,
-     &         recvtypes(rank_x+1),ierror)
-             call MPI_Type_commit(recvtypes(rank_x+1),ierror)
+     &         recvtypes(rank_z+1),ierror)
+             call MPI_Type_commit(recvtypes(rank_z+1),ierror)
 !JD recv from process with z-pencil defined by (kc,ic)
 !JD x-bounds are taken from the z-pencils
 !             send: sp%x1st(kc):sp%x1en(kc)
