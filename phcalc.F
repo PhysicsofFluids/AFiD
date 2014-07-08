@@ -19,6 +19,7 @@ c
       integer :: n2mh
       real,allocatable,dimension(:,:,:) :: ry1,rz1
       complex,allocatable,dimension(:,:,:) :: cy1,cz1,dphc
+!JD      complex,allocatable,dimension(:,:,:) :: dphcdum,cz1dum
       logical,save:: printed=.false.
 
       integer ic,jc,kc
@@ -27,7 +28,6 @@ c
       integer,dimension(:),allocatable,save::sendcnts,sdispls,sendtypes
       integer,dimension(:),allocatable,save::recvcnts,rdispls,recvtypes
       integer ierror,rank_x,rank_z,subsize_y,offset_y
-
 
 
 !RO   Stuff for unoptimized FFTW
@@ -49,8 +49,14 @@ c
      &             sp%xst(2):sp%xen(2),
      &             sp%xst(3):sp%xen(3)))
 
-      n2mh=n2m/2+1
+!JD      allocate(cz1dum(sp%zst(1):sp%zen(1),
+!JD     &             sp%zst(2):sp%zen(2),
+!JD     &             sp%zst(3):sp%zen(3)))
+!JD      allocate(dphcdum(sp%xst(1):sp%xen(1),
+!JD     &             sp%xst(2):sp%xen(2),
+!JD     &             sp%xst(3):sp%xen(3)))
 
+      n2mh=n2m/2+1
 
       call transpose_x_to_y(dph(ph%xst(1):ph%xen(1),
      & ph%xst(2):ph%xen(2),
@@ -92,6 +98,7 @@ c
       cz1 = cz1 / (n1m*n2m)
 
       if (.not.printed)then
+        printed=.true.
         allocate(sendcnts(nproc),recvcnts(nproc))
         allocate(sendtypes(nproc),recvtypes(nproc))
 	allocate(sdispls(nproc),rdispls(nproc))
@@ -103,21 +110,25 @@ c
         recvtypes=MPI_INTEGER
         call MPI_CART_GET(DECOMP_2D_COMM_CART_X, 2, 
      &    dims, dummy_periods, dummy_coords, ierror)
-        printed=.true.
+             if (ierror.ne.MPI_SUCCESS)print*,'ERROR1 ',ierror
         do kc=0,dims(1)-1
         do ic=0,dims(2)-1
            call MPI_Cart_rank(DECOMP_2D_COMM_CART_X,(/kc,ic/),rank_x,ierror)
+             if (ierror.ne.MPI_SUCCESS)print*,'ERROR2 ',ierror
            call MPI_Cart_rank(DECOMP_2D_COMM_CART_Z,(/kc,ic/),rank_z,ierror)
+             if (ierror.ne.MPI_SUCCESS)print*,'ERROR3 ',ierror
 !JD no checks on x- or z-dimension, since we transform from z- into x-pencils, so these always overlap.
            if (sp%zst(2).le.sp%y1en(kc) .and. 
      &          sp%zen(2).ge.sp%y1st(kc)) then
-             sendcnts(rank_x+1)=1
+             sendcnts(rank_z+1)=1
              subsize_y=min(sp%zen(2),sp%y1en(kc))-max(sp%zst(2),sp%y1st(kc))+1
              offset_y =max(sp%zst(2),sp%y1st(kc))-sp%zst(2)
              call MPI_Type_create_subarray(3,sp%zsz,(/sp%zsz(1),subsize_y,sp%z2dist(ic)/),
-     &         (/0,offset_y,sp%z2st(ic)-sp%zst(3)/),MPI_ORDER_FORTRAN,real_type,
-     &         sendtypes(rank_x+1),ierror)
-             call MPI_Type_commit(sendtypes(rank_x+1),ierror)
+     &         (/0,offset_y,sp%z2st(ic)-sp%zst(3)/),MPI_ORDER_FORTRAN,complex_type,
+     &         sendtypes(rank_z+1),ierror)
+             if (ierror.ne.MPI_SUCCESS)print*,'ERROR4 ',ierror
+             call MPI_Type_commit(sendtypes(rank_z+1),ierror)
+             if (ierror.ne.MPI_SUCCESS)print*,'ERROR5 ',ierror
 !JD send to process with x-pencil defined by (kc,ic)
 !JD x-bounds are taken from the z-pencils
 !             send: sp%zst(1):sp%zen(1)
@@ -131,18 +142,22 @@ c
      &         max(sp%zst(2),sp%y1st(kc)),min(sp%zen(2),sp%y1en(kc))
              write(*,'(a,i4,i4)')'sp%z2st(ic):sp%z2en(ic)=',sp%z2st(ic),sp%z2en(ic)
              write(*,'(a,i4,i4,i4,i4,i4,i4)')'cz1(:,:,:)=',sp%zst(1),sp%zen(1),sp%zst(2),sp%zen(2),sp%zst(3),sp%zen(3)
+             write(*,'(a,9i4)')'sends=',sp%zsz,(/sp%zsz(1),subsize_y,sp%z2dist(ic)/),
+     &         (/0,offset_y,sp%z2st(ic)-sp%zst(3)/)
            endif
 !JD      Recvs:
 !JD no checks on x- or z-dimension, since we transform from z- into x-pencils, so these always overlap.
            if (sp%xst(2).le.sp%y2en(ic) .and. 
      &          sp%xen(2).ge.sp%y2st(ic)) then
-             recvcnts(rank_z+1)=1
+             recvcnts(rank_x+1)=1
              subsize_y=min(sp%xen(2),sp%y2en(ic))-max(sp%xst(2),sp%y2st(ic))+1
              offset_y =max(sp%xst(2),sp%y2st(ic))-sp%xst(2)
              call MPI_Type_create_subarray(3,sp%xsz,(/sp%x1dist(kc),subsize_y,sp%xsz(3)/),
-     &         (/sp%x1st(kc)-sp%xst(1),offset_y,0/),MPI_ORDER_FORTRAN,real_type,
-     &         recvtypes(rank_z+1),ierror)
-             call MPI_Type_commit(recvtypes(rank_z+1),ierror)
+     &         (/sp%x1st(kc)-sp%xst(1),offset_y,0/),MPI_ORDER_FORTRAN,complex_type,
+     &         recvtypes(rank_x+1),ierror)
+             if (ierror.ne.MPI_SUCCESS)print*,'ERROR6 ',ierror
+             call MPI_Type_commit(recvtypes(rank_x+1),ierror)
+             if (ierror.ne.MPI_SUCCESS)print*,'ERROR7 ',ierror
 !JD recv from process with z-pencil defined by (kc,ic)
 !JD x-bounds are taken from the z-pencils
 !             send: sp%x1st(kc):sp%x1en(kc)
@@ -156,14 +171,19 @@ c
      &         max(sp%xst(2),sp%y2st(ic)),min(sp%xen(2),sp%y2en(ic))
              write(*,'(a,i4,i4)')'sp%xst(3):sp%xen(3)=',sp%xst(3),sp%xen(3)
              write(*,'(a,i4,i4,i4,i4,i4,i4)')'dphc(:,:,:)=',sp%xst(1),sp%xen(1),sp%xst(2),sp%xen(2),sp%xst(3),sp%xen(3)
+             write(*,'(a,9i4)')'recvs=',sp%xsz,(/sp%x1dist(kc),subsize_y,sp%xsz(3)/),
+     &         (/sp%x1st(kc)-sp%xst(1),offset_y,0/)
            endif
          enddo
          enddo
       endif
       call MPI_Alltoallw(cz1,sendcnts,sdispls,sendtypes,
      &  dphc,recvcnts,rdispls,recvtypes,MPI_COMM_WORLD,ierror)
+      if (ierror.ne.MPI_SUCCESS)print*,'ERROR8 ',ierror
 !JD      call transpose_z_to_y(cz1,cy1,sp)
-!JD      call transpose_y_to_x(cy1,dphc,sp)
+!JD      call transpose_y_to_x(cy1,dphcdum,sp)
+!JD      ierror=count(dphc.ne.dphcdum)
+!JD      if (ierror.gt.0)print*,'NOT EQUAL1 ',ierror
 
 !RO   Solve the tridiagonal matrix with complex coefficients
 
@@ -198,12 +218,14 @@ c
       enddo
 !$OMP END PARALLEL DO
 
-      call MPI_Alltoallw(cz1,recvcnts,rdispls,recvtypes,
-     &  dphc,sendcnts,sdispls,sendtypes,MPI_COMM_WORLD,ierror)
+      call MPI_Alltoallw(dphc,recvcnts,rdispls,recvtypes,
+     &  cz1,sendcnts,sdispls,sendtypes,MPI_COMM_WORLD,ierror)
+             if (ierror.ne.MPI_SUCCESS)print*,'ERROR9 ',ierror
 
 !JD      call transpose_x_to_y(dphc,cy1,sp)
-
-!JD      call transpose_y_to_z(cy1,cz1,sp)
+!JD      call transpose_y_to_z(cy1,cz1dum,sp)
+!JD      ierror=count(cz1.ne.cz1dum)
+!JD      if (ierror.gt.0)print*,'NOT EQUAL2 ',ierror
 
 !RO   Inverse shitty FFT 1
 
