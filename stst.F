@@ -202,8 +202,8 @@ c***********************************************************************
       ndims=1
       dims_grid(1)=1
 
-      call h5fopen_f(filnamgrid, H5F_ACC_RDONLY_F, file_id, hdf_error,
-     &                 access_prp=plist_full)
+      filnamgrid = 'stafield_master.h5'
+      call h5fopen_f(filnamgrid, H5F_ACC_RDONLY_F, file_id, hdf_error)
 
       call h5screate_simple_f(ndims, dims_grid, dspace_grid, hdf_error)
 
