@@ -6,21 +6,21 @@ c***********************************************************
         integer :: m2,m3,m1
         integer :: m2m,m3m,m2mh,m1m
 c       Grid size        
-       parameter (m1=129,m2=129,m3=129)
+       parameter (m1=33,m2=65,m3=65)
         parameter (m1m=m1-1,m2m=m2-1,m3m=m3-1,m2mh=m2m/2+1)
 c==========================================================			
 c       read from input file bou.in
 c==========================================================
         integer   :: n2, n3,n1
         integer   :: nsst, nwrit, nread, ntst, ireset
-        real      :: tprint,tpin,tmax
+        real      :: walltimemax,tpin,tmax
         real      :: alx3,str3
         integer   :: istr3
         real      :: rext,rext2
         real      :: ray,pra,dt,resid,cflmax
         integer   :: inslws,inslwn
         integer   :: starea,tsta
-        real      :: dtmax,cfllim 
+        real      :: dtmin,dtmax,cfllim,vlim
         integer   :: nson,idtv
         real   :: tframe
 c=================================================

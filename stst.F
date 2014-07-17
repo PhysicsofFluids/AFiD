@@ -6,28 +6,17 @@
       use stat_arrays
       use mpih
       implicit none
-      real :: my_q2_rms_vol,my_q1_rms_vol,my_q3_rms_vol
-      real :: my_q1q2q3_rms_vol,q2_rms_vol,q1_rms_vol
-      real :: q3_rms_vol,q1q2q3_rms_vol
-      real :: lvol,volt,usn1m,rradpr,usn2m
+      real :: usn1m,usn2m
       integer :: i,j,k
 
       timeint_cdsp = timeint_cdsp + 1
 
-768   format(6e20.10)
-
       usn1m = 1.0/n1m
       usn2m = 1.0/n2m
-
-      my_q1_rms_vol = 0.0d0
-      my_q2_rms_vol = 0.0d0
-      my_q3_rms_vol = 0.0d0
-      my_q1q2q3_rms_vol = 0.0d0
 
       do i=xstart(3),xend(3)
         do j=xstart(2),xend(2)
           do k=1,n3m
-               lvol = g3rm(k)
                q1_me(k) = q1_me(k) + q1(k,j,i)*usn1m*usn2m
                q2_me(k) = q2_me(k) + q2(k,j,i)*usn1m*usn2m
                q3_me(k) = q3_me(k) + q3(k,j,i)*usn1m*usn2m
@@ -39,37 +28,9 @@
      &                               dens(k,j,i)**2*usn1m*usn2m
                densq3_me(k) = densq3_me(k) + 
      &                         dens(k,j,i)*q3(k,j,i)*usn1m*usn2m
-
-               my_q1_rms_vol = my_q1_rms_vol + lvol*q1(k,j,i)**2
-               my_q2_rms_vol = my_q2_rms_vol + lvol*q2(k,j,i)**2
-               my_q3_rms_vol = my_q3_rms_vol + lvol*q3(k,j,i)**2
-               my_q1q2q3_rms_vol = my_q1q2q3_rms_vol + lvol*
-     &          (q1(k,j,i)**2+q2(k,j,i)**2+q3(k,j,i)**2)  
             end do
          end do
       end do
-
-      call MPI_REDUCE(my_q1_rms_vol,q1_rms_vol,1,MDP,MPI_SUM,0,
-     & MPI_COMM_WORLD,ierr)
-      call MPI_REDUCE(my_q2_rms_vol,q2_rms_vol,1,MDP,MPI_SUM,0,
-     & MPI_COMM_WORLD,ierr)
-      call MPI_REDUCE(my_q3_rms_vol,q3_rms_vol,1,MDP,MPI_SUM,0,
-     & MPI_COMM_WORLD,ierr)
-      call MPI_REDUCE(my_q1q2q3_rms_vol,q1q2q3_rms_vol,1,MDP,
-     & MPI_SUM,0,MPI_COMM_WORLD,ierr)
-
-
-      if(nrank.eq.0) then
-        volt = 1.d0/(real(n1m)*real(n2m)*real(n3m))
-        rradpr=dsqrt(ray/pra)
-        q1_rms_vol=dsqrt(q1_rms_vol*volt)*rradpr
-        q2_rms_vol=dsqrt(q2_rms_vol*volt)*rradpr
-        q3_rms_vol=dsqrt(q3_rms_vol*volt)*rradpr
-        q1q2q3_rms_vol=dsqrt(q1q2q3_rms_vol*volt)*rradpr
-      
-       write(94,768) time,q1_rms_vol,q2_rms_vol,q3_rms_vol,
-     & q1q2q3_rms_vol
-      endif
 
 #endif
       return  
