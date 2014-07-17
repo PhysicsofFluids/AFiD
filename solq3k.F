@@ -27,9 +27,9 @@ c
       ackl(1)=1.d0
       do kc=2,n3m
         ackl_b=1.0d0/(1.0d0-ac3ck(kc)*betadx)
-        amkl(kc)=-am3ck(kc)*betadx*ackl_b
+        amkl(kc)=-am3ssk(kc)*betadx*ackl_b
         ackl(kc)=1.0d0
-        apkl(kc)=-ap3ck(kc)*betadx*ackl_b
+        apkl(kc)=-ap3ssk(kc)*betadx*ackl_b
       enddo
       amkl(n3)=0.d0
       apkl(n3)=0.d0
@@ -57,9 +57,6 @@ c
           enddo
           enddo
       end do
-
-!     q3(1,:,:)=0.0d0
-!     q3(n3,:,:)=0.0d0
 
       return
       end

@@ -98,15 +98,15 @@ c***********************************************************************
 
       integer :: ndims,timeint_cdsp_old
 
-      character*30 filename_q1me
-      character*30 filename_q2me
-      character*30 filename_q3me
-      character*30 filename_densme
-      character*30 filename_q1rms
-      character*30 filename_q2rms
-      character*30 filename_q3rms
-      character*30 filename_densrms
-      character*30 filename_densq3me
+      character*30 filename_q1me,dsetname_q1me
+      character*30 filename_q2me,dsetname_q2me
+      character*30 filename_q3me,dsetname_q3me
+      character*30 filename_densme,dsetname_densme
+      character*30 filename_q1rms,dsetname_q1rms
+      character*30 filename_q2rms,dsetname_q2rms
+      character*30 filename_q3rms,dsetname_q3rms
+      character*30 filename_densrms,dsetname_densrms
+      character*30 filename_densq3me,dsetname_densq3me
       character*30 filnamgrid
 
       real,dimension(1:n3m) :: my_q1_me,my_q2_me,my_q3_me,my_dens_me
@@ -119,8 +119,8 @@ c***********************************************************************
 #ifdef BALANCE
       real,dimension(1:n3m) :: dissth_old,disste_old
       real,dimension(1:n3m) :: my_dissth,my_disste
-      character*30 filename_dissth
-      character*30 filename_disste
+      character*30 filename_dissth,dsetname_dissth
+      character*30 filename_disste,dsetname_disste
 #endif
       
 
@@ -181,22 +181,39 @@ c***********************************************************************
       filename_dissth = trim('stats/dissth.h5')
       filename_disste = trim('stats/disste.h5')
 
+      dsetname_q1me = trim('q1_mean')
+      dsetname_q2me = trim('q2_mean')
+      dsetname_q3me = trim('q3_mean')
+      dsetname_densme = trim('dens_mean.h5')
+      dsetname_q1rms = trim('q1_rms.h5')
+      dsetname_q2rms = trim('q2_rms.h5')
+      dsetname_q3rms = trim('q3_rms.h5')
+      dsetname_densrms = trim('dens_rms.h5')
+      dsetname_densq3me = trim('densq3_mean.h5')
+      dsetname_dissth = trim('dissth.h5')
+      dsetname_disste = trim('disste.h5')
+
       if(starea.eq.1) then
-      call hdf_read_serial_1d('q1_mean',filename_q1me,n3m,q1_me_old)
-      call hdf_read_serial_1d('q2_mean',filename_q2me,n3m,q2_me_old)
-      call hdf_read_serial_1d('q3_mean',filename_q3me,n3m,q3_me_old)
-      call hdf_read_serial_1d('dens_mean',filename_densme,
+      call hdf_read_serial_1d(dsetname_q1me,filename_q1me,n3m,q1_me_old)
+      call hdf_read_serial_1d(dsetname_q2me,filename_q2me,n3m,q2_me_old)
+      call hdf_read_serial_1d(dsetname_q3me,filename_q3me,n3m,q3_me_old)
+      call hdf_read_serial_1d(dsetname_densme,filename_densme,
      %                        n3m,dens_me_old)
-      call hdf_read_serial_1d('q1_rms',filename_q1rms,n3m,q1_rms_old)
-      call hdf_read_serial_1d('q2_rms',filename_q2rms,n3m,q2_rms_old)
-      call hdf_read_serial_1d('q3_rms',filename_q3rms,n3m,q3_rms_old)
-      call hdf_read_serial_1d('dens_rms',filename_densrms,
+      call hdf_read_serial_1d(dsetname_q1rms,filename_q1rms,
+     &                        n3m,q1_rms_old)
+      call hdf_read_serial_1d(dsetname_q2rms,filename_q2rms,
+     &                        n3m,q2_rms_old)
+      call hdf_read_serial_1d(dsetname_q3rms,filename_q3rms,
+     &                        n3m,q3_rms_old)
+      call hdf_read_serial_1d(dsetname_densrms,filename_densrms,
      %                        n3m,dens_rms_old)
-      call hdf_read_serial_1d('densq3_mean',filename_densq3me,
+      call hdf_read_serial_1d(dsetname_densq3me,filename_densq3me,
      %                        n3m,densq3_me_old)
 #ifdef BALANCE
-      call hdf_read_serial_1d('dissth',filename_dissth,n3m,dissth_old)
-      call hdf_read_serial_1d('disste',filename_disste,n3m,disste_old)
+      call hdf_read_serial_1d(dsetname_dissth,filename_dissth,
+     &                        n3m,dissth_old)
+      call hdf_read_serial_1d(dsetname_disste,filename_disste,
+     &                        n3m,disste_old)
 #endif
 
       ndims=1
@@ -241,19 +258,26 @@ c***********************************************************************
 
       if (nrank.eq.0) then
 
-      call hdf_write_serial_1d('q1_mean',filename_q1me,n3m,q1_me)
-      call hdf_write_serial_1d('q2_mean',filename_q2me,n3m,q2_me)
-      call hdf_write_serial_1d('q3_mean',filename_q3me,n3m,q3_me)
-      call hdf_write_serial_1d('dens_mean',filename_densme,n3m,dens_me)
-      call hdf_write_serial_1d('q1_rms',filename_q1rms,n3m,q1_rms)
-      call hdf_write_serial_1d('q2_rms',filename_q2rms,n3m,q2_rms)
-      call hdf_write_serial_1d('q3_rms',filename_q3rms,n3m,q3_rms)
-      call hdf_write_serial_1d('dens_rms',filename_densrms,n3m,dens_rms)
-      call hdf_write_serial_1d('densq3_mean',filename_densq3me,
-     %                         n3m,densq3_me)
+      call hdf_write_serial_1d(dsetname_q1me,filename_q1me,n3m,q1_me)
+      call hdf_write_serial_1d(dsetname_q2me,filename_q2me,n3m,q2_me)
+      call hdf_write_serial_1d(dsetname_q3me,filename_q3me,n3m,q3_me)
+      call hdf_write_serial_1d(dsetname_densme,filename_densme,
+     %                        n3m,dens_me)
+      call hdf_write_serial_1d(dsetname_q1rms,filename_q1rms,
+     &                        n3m,q1_rms)
+      call hdf_write_serial_1d(dsetname_q2rms,filename_q2rms,
+     &                        n3m,q2_rms)
+      call hdf_write_serial_1d(dsetname_q3rms,filename_q3rms,
+     &                        n3m,q3_rms)
+      call hdf_write_serial_1d(dsetname_densrms,filename_densrms,
+     %                        n3m,dens_rms)
+      call hdf_write_serial_1d(dsetname_densq3me,filename_densq3me,
+     %                        n3m,densq3_me)
 #ifdef BALANCE
-      call hdf_write_serial_1d('dissth',filename_dissth,n3m,dissth)
-      call hdf_write_serial_1d('disste',filename_disste,n3m,disste)
+      call hdf_write_serial_1d(dsetname_dissth,filename_dissth,
+     &                        n3m,dissth)
+      call hdf_write_serial_1d(dsetname_disste,filename_disste,
+     &                        n3m,disste)
 #endif
 
 !RO   Write the grid & statistics information

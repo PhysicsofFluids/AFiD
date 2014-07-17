@@ -71,14 +71,15 @@
      endif
 
        ! *** top/bottom ***
-!      tag_b = 10
-!      tag_t = 20
       tag_b = coord(2)
        if (coord(2)==dims(2)-1 .AND. periodic_z) then
           tag_t = 0
        else
          tag_t = coord(2) + 1
        end if
+
+      ys = 1 
+      s2 = s2 +2
 
        icount = (s1 * s2) * level
 
@@ -104,6 +105,7 @@
       in(:,:,ze+1) = in(:,:,zs)
       in(:,:,zs-1) = in(:,:,ze)
      endif
+
 #ifdef HALO_DEBUG       
           write(*,*) 'HALO COMPARISON'
 

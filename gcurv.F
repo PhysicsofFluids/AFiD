@@ -84,8 +84,8 @@ c
 #ifdef STATS
       call initstst
 #endif
-#ifdef STATS2
-      call initstst2
+#ifdef STATS3
+      call initstst3
 #endif
 C**************************
 cm       imovie = 0
@@ -144,11 +144,11 @@ cm================================
 #endif
         call inqpr
 
-        call update_halo(q1,1,.TRUE.)
-        call update_halo(q2,1,.TRUE.)
-        call update_halo(q3,1,.TRUE.)
-        call update_halo(dens,1,.TRUE.)
-        call update_halo(pr,1,.TRUE.)
+        call update_halo(q1,1)
+        call update_halo(q2,1)
+        call update_halo(q3,1)
+        call update_halo(dens,1)
+        call update_halo(pr,1)
 
         
 cm======================================================================  
@@ -173,11 +173,11 @@ cm
         write(*,*) 'starting inirea' 
 #endif
        call inirea
-        call update_halo(q1,1,.TRUE.)
-        call update_halo(q2,1,.TRUE.)
-        call update_halo(q3,1,.TRUE.)
-        call update_halo(dens,1,.TRUE.)
-        call update_halo(pr,1,.TRUE.)
+        call update_halo(q1,1)
+        call update_halo(q2,1)
+        call update_halo(q3,1)
+        call update_halo(dens,1)
+        call update_halo(pr,1)
       tmax = tmax + time
 cm
 cm=====================================================
@@ -235,7 +235,6 @@ c  ********* starts the time dependent calculation ***
       tin(2) = MPI_WTIME()
       
        write(6,*) 'Initialization Time = ', tin(2) -tin(1), ' sec.'
-       write(6,*) 'Max D',dmax
       endif
 c                                                                       
       do 350 ntime=0,ntstf                                           
@@ -285,8 +284,8 @@ c
 #ifdef STATS
             call stst
 #endif
-#ifdef STATS2
-            call stst2
+#ifdef STATS3
+            call stst3
 #endif
 #ifdef BALANCE
             call balance
@@ -310,12 +309,12 @@ c
          ti(2) = MPI_WTIME()
               if(mod(time,tpin).lt.dt) then
               if(nrank.eq.0) then
+               write(6,*) 'Maximum divergence = ', dmax
                write(6,*) 'Iteration Time = ', ti(2) -ti(1), ' sec.'
-          write(6,*) 'dmax',dmax
               endif
               endif
 cm===============================================
-           if( (ti(2) -tin(1)) .gt. 85500.) then
+           if( (ti(2) -tin(1)) .gt. 83500.) then
 #ifdef STATS
         call ststwr
 #endif
@@ -366,6 +365,10 @@ cm======================================
 cm======================================
       if(nrank.eq.0) then
       write(6,268)                                                      
+         ti(2) = MPI_WTIME()
+              if(nrank.eq.0) then
+               write(6,*) 'Iteration Time = ', ti(2) -ti(1), ' sec.'
+              endif
   268 format(10x,'velocities diverged')
       endif
 cm======================================                                 

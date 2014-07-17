@@ -59,8 +59,9 @@ c
 !$OMP END PARALLEL DO
 
 
-      call solq12k(q1(1:n3,xstart(2):xend(2),xstart(3):xend(3)),
-     %     rhs(1:n3,xstart(2):xend(2),xstart(3):xend(3)))
+!     call solq12k(q1(1:n3,xstart(2):xend(2),xstart(3):xend(3)),
+!    %     rhs(1:n3,xstart(2):xend(2),xstart(3):xend(3)))
+      call solq12k(q1,rhs)
 
 
       return
