@@ -1,0 +1,18 @@
+ N1    N2    N3   NSST(>1=RK,else AB) NWRIT NREAD 
+ 33 65 65 3                0  0
+ NTST      TPRINT       TPIN      TMAX     IRESET    WARNING: SET TO 0
+ 10000     0.1            1e-2      1.0      0
+ ALX3D      ISTR3   STR3 
+ 1.0000       6     12.0
+ REXT1 REXT2 
+ 0.5   0.5   
+   RA   PRA      DT      RESID    CFLMAX
+ 1e+7  1.0   1e-8   1.e-2    1.2
+ TSTA  STAREAD
+ 0    0
+ inslws   inslwn 
+  1          1   
+ IDTV(0=dt fisso,1=var.)     DTMAX(per dt var.)   CFLLIM(per dt fisso)
+   1                         0.01                1.0
+ TFRAME
+ 0.02

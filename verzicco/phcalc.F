@@ -3,6 +3,7 @@ c  this subroutine perform the calculation of dph , periodic direction
 c  along x3 and x1to use the real fourier transform
 c
       subroutine phcalc
+      use, intrinsic :: iso_c_binding
       use param
       use fftw_params
       use local_arrays, only: dph
@@ -20,7 +21,8 @@ c
       real,allocatable,dimension(:,:,:) :: ry1,rz1
       complex,allocatable,dimension(:,:,:) :: cy1,cz1,dphc
 
-      integer ic,jc,kc
+      type(fftw_iodim),dimension(1) :: iodim
+      type(fftw_iodim),dimension(2) :: iodim_howmany
 
 !RO   Stuff for unoptimized FFTW
 
@@ -44,40 +46,68 @@ c
       n2mh=n2m/2+1
 
 
+!EP   Here array temporaries are created, this should be avoided
       call transpose_x_to_y(dph(ph%xst(1):ph%xen(1),
      & ph%xst(2):ph%xen(2),
      & ph%xst(3):ph%xen(3)),ry1,ph)
 
+!     call transpose_x_to_y(dph,ry1,ph)
 
-!RO   Unoptimized FFT, needs to be written properly sometime
+      if (.not.planned) then
+        iodim(1)%n=n1m
+        iodim(1)%is=(sp%zen(1)-sp%zst(1)+1)*(sp%zen(2)-sp%zst(2)+1)
+        iodim(1)%os=(sp%zen(1)-sp%zst(1)+1)*(sp%zen(2)-sp%zst(2)+1)
+        iodim_howmany(1)%n=(sp%zen(1)-sp%zst(1)+1)
+        iodim_howmany(1)%is=1
+        iodim_howmany(1)%os=1
+        iodim_howmany(2)%n=(sp%zen(2)-sp%zst(2)+1)
+        iodim_howmany(2)%is=(sp%zen(1)-sp%zst(1)+1)
+        iodim_howmany(2)%os=(sp%zen(1)-sp%zst(1)+1)
+        fwd_guruplan_z=fftw_plan_guru_dft(1,iodim,
+     %    2,iodim_howmany,cz1,cz1,
+     %    FFTW_FORWARD,FFTW_PATIENT)
+        iodim(1)%n=m1m
+        bwd_guruplan_z=fftw_plan_guru_dft(1,iodim,
+     %    2,iodim_howmany,cz1,cz1,
+     %    FFTW_BACKWARD,FFTW_PATIENT)
 
-!$OMP  PARALLEL DO
-!$OMP$ DEFAULT(none)
-!$OMP$ SHARED(ph,n2mh)
-!$OMP$ SHARED(fwd_plan_y,ry1,cy1)
-!$OMP$ PRIVATE(ic,kc,yr,ya)
-      do kc=ph%yst(1),ph%yen(1)
-      do ic=ph%yst(3),ph%yen(3)
-        yr(:)=ry1(kc,:,ic)
-        call dfftw_execute_dft_r2c(fwd_plan_y,yr,ya)
-        cy1(kc,1:n2mh,ic) = ya(1:n2mh)
-       end do
-      end do
-!$OMP  END PARALLEL DO
+        iodim(1)%n=m2m
+        iodim(1)%is=ph%yen(1)-ph%yst(1)+1
+        iodim(1)%os=sp%yen(1)-sp%yst(1)+1
+        iodim_howmany(1)%n=(ph%yen(1)-ph%yst(1)+1)
+        iodim_howmany(1)%is=1
+        iodim_howmany(1)%os=1
+        iodim_howmany(2)%n=(ph%yen(3)-ph%yst(3)+1)
+        iodim_howmany(2)%is=(ph%yen(1)-ph%yst(1)+1)
+     %    *(ph%yen(2)-ph%yst(2)+1)
+        iodim_howmany(2)%os=(sp%yen(1)-sp%yst(1)+1)
+     %    *(sp%yen(2)-sp%yst(2)+1)
+        fwd_guruplan_y=fftw_plan_guru_dft_r2c(1,iodim,
+     %    2,iodim_howmany,ry1,cy1,
+     %    FFTW_PATIENT)
+
+        iodim(1)%n=m2m
+        iodim(1)%is=sp%yen(1)-sp%yst(1)+1
+        iodim(1)%os=ph%yen(1)-ph%yst(1)+1
+        iodim_howmany(1)%n=(sp%yen(1)-sp%yst(1)+1)
+        iodim_howmany(1)%is=1
+        iodim_howmany(1)%os=1
+        iodim_howmany(2)%n=(sp%yen(3)-sp%yst(3)+1)
+        iodim_howmany(2)%is=(sp%yen(1)-sp%yst(1)+1)
+     %    *(sp%yen(2)-sp%yst(2)+1)
+        iodim_howmany(2)%os=(ph%yen(1)-ph%yst(1)+1)
+     %    *(ph%yen(2)-ph%yst(2)+1)
+        bwd_guruplan_y=fftw_plan_guru_dft_c2r(1,iodim,
+     %    2,iodim_howmany,cy1,ry1,
+     %    FFTW_PATIENT)
+        planned=.true.
+      endif
+
+      call dfftw_execute_dft_r2c(fwd_guruplan_y,ry1,cy1)
 
       call transpose_y_to_z(cy1,cz1,sp)
 
-!RO   Again shitty FFT, unoptimized
-
-
-      do kc=sp%zst(1),sp%zen(1)
-       do jc=sp%zst(2),sp%zen(2)
-        zr(1:n1m)=cz1(kc,jc,1:n1m)
-        call dfftw_execute(fwd_plan_z,zr,za)
-        cz1(kc,jc,1:n1m) = za(1:n1m)
-       end do
-      end do
-
+      call dfftw_execute_dft(fwd_guruplan_z,cz1,cz1)
 
 
 !EP   Normalize. FFT does not do this
@@ -124,32 +154,13 @@ c
 
       call transpose_y_to_z(cy1,cz1,sp)
 
-!RO   Inverse shitty FFT 1
-
-      do kc=sp%zst(1),sp%zen(1)
-      do jc=sp%zst(2),sp%zen(2)
-        za(1:m1m)=cz1(kc,jc,1:m1m)
-        call dfftw_execute(bck_plan_z,za,zr)
-        cz1(kc,jc,1:m1m) = zr(1:m1m)
-       end do
-      end do
+      call dfftw_execute_dft(bwd_guruplan_z,cz1,cz1)
 
       call transpose_z_to_y(cz1,cy1,sp)
 
+      call dfftw_execute_dft_c2r(bwd_guruplan_y,cy1,ry1)
 
-!$OMP  PARALLEL DO
-!$OMP$ DEFAULT(none)
-!$OMP$ SHARED(bck_plan_y,ry1,cy1,sp)
-!$OMP$ PRIVATE(ic,kc,yr,ya)
-      do kc=sp%yst(1),sp%yen(1)
-      do ic=sp%yst(3),sp%yen(3)
-        ya(1:m2mh)=cy1(kc,sp%yst(2):sp%yen(2),ic)
-        call dfftw_execute_dft_c2r(bck_plan_y,ya,yr)
-        ry1(kc,1:m2m,ic) = yr(1:m2m)
-       end do
-      end do
-!$OMP  END PARALLEL DO
-
+!EP   Here array temporaries are created, this should be avoided
       call transpose_y_to_x(ry1,dph(:,ph%xst(2):ph%xen(2),
      & ph%xst(3):ph%xen(3)),ph)
 

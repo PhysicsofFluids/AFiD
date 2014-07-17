@@ -15,6 +15,7 @@
 
     implicit none
     
+!   real(mytype), dimension(opt_decomp%xst(3):opt_decomp%xen(3),opt_decomp%xst(2):opt_decomp%xen(2),opt_decomp%xst(1):opt_decomp%xen(1)), intent(IN) :: src
     real(mytype), dimension(:,:,:), intent(IN) :: src
     real(mytype), dimension(:,:,:), intent(OUT) :: dst
     TYPE(DECOMP_INFO), intent(IN), optional :: opt_decomp
@@ -104,7 +105,7 @@
     implicit none
 
     integer, intent(IN) :: n1,n2,n3
-    real(mytype), dimension(n1,n2,n3), intent(IN) :: in
+    real(mytype), dimension(1:n1,1:n2,1:n3), intent(IN) :: in
     real(mytype), dimension(*), intent(OUT) :: out
     integer, intent(IN) :: iproc
     integer, dimension(0:iproc-1), intent(IN) :: dist
@@ -181,7 +182,7 @@
     
     integer, intent(IN) :: n1,n2,n3
     real(mytype), dimension(*), intent(IN) :: in
-    real(mytype), dimension(n1,n2,n3), intent(OUT) :: out
+    real(mytype), dimension(1:n1,1:n2,1:n3), intent(OUT) :: out
     integer, intent(IN) :: iproc
     integer, dimension(0:iproc-1), intent(IN) :: dist
     TYPE(DECOMP_INFO), intent(IN) :: decomp

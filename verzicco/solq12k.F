@@ -10,8 +10,10 @@ c
 !     use local_arrays, only : rhs
       use decomp_2d, only: xstart,xend
       implicit none
-      real,intent(inout) :: q(1:n3,xstart(2):xend(2),xstart(3):xend(3))
-      real,intent(in) :: rhs(1:n3,xstart(2):xend(2),xstart(3):xend(3))
+      real,intent(inout) :: q(1:n3,xstart(2)-1:xend(2)+1,
+     &      xstart(3)-1:xend(3)+1)
+      real,intent(inout) :: rhs(1:n3,xstart(2):xend(2),
+     &      xstart(3):xend(3))
       real, dimension(m3) :: amkl,apkl,ackl,fkl
       integer :: jc,kc,info,ipkv(m3m),ic
       real :: betadx,ackl_b

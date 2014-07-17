@@ -29,7 +29,7 @@ c***********************************************************************
        write(*,*) "q3",(q3(kp,jc,ic)-q3(kc,jc,ic))*udx3m(kc)
                 write(*,*) "q2m",ic,jc,kc,q2(kc,jc,ic)
                 write(*,*) "q2p",ic,jp,kc,q2(kc,jp,ic)
-              endif
+             endif
       enddo
       enddo
       enddo

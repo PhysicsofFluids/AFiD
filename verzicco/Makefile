@@ -9,10 +9,13 @@
 #FC += -WF,-DMPI -WF,-DFREESLIP
 #FC = h5pfc -r8 -ip -ipo -O3 -fpp
 #FC = h5pfc -r8 -ip -ipo -O0 -fpp
+#FC = h5pfc -r8 -ip -ipo -O3 -fpp -g -traceback -fpe0
+FC = h5pfc -r8 -O0 -fpp -g -traceback -fpe0 -warn all -debug all -check all
+FC += -fopenmp
 
 #FC += -openmp
 #FC += -debug all -warn all -check all -g -traceback
-#FC += -fpe0 -ftrapuv
+#FC += -fpe0 -g -traceback -ftrapuv
 #FC += -axAVX -xAVX
 
 
@@ -21,12 +24,9 @@
 #FC = mpif90 -O3 -cpp -fdefault-real-8 -fdefault-double-8 -fbounds-check -fbacktrace -Wall -I/usr/include
 #FC = mpif90 -O0 -cpp -Wextra -fdefault-real-8 -fbounds-check -fdefault-double-8 -fbacktrace
 #FC = mpif90 -O0 -Wall -Wsurprising -Waliasing -Wunused-parameter -fbounds-check -fcheck-array-temporaries -fbacktrace -fdefault-real-8 -fdefault-double-8
-#FC += -fopenmp
-FC = h5pfc -r8 -ip -ipo -O3 -fpp -fopenmp
-#FC = h5pfc -r8 -O0 -fpp -g -traceback -check bounds
 
 FC += -DDOUBLE_PREC
-FC += -axAVX -xAVX
+#FC += -axAVX -xAVX
 #FC += -DSERIAL_DEBUG -DDEBUG
 #FC += -DHALO_DEBUG
 
@@ -45,7 +45,7 @@ FC += -axAVX -xAVX
 # GENERAL
 #FC += -DDEBUG
 FC += -DSTATS 
-#FC += -DSTATS2
+FC += -DSTATS3
 FC += -DBALANCE
 #FC += -DBLSNAP
 #=======================================================================
@@ -59,8 +59,7 @@ FC += -DBALANCE
 
 #LINKS = -lfftw3 -llapack -lessl 
 
-LINKS = -lfftw3 -lmkl_intel_lp64 -lmkl_sequential -lpthread -lmkl_core -lm
-#LINKS = -L/usr/local/lib -llapack -lblas -lfftw3 
+LINKS = -lfftw3 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core 
 
 #LINKS = -lfftw3 -llapack -lblas -lz -lhdf5_fortran -lhdf5
 #LINKS = -L${FFTW_LIB} -lfftw3 -L${LAPACK_LIB} -llapack -L${ESSL_LIB} -lesslbg -L${BLAS_LIB} -lblas
@@ -83,7 +82,7 @@ OBJECTS = cfl.o coetar.o cordin.o densbo.o densmc.o \
           tsch.o updvp.o vmaxv.o phini.o mkfftplans.o \
           phcalc.o balance.o interp.o divgloc.o \
  	    decomp_2d.o decomp_2d_fft.o continua.o hdf_write_serial_1d.o \
-	    hdf_read_serial_1d.o
+	    hdf_read_serial_1d.o stst3.o
 #          alloc.o decomp_2d.o fft_fftw3.o halo.o halo_common.o
 
 MODULES = param.o decomp_2d.o decomp_2d_fft.o
@@ -92,7 +91,7 @@ MODULES = param.o decomp_2d.o decomp_2d_fft.o
 #============================================================================
 
 $(PROGRAM) : $(MODULES) $(OBJECTS)
-	$(FC) $(OBJECTS) $(LINKS) -o $@
+	$(FC) $(OP_LINK) $(OBJECTS) -o $@ $(LINKS)  
 
 #============================================================================
 #  Dependencies
@@ -119,7 +118,8 @@ decomp_2d_fft.o: decomp_2d_fft.f90
 #============================================================================
 
 clean :
-	rm $(PROGRAM) *.o *.mod  
+	rm *.o  
+	rm *.mod
 
 veryclean :
-	rm *.o *.mod *.out *.h5 stats/*.h5 dati/* $(PROGRAM)
+	rm *.o *.mod *.out *.h5 stats/*.h5 dati/* boutnp

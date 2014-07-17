@@ -23,13 +23,11 @@
 
 !RO   Create the dataset with default properties.
       call h5dcreate_f(file_id, dsetname, H5T_NATIVE_DOUBLE,
-     &                filespace,
-     &                dset, hdf_error)
+     &                filespace, dset, hdf_error)
 
 !RO   Select hyperslab  and then write it
        call h5dwrite_f(dset, H5T_NATIVE_DOUBLE,
-     &   var(1:n), dims,
-     &   hdf_error)
+     &   var(1:n), dims, hdf_error)
 
 !RO   Close properties and file
 
