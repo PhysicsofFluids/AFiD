@@ -342,11 +342,6 @@ contains
       
     decomp_ph=decomp_main
 
-    write(*,*) "NRANK",nrank
-    write(*,*)'xsize:',xstart,xend
-    write(*,*)'ysize:',ystart,yend
-    write(*,*)'zsize:',zstart,zend
-
 #ifdef SHM_DEBUG
     ! print out shared-memory information
     write(fname,99) nrank

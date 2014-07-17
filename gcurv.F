@@ -179,8 +179,8 @@ c
       endif
                                                                         
 c  ********* starts the time dependent calculation ***
+      errorcode = 0
       do ntime=0,ntstf                                           
-        errorcode = 0
         ti(1) = MPI_WTIME()
 
 !EP   Determine timestep size
@@ -292,26 +292,34 @@ c  ********* starts the time dependent calculation ***
 
         if(errorcode.eq.333) then
 !EP   Physical time exceeded tmax, no error; normal quit
-          write(*,*) "time greater than tmax"
-          write(*,*) "statistics and continuation updated"
+          if(nrank.eq.0) then
+            write(*,*) "time greater than tmax"
+            write(*,*) "statistics and continuation updated"
+          endif
           call quit(tin,1)
         endif
 
         if(errorcode.eq.333) then
 !EP   walltime exceeded walltimemax, no error; normal quit
-          write(*,*) "walltime greater than walltimemax"
-          write(*,*) "statistics and continuation updated"
+          if(nrank.eq.0) then
+            write(*,*) "walltime greater than walltimemax"
+            write(*,*) "statistics and continuation updated"
+          endif
           call quit(tin,1)
         endif
 
-        write(*,*) "unknown error"
+        if(nrank.eq.0) then
+          write(*,*) "unknown error"
+        endif
         call quit(tin,0)
 
         endif
 
       enddo !EP main loop
 
-      write(*,*) "Maximum number of timesteps reached"
+      if(nrank.eq.0) then
+        write(*,*) "Maximum number of timesteps reached"
+      endif
       call quit(tin,1)
       
       return                                                            
@@ -332,11 +340,6 @@ c  ********* starts the time dependent calculation ***
           write(6,*) 'Total Iteration Time = ',tin(3) -tin(2),' sec.'
       endif
 
-      call closefi
-      call mem_dealloc
-      call h5close_f(hdf_error)
-      call decomp_2d_fft_finalize
-
       if(cond.eq.1) then
 #ifdef STATS
         call ststwr
@@ -344,6 +347,10 @@ c  ********* starts the time dependent calculation ***
         call continua
       endif
 
+      call closefi
+      call mem_dealloc
+      call h5close_f(hdf_error)
+      call decomp_2d_fft_finalize
 
       stop
 
