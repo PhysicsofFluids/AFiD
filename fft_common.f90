@@ -38,8 +38,7 @@
   complex(mytype), allocatable, dimension(:,:,:) :: wk2_c2c, wk2_r2c
   complex(mytype), allocatable, dimension(:,:,:) :: wk13
 
-  public :: decomp_2d_fft_init, decomp_2d_fft_3d, &
-       decomp_2d_fft_finalize, decomp_2d_fft_get_size
+  public :: decomp_2d_fft_init, decomp_2d_fft_finalize, decomp_2d_fft_get_size
 
   public :: ffty,fftz
   
@@ -49,12 +48,6 @@
      module procedure fft_init_noarg
      module procedure fft_init_arg
      module procedure fft_init_general
-  end interface
-  
-  interface decomp_2d_fft_3d
-     module procedure fft_3d_c2c
-     module procedure fft_3d_r2c
-     module procedure fft_3d_c2r
   end interface
   
   interface ffty
