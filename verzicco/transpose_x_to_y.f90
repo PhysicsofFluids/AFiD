@@ -15,7 +15,6 @@
 
     implicit none
     
-!   real(mytype), dimension(opt_decomp%xst(3):opt_decomp%xen(3),opt_decomp%xst(2):opt_decomp%xen(2),opt_decomp%xst(1):opt_decomp%xen(1)), intent(IN) :: src
     real(mytype), dimension(:,:,:), intent(IN) :: src
     real(mytype), dimension(:,:,:), intent(OUT) :: dst
     TYPE(DECOMP_INFO), intent(IN), optional :: opt_decomp

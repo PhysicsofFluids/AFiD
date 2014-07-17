@@ -47,11 +47,11 @@ c
 
 
 !EP   Here array temporaries are created, this should be avoided
-      call transpose_x_to_y(dph(ph%xst(1):ph%xen(1),
-     & ph%xst(2):ph%xen(2),
-     & ph%xst(3):ph%xen(3)),ry1,ph)
+!     call transpose_x_to_y(dph(ph%xst(1):ph%xen(1),
+!    & ph%xst(2):ph%xen(2),
+!    & ph%xst(3):ph%xen(3)),ry1,ph)
 
-!     call transpose_x_to_y(dph,ry1,ph)
+      call transpose_x_to_y(dph,ry1,ph)
 
       if (.not.planned) then
         iodim(1)%n=n1m
@@ -161,8 +161,9 @@ c
       call dfftw_execute_dft_c2r(bwd_guruplan_y,cy1,ry1)
 
 !EP   Here array temporaries are created, this should be avoided
-      call transpose_y_to_x(ry1,dph(:,ph%xst(2):ph%xen(2),
-     & ph%xst(3):ph%xen(3)),ph)
+!     call transpose_y_to_x(ry1,dph(:,ph%xst(2):ph%xen(2),
+!    & ph%xst(3):ph%xen(3)),ph)
+      call transpose_y_to_x(ry1,dph,ph)
 
 
       if(allocated(dphc)) deallocate(dphc)

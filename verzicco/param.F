@@ -6,7 +6,7 @@ c***********************************************************
         integer :: m2,m3,m1
         integer :: m2m,m3m,m2mh,m1m
 c       Grid size        
-       parameter (m1=33,m2=65,m3=65)
+       parameter (m1=129,m2=129,m3=129)
         parameter (m1m=m1-1,m2m=m2-1,m3m=m3-1,m2mh=m2m/2+1)
 c==========================================================			
 c       read from input file bou.in
@@ -84,7 +84,7 @@ c******* 2D arrays, dynamically allocated by each process*******
         real,allocatable,dimension(:,:,:) :: q1,q2,q3
         real,allocatable,dimension(:,:,:) :: pr,dens,rhs
         real,allocatable,dimension(:,:,:) :: ru1,ru2,ru3,ruro
-        real,allocatable,dimension(:,:,:) :: dph,qcap,dq,hro
+        real,allocatable,dimension(:,:,:) :: dph,qcap,dq,hro,dphhalo
       end module local_arrays
 
 c===============================================================
