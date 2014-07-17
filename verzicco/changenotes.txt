@@ -1,3 +1,0 @@
-312: Subroutine for parallel 3D I/O, Subroutine for serial 1D I/O, Statistics and Balance for pencil
-313: Fixed statistics I/O, fixed balance.F which was causing problems in the
-code. The code is now tested for Ra=1e8 at 16 cores.

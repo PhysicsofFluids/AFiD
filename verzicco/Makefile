@@ -10,7 +10,7 @@
 #FC = h5pfc -r8 -ip -ipo -O3 -fpp
 #FC = h5pfc -r8 -ip -ipo -O0 -fpp
 #FC = h5pfc -r8 -ip -ipo -O3 -fpp -g -traceback -fpe0
-FC = h5pfc -r8 -O0 -fpp -g -traceback -fpe0 -warn all -debug all -check all
+ FC = h5pfc -r8 -O0 -fpp -g -traceback -fpe0 -warn all -debug all -check all
 FC += -fopenmp
 
 #FC += -openmp
@@ -79,7 +79,7 @@ OBJECTS = cfl.o coetar.o cordin.o densbo.o densmc.o \
           solq12k.o \
           stst.o hdf_write.o hdf_read.o \
           solq3k.o solrok.o invtrro.o \
-          tsch.o updvp.o vmaxv.o phini.o mkfftplans.o \
+          tsch.o updvp.o globalquantities.o phini.o mkfftplans.o \
           phcalc.o balance.o interp.o divgloc.o \
  	    decomp_2d.o decomp_2d_fft.o continua.o hdf_write_serial_1d.o \
 	    hdf_read_serial_1d.o stst3.o
@@ -122,4 +122,4 @@ clean :
 	rm *.mod
 
 veryclean :
-	rm *.o *.mod *.out *.h5 stats/*.h5 dati/* boutnp
+	rm *.o *.mod *.out *.h5 stats/*.h5 stst3/* boutnp

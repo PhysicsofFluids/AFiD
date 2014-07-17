@@ -2,7 +2,7 @@
       use param
       implicit none
 
-!EP    nusse.out  in vmaxv.F
+!EP    nusse.out  in globalquantities.F
       open(95,file='nusse.out',status='unknown',access='sequential',
      % position='append')
 
@@ -10,7 +10,7 @@
        open(97,file="nusse2.out",status='unknown',access='sequential',
      % position='append')
 
-!EP   rms_vel.out in stst.F
+!EP   rms_vel.out in globalquantities.F
        open(94,file='rms_vel.out',status='unknown',position='append',
      & access='sequential')
 

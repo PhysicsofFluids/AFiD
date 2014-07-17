@@ -60,7 +60,7 @@ c
         read(15,301) dummy
         read(15,*) n1,n2,n3,nsst,nwrit,nread
         read(15,301) dummy
-        read(15,*) ntst,tprint,tpin,tmax,ireset
+        read(15,*) ntst,walltimemax,tpin,tmax,ireset
         read(15,301) dummy
         read(15,*) alx3,istr3,str3
         read(15,301) dummy
@@ -72,7 +72,7 @@ c
         read(15,301) dummy
         read(15,*) inslws,inslwn
         read(15,301) dummy       
-        read(15,*) idtv,dtmax,cfllim  
+        read(15,*) idtv,dtmin,dtmax,cfllim,vlim
         read(15,301) dummy       
         read(15,*) tframe
 301     format(a4)                
@@ -219,10 +219,5 @@ cm======================================================
 
       call gcurv
       
-cm==================================================
-      call closefi
-
-cm==================================================
-
       stop                                                              
       end                                                               
