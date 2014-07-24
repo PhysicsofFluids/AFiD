@@ -27,9 +27,6 @@
     ! then call MPI send/receive to exchange halo data
 
        ! *** north/south *** 
-!     tag_n = 40
-!     tag_s = 50
-
  
      tag_s = coord(1)
       if (coord(1)==dims(1)-1 .AND. periodic_y) then
@@ -143,14 +140,5 @@
           write(*,*) "CKSUM ZE",nrank,cksum2
           write(*,*) "CKSUM ZS-1",nrank,cksum3
           write(*,*) "CKSUM ZE+1",nrank,cksum4
-
-!         do j=ys,ye
-!           do k=xs,xe
-!             write(*,*) j,k, in(k,j,zs-1)
-!           end do
-!         end do
-      
-
-!     call MPI_BARRIER(MPI_COMM_WORLD,ierror)
 #endif       
 

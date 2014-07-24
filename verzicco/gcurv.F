@@ -299,7 +299,7 @@ c  ********* starts the time dependent calculation ***
           call quit(tin,1)
         endif
 
-        if(errorcode.eq.333) then
+        if(errorcode.eq.334) then
 !EP   walltime exceeded walltimemax, no error; normal quit
           if(nrank.eq.0) then
             write(*,*) "walltime greater than walltimemax"
