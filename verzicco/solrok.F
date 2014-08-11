@@ -1,9 +1,18 @@
-************************************************************************
-c   this subroutine performs the inversion of the q3 momentum equation
-c   by a factored implicit scheme, only the derivatives 11,22,33 of q3
-c   are treated implicitly
-c       direction x3
-c
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                                          !
+!     Name: solrok                                                         !
+!     Date: July 8th 2014                                                  !
+!                                                                          !
+!     Description: Solve the implicit Eq. 5 from VO96 by using             !
+!       Thomas' algorithm to solve the tridiagonal matrix in O(N)          !
+!       operations, and uses the solution to update the temperature        !
+!       field.                                                             !
+!                                                                          !
+!     Uses:    rhs                                                         !
+!     Updates: dens                                                        !
+!                                                                          !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine solrok
       use param
       use local_arrays, only : dens,rhs
@@ -14,10 +23,10 @@ c
       real :: betadx,ackl_b
       real :: amkT(m3-1),ackT(m3),apkT(m3-1),appk(m3-2)
 
-cm      dimension amkl(m3),apkl(m3),ackl(m3),fkl(m1,m3) 
-c  ********* compute the dq3* sweeping in the x3 direction
-c
-c
+!     Calculate the coefficients of the tridiagonal matrix
+!     The coefficients are normalized to prevent floating
+!     point errors.
+
       betadx=0.5d0*al*dt/pec
 
       amkl(1)=0.d0
@@ -37,23 +46,34 @@ c
       apkT=apkl(1:n3m)
       ackT=ackl(1:n3)
 
+!     Call to LAPACK library to factor tridiagonal matrix.
+!     No solving is done in this call.
+
       call dgttrf(n3,amkT,ackT,apkT,appk,ipkv,info)
 
       do ic=xstart(3),xend(3)
-         do jc=xstart(2),xend(2)
-            fkl(1)= 0.d0
-          do kc=2,n3m
-            ackl_b=1.-ac3ssk(kc)*betadx
-            fkl(kc)=rhs(kc,jc,ic)/ackl_b
-          end do
-            fkl(n3)= 0.d0
+       do jc=xstart(2),xend(2)
+
+!     Normalize RHS of equation
+
+        fkl(1)= 0.d0
+        do kc=2,n3m
+         ackl_b=1.0/(1.-ac3ssk(kc)*betadx)
+         fkl(kc)=rhs(kc,jc,ic)*ackl_b
+        end do
+        fkl(n3)= 0.d0
           
-          call dgttrs('N',n3,1,amkT,ackT,apkT,appk,ipkv,fkl,n3,info)
+!     Solve equation using LAPACK library
+
+        call dgttrs('N',n3,1,amkT,ackT,apkT,appk,ipkv,fkl,n3,info)
           
-          do kc=2,n3m
-            dens(kc,jc,ic) = dens(kc,jc,ic) + fkl(kc)
-          end do
-         enddo
+!      Update temperature field
+
+        do kc=2,n3m
+          dens(kc,jc,ic) = dens(kc,jc,ic) + fkl(kc)
+        end do
+
+       enddo
       end do
 
       return
