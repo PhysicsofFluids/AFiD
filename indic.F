@@ -1,7 +1,7 @@
       subroutine indic
       use param
       implicit none
-      integer :: jc,kc,ic
+      integer :: kc
 
 c
 c     direction normal to non-slip walls

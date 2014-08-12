@@ -66,7 +66,8 @@ c=================================================
       allocate(q3(1:n3,xstart(2)-1:xend(2)+1,xstart(3)-1:xend(3)+1))
       allocate(pr(1:n3,xstart(2)-1:xend(2)+1,xstart(3)-1:xend(3)+1))
       allocate(dens(1:n3,xstart(2)-1:xend(2)+1,xstart(3)-1:xend(3)+1))
-      allocate(dph(1:n3,xstart(2)-1:xend(2)+1,xstart(3)-1:xend(3)+1))
+      allocate(dphhalo(1:n3m,xstart(2)-1:xend(2)+1,
+     & xstart(3)-1:xend(3)+1))
 
       !-----------------------------------------------
       ! Arrays without ghost cells
@@ -77,6 +78,7 @@ c=================================================
 !     call alloc_x(ru3,ph,.TRUE.)
 !     call alloc_x(ruro,ph,.TRUE.)
       allocate(rhs(1:n3,xstart(2):xend(2),xstart(3):xend(3)))
+      allocate(dph(1:n3m,xstart(2):xend(2),xstart(3):xend(3)))
       allocate(dq(1:n3,xstart(2):xend(2),xstart(3):xend(3)))
       allocate(qcap(1:n3,xstart(2):xend(2),xstart(3):xend(3)))
       allocate(ru1(1:n3,xstart(2):xend(2),xstart(3):xend(3)))
@@ -121,6 +123,7 @@ c==================================================
       if(allocated(rhs)) deallocate(rhs)
       
       if(allocated(dph)) deallocate(dph)
+      if(allocated(dphhalo)) deallocate(dphhalo)
       
       if(allocated(ru1)) deallocate(ru1)
       if(allocated(ru2)) deallocate(ru2)

@@ -10,10 +10,10 @@
       use stat_arrays, only: timeint_cdsp
 #endif
       implicit none
-      integer :: ntstf, l, hdf_error
+      integer :: ntstf, hdf_error, errorcode
       real    :: cflm,dmax
       real    :: ti(2), tin(3)
-      real :: ts,te
+      real :: ts
 c
 c     Code for the computation of three-dimensional incompressible flows    
 c     in cylindrical polar coordinates.                                             
@@ -60,14 +60,11 @@ c
 c     Other details of the scheme are given in the introduction of the  
 c     subroutine TSCHEM
 c
-c     timings
-c                                                                       
-c
 c
       ts=MPI_WTIME()
       tin(1) = MPI_WTIME()
       
-c
+!EP   Initialize 
       call initia
 c                                                                       
 c     grid information                                                 
@@ -77,20 +74,15 @@ c
       call cordin
 
 !RO   Make fftw plans
-
       call mkfftplans
 
       call h5open_f(hdf_error)
 #ifdef STATS
       call initstst
 #endif
-#ifdef STATS2
-      call initstst2
+#ifdef STATS3
+      call initstst3
 #endif
-C**************************
-cm       imovie = 0
-cm       tframe = 0.05
-C**************************
 cm===================================                                                      
 #ifdef MOVIE
       call inimov
@@ -110,174 +102,111 @@ cm===================================
 cm===================================     
       
       time=0.d0
-c                                                                       
-c   read or create initial fields                                       
-c                                                                       
-#ifdef DEBUG
-      write(*,*) 'starting phini'
-#endif
+
+!EP   Initialize the pressure solver
       call phini
-c
-        do 22 l=1,ndv                                                   
-           vmax(l)=0.d0
-   22   continue                                                        
-c
-#ifdef DEBUG
-      write(*,*) 'starting densbo'
-#endif
+ 
+
+!EP   Set the temperature boundary conditions
       call densbo
 c
 c      create the initial conditions
 c
       if(nread.eq.0) then
-cm================================
         if(nrank.eq.0) then
-        write(6,*)' nread=0 ---> cond. iniz. create nel code'     
-      endif
-cm================================            
+          write(6,*)' nread = 0: creating initial condition'
+        endif
+!EP   Set times to 0
         ntime=0                                                         
         time=0.d0
         cflm=0.d0
         
-#ifdef DEBUG                                                               
-        write(*,*) 'starting inqpr'
-#endif
+!EP   Create an initial condition
         call inqpr
-
-        call update_halo(q1,1,.TRUE.)
-        call update_halo(q2,1,.TRUE.)
-        call update_halo(q3,1,.TRUE.)
-        call update_halo(dens,1,.TRUE.)
-        call update_halo(pr,1,.TRUE.)
-
-        
-cm======================================================================  
-#ifdef DEBUG                                                               
-        write(*,*) 'starting divgck' 
-#endif
-        call divgck(dmax)
-        if(nrank.eq.0) then
-        write(6,*)' initial divg dmax  ',dmax
-      endif
-cm================================ 
-cm
       else
-cm
-cm================================
         if(nrank.eq.0) then
-       write(6,*)' nread=1 ---> cond. iniz. lette da file'      
-      endif
-cm================================ 
-cm      
-#ifdef DEBUG                                                               
-        write(*,*) 'starting inirea' 
-#endif
-       call inirea
-        call update_halo(q1,1,.TRUE.)
-        call update_halo(q2,1,.TRUE.)
-        call update_halo(q3,1,.TRUE.)
-        call update_halo(dens,1,.TRUE.)
-        call update_halo(pr,1,.TRUE.)
-      tmax = tmax + time
-cm
-cm=====================================================
-       
-#ifdef DEBUG                                                               
-        write(*,*) 'starting divgck' 
-#endif
-       call divgck(dmax)
-        if(nrank.eq.0) then
-       write(6,*)' initial divg dmax  ',dmax
-      endif
-cm==============================               
+          write(6,*)' nread = 1: reading initial condition from file'
+        endif
+!EP   Read (and interpolate) continuation files
+        call inirea
+
+!EP   Increase the maximum simulation time by the end time in the
+!continuation files
+        tmax = tmax + time
       endif                                                             
-c
+
+!EP   Update all relevant halos
+      call update_halo(q1,1)
+      call update_halo(q2,1)
+      call update_halo(q3,1)
+      call update_halo(dens,1)
+      call update_halo(pr,1)
+
+!EP   Check divergence. Should be reduced to machine precision after the first
+!phcalc. Here it can still be high.
+      call divgck(dmax)
+      if(nrank.eq.0) then
+        write(6,*)' initial maximum divergence: ',dmax
+      endif
+
       ntstf=ntst                                                   
-cm================================
-        if(nrank.eq.0) then
-      write(6,711) tprint,ntstf,tpin
-711   format(3x,'check in cond : tprint =',f10.1, 
+      if(nrank.eq.0) then
+        write(6,711) ntstf,tpin
+711     format(3x,'check in cond : ', 
      &       '  ntstf =',i8,2x,'tpin =',f10.1//)
       endif
-cm================================ 
-#ifdef DEBUG                                                               
-        write(*,*) 'starting densmc' 
-#endif
-       call densmc
-            if(idtv.eq.1) then
-            
-cm================================
-        if(nrank.eq.0) then
-      write(6,*)ntime,time,vmax(1),vmax(2),vmax(3),
-     & dt,dmax,densm,denmax,denmin
-      endif
-cm================================  
-            else
-cm================================
-        if(nrank.eq.0) then
-      write(6,*)ntime,time,vmax(1),vmax(2),vmax(3),
-     % cflm,dmax, densm,denmax,denmin
-      endif
-cm================================     
-     
-        cflm=cflm*dt
-            endif
-c
-#ifdef DEBUG                                                               
-        write(*,*) 'starting coetar' 
-#endif
-         call coetar
-c      
-c
-c  ********* starts the time dependent calculation ***
 
+!EP   Write some values
+      if(idtv.eq.1) then
         if(nrank.eq.0) then
-      tin(2) = MPI_WTIME()
-      
-       write(6,*) 'Initialization Time = ', tin(2) -tin(1), ' sec.'
-       write(6,*) 'Max D',dmax
-      endif
-c                                                                       
-      do 350 ntime=0,ntstf                                           
-c
-c     the calculation stops if the velocities are diverging for numerical
-c     stability conditions (courant number restrictions)                
-c
-          ti(1) = MPI_WTIME()
-c
-#ifdef DEBUG                                                               
-        if(nrank.eq.0) then
-        write(*,*) 'starting cfl' 
+          write(6,*)ntime,time,
+     &    dt,dmax,densm,denmax,denmin
         endif
-#endif
-            call cfl(cflm)
-#ifdef DEBUG                                                               
-        write(*,*) 'finished cfl' ,nrank,cflm
-#endif
-            
-            
-            if(idtv.eq.1) then
-              if(ntime.ne.1) then
-                 dt=cflmax/cflm
-                 if(dt.gt.dtmax) dt=dtmax
-              endif
-              if(dt.lt. 0.00000001d0) go to 166
-            else
-              cflm=cflm*dt
-              if(cflm.gt.cfllim) go to 165
-            endif
-            beta=dt/ren*0.5d0
-#ifdef DEBUG                                                               
-        write(*,*) 'starting tschem'
-#endif
-            call tschem
-            time=time+dt
-            if(ntime.eq.1) go to 306 
-            if(mod(time,tpin).lt.dt) go to 306  
-            go to 305
-  306 continue                                                          
-            call vmaxv
-            if(vmax(1).gt.1000.d0.and.vmax(2).gt.1000.d0) go to 266
+        else
+        if(nrank.eq.0) then
+          write(6,*)ntime,time,
+     %    cflm,dmax, densm,denmax,denmin
+        endif
+        cflm=cflm*dt
+      endif
+
+!EP   Initialize metrics
+      call coetar
+
+      if(nrank.eq.0) then
+        tin(2) = MPI_WTIME()
+        write(6,*) 'Initialization Time = ', tin(2) -tin(1), ' sec.'
+      endif
+                                                                        
+c  ********* starts the time dependent calculation ***
+      errorcode = 0
+      do ntime=0,ntstf                                           
+        ti(1) = MPI_WTIME()
+
+!EP   Determine timestep size
+        call cfl(cflm)
+
+        if(idtv.eq.1) then
+          if(ntime.ne.1) then
+            dt=cflmax/cflm
+!EP   Restrict dt
+            if(dt.gt.dtmax) dt=dtmax
+          endif
+            if(dt.lt.dtmin) errorcode = 166
+        else
+          cflm=cflm*dt
+          if(cflm.gt.cfllim) errorcode = 165
+        endif
+        beta=dt/ren*0.5d0
+
+!EP   Integrate
+        call tschem
+        time=time+dt
+
+
+        if(ntime.eq.1.or.mod(time,tpin).lt.dt) then
+          call globalquantities
+          if(vmax(1).gt.vlim.and.vmax(2).gt.vlim) errorcode = 266
             call cfl(cflm)
             call divgck(dmax)
             call densmc
@@ -285,122 +214,144 @@ c
 #ifdef STATS
             call stst
 #endif
-#ifdef STATS2
-            call stst2
+#ifdef STATS3
+            call stst3
 #endif
 #ifdef BALANCE
             call balance
 #endif
             endif
-            if(idtv.eq.1) then
-            else
+            if(idtv.eq.0) then
               cflm=cflm*dt
             endif
-            if(dmax.gt.resid) go to 169
-c                                                                       
-  305 continue                                                          
-
-#ifdef MOVIE
-       if(mod(time,tframe).lt.dt) then
-        call mkmov
-       endif
-#endif
-          
-                 if(time.gt.tmax) go to 333
-         ti(2) = MPI_WTIME()
-              if(mod(time,tpin).lt.dt) then
-              if(nrank.eq.0) then
-               write(6,*) 'Iteration Time = ', ti(2) -ti(1), ' sec.'
-          write(6,*) 'dmax',dmax
-              endif
-              endif
-cm===============================================
-           if( (ti(2) -tin(1)) .gt. 85500.) then
-#ifdef STATS
-        call ststwr
-#endif
-       call continua
-
-         if(nrank.eq.0) then
-            write(6,*) 'Restart file updated at exit'
-            write(6,*) 'exit time=',ti(2) -tin(1),'sec'
-         endif
-         call MPI_FINALIZE(ierr)
-
-         stop ! Exit after time limit
+            if(dmax.gt.resid) errorcode = 169
 
         endif
-c================================================           
-c
-  350 continue
- 
-333   continue
-  
-        tin(3) = MPI_WTIME()
-      if(nrank.eq.0) then
-          write(6,*) 'Total Iteration Time = ',tin(3) -tin(2),' sec.'
-      endif
-#ifdef STATS
-      call ststwr
+
+#ifdef MOVIE
+        if(mod(time,tframe).lt.dt) then
+          call mkmov
+        endif
 #endif
-      call continua
-      go to 167                                                         
-  165 continue 
+         
+        if(time.gt.tmax) errorcode = 333
 
-cm======================================
-      if(nrank.eq.0) then
-      write(6,164)                                                      
-  164 format(10x,'cfl too large  ')
-      endif
-cm======================================                                  
-      go to 167                                                         
-  166 continue
-cm======================================
-      if(nrank.eq.0) then
-      write(6,168) dt 
-  168 format(10x,'dt too small, DT= ',e14.7)
-      endif
-cm======================================   
-      go to 167                                                         
-  266 continue
-cm======================================
-      if(nrank.eq.0) then
-      write(6,268)                                                      
-  268 format(10x,'velocities diverged')
-      endif
-cm======================================                                 
-      go to 167                                                         
-  169 continue
-  
-cm======================================
-      if(nrank.eq.0) then
-      write(6,178) dmax                                 
-  178 format(10x,'too large local residue for mass conservation : '     
-     1       ,e12.5,' at ')
-     
-      endif
-      call divgloc
-cm======================================
+        ti(2) = MPI_WTIME()
+        if(mod(time,tpin).lt.dt) then
+          if(nrank.eq.0) then
+          write(6,*) 'Maximum divergence = ', dmax
+          write(6,*)ntime,time,vmax(1),vmax(2),vmax(3),
+     &    dmax,densm,denmax,denmin
+          write(6,*) 'Iteration Time = ', ti(2) -ti(1), ' sec.'
+          endif
+        endif
 
-  167 continue                                                          
+       if( (ti(2) - tin(1)) .gt. walltimemax) errorcode = 334
 
-      te=MPI_WTIME()
+
+!EP   Conditional exits
+      if(errorcode.ne.0) then
+
+        if(errorcode.eq.166) then
+!EP    dt too small
+          if(nrank.eq.0) then
+            write(6,168) dt 
+168         format(10x,'dt too small, DT= ',e14.7)
+          endif
+          call quit(tin,0)
+        endif
+
+        if(errorcode.eq.165) then
+!EP   cfl too high    
+          if(nrank.eq.0) then
+            write(6,164) 
+164         format(10x,'cfl too large  ')
+          endif
+          call quit(tin,0)
+        endif
       
+        if(errorcode.eq.266) then
+!EP   velocities diverged
+          if(nrank.eq.0) then
+            write(6,268)
+268         format(10x,'velocities diverged')
+          endif
+          call quit(tin,0)
+        endif
+          
+        if(errorcode.eq.169) then
+!EP   mass not conserved
+          if(nrank.eq.0) then
+            write(6,178) dmax                                 
+178         format(10x,'too large local residue for mass conservation
+     & : ',e12.5,' at ')
+          endif
+          call divgloc
+          call quit(tin,0)
+        endif
+
+        if(errorcode.eq.333) then
+!EP   Physical time exceeded tmax, no error; normal quit
+          if(nrank.eq.0) then
+            write(*,*) "time greater than tmax"
+            write(*,*) "statistics and continuation updated"
+          endif
+          call quit(tin,1)
+        endif
+
+        if(errorcode.eq.334) then
+!EP   walltime exceeded walltimemax, no error; normal quit
+          if(nrank.eq.0) then
+            write(*,*) "walltime greater than walltimemax"
+            write(*,*) "statistics and continuation updated"
+          endif
+          call quit(tin,1)
+        endif
+
+        if(nrank.eq.0) then
+          write(*,*) "unknown error"
+        endif
+        call quit(tin,0)
+
+        endif
+
+      enddo !EP main loop
+
       if(nrank.eq.0) then
-        open(27,file="Total_time.out")
-        write(27,*)"Total simulation time in sec.: ", te-ts
-        close(27)
+        write(*,*) "Maximum number of timesteps reached"
       endif
-
-      call mem_dealloc
-
-      call h5close_f(hdf_error)
-c
-      call decomp_2d_fft_finalize
-      
-!     call MPI_FINALIZE(ierr)
-
+      call quit(tin,1)
       
       return                                                            
       end                                                               
-c
+
+      subroutine quit(tin,cond)
+      use hdf5
+      use mpih
+      use decomp_2d, only: nrank
+      use decomp_2d_fft
+      implicit none
+      integer, intent(in) :: cond
+      integer :: hdf_error
+      real :: tin(3)
+
+      tin(3) = MPI_WTIME()
+      if(nrank.eq.0) then
+          write(6,*) 'Total Iteration Time = ',tin(3) -tin(2),' sec.'
+      endif
+
+      if(cond.eq.1) then
+#ifdef STATS
+        call ststwr
+#endif
+        call continua
+      endif
+
+      call closefi
+      call mem_dealloc
+      call h5close_f(hdf_error)
+      call decomp_2d_fft_finalize
+
+      stop
+
+      end subroutine quit

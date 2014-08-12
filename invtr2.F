@@ -81,8 +81,9 @@ c
       write(*,*) 'hdnl2, ru2 cksum', cksum
 #endif
 
-      call solq12k(q2(1:n3,xstart(2):xend(2),xstart(3):xend(3)),
-     %     rhs(1:n3,xstart(2):xend(2),xstart(3):xend(3)))
+!     call solq12k(q2(1:n3,xstart(2):xend(2),xstart(3):xend(3)),
+!    %     rhs(1:n3,xstart(2):xend(2),xstart(3):xend(3)))
+      call solq12k(q2,rhs)
 
 #ifdef SERIAL_DEBUG
       cksum=0.0d0

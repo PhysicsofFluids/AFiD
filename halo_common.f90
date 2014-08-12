@@ -27,9 +27,6 @@
     ! then call MPI send/receive to exchange halo data
 
        ! *** north/south *** 
-!     tag_n = 40
-!     tag_s = 50
-
  
      tag_s = coord(1)
       if (coord(1)==dims(1)-1 .AND. periodic_y) then
@@ -71,14 +68,15 @@
      endif
 
        ! *** top/bottom ***
-!      tag_b = 10
-!      tag_t = 20
       tag_b = coord(2)
        if (coord(2)==dims(2)-1 .AND. periodic_z) then
           tag_t = 0
        else
          tag_t = coord(2) + 1
        end if
+
+      ys = 1 
+      s2 = s2 +2
 
        icount = (s1 * s2) * level
 
@@ -104,6 +102,7 @@
       in(:,:,ze+1) = in(:,:,zs)
       in(:,:,zs-1) = in(:,:,ze)
      endif
+
 #ifdef HALO_DEBUG       
           write(*,*) 'HALO COMPARISON'
 
@@ -141,14 +140,5 @@
           write(*,*) "CKSUM ZE",nrank,cksum2
           write(*,*) "CKSUM ZS-1",nrank,cksum3
           write(*,*) "CKSUM ZE+1",nrank,cksum4
-
-!         do j=ys,ye
-!           do k=xs,xe
-!             write(*,*) j,k, in(k,j,zs-1)
-!           end do
-!         end do
-      
-
-!     call MPI_BARRIER(MPI_COMM_WORLD,ierror)
 #endif       
 

@@ -1,4 +1,18 @@
-c***********************************************************************
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                                          !
+!     Name: invtrro (maybe change name)                                    !
+!     Date: July 8th 2014                                                  !
+!                                                                          !
+!     Description: Calculates the right hand side of Eq. 5 from VO96       !
+!       and then calls solrok to solve the implicit equation for           !
+!       temperature at time-step t+dt in solrok.F. At the end of           !
+!       this routine, the temperature field is updated to t+dt.            !
+!                                                                          !
+!     Uses:    rhs, hro, ruro, dens                                        !
+!     Updates: ruro, dens                                                  !
+!                                                                          !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine invtrro
       use param
       use local_arrays, only: dens,hro,ruro,rhs
@@ -8,9 +22,8 @@ c***********************************************************************
       integer :: km,kp
       real    :: alpec,dq33
       real    :: app,acc,amm
-c
-c     h term for the q3 momentum equation at i+1/2,j+1/2,k
-c
+
+
 
       alpec=al/pec
 
@@ -26,43 +39,44 @@ c
       do ic=xstart(3),xend(3)
       do jc=xstart(2),xend(2)
       do kc=2,n3m
-      km=kc-1
-      kp=kc+1
-      app=ap3ck(kc)
-      acc=ac3ck(kc)
-      amm=am3ck(kc)
 
-c   33 second derivatives of dens
-c
-               dq33= dens(kp,jc,ic)*app
-     %              +dens(kc,jc,ic)*acc
-     %              +dens(km,jc,ic)*amm
-c     
-c
-c    right hand side of the density equation
-c
-cm===========================================================
+!   Calculate second derivative of temperature in the z-direction.
+!   This is the only term calculated implicitly for temperature.
+
+               dq33= dens(kc+1,jc,ic)*ap3ck(kc)
+     %              +dens(kc  ,jc,ic)*ac3ck(kc)
+     %              +dens(kc-1,jc,ic)*am3ck(kc)
+
+
+!    Calculate right hand side of Eq. 5 (VO96)
+
             rhs(kc,jc,ic)=(ga*hro(kc,jc,ic)+ro*ruro(kc,jc,ic)
      %              +alpec*dq33)*dt
-cm===========================================================
-c
-c    updating of the non-linear terms
-c
+
+!    Store the non-linear terms for the calculation of 
+!    the next timestep
+
             ruro(kc,jc,ic)=hro(kc,jc,ic)
-      enddo
-      enddo
+
+        enddo
+       enddo
       enddo
 !$OMP END PARALLEL DO
 
 
+!  Solve equation and update temperature
+
       call solrok
 
+!  Set boundary conditions on the temperature field at top
+!  and bottom plates. This seems necessary.
 
-!      write(*,*) dens(1,:,:)
-       dens(1,xstart(2):xend(2),xstart(3):xend(3)) 
-     4    = denbs(xstart(2):xend(2),xstart(3):xend(3))
-       dens(n3,xstart(2):xend(2),xstart(3):xend(3)) 
-     4    = denbn(xstart(2):xend(2),xstart(3):xend(3))
-      
+       dens(1,xstart(2):xend(2),xstart(3):xend(3))
+     %    = denbs(xstart(2):xend(2),xstart(3):xend(3))
+
+       dens(n3,xstart(2):xend(2),xstart(3):xend(3))
+     %    = denbn(xstart(2):xend(2),xstart(3):xend(3))
+
+
       return
       end

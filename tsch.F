@@ -66,13 +66,11 @@ c
       use decomp_2d
       implicit none
       integer :: ns
+      integer :: j,k,i
 #ifdef DEBUG
       integer :: kstartp
       real :: cksum2,cksum3,mck2,mck3,cksum1,mck1,mck4,cksum4
-      integer :: j,k,i
 #endif
-      
-      real :: cksum
 c 
 cm      REAL timef !etime_,t(2)
 c
@@ -267,11 +265,11 @@ c
 
 
       ! MAKE ONLY IP HALO
-        call update_halo(q1,1,.TRUE.)
+        call update_halo(q1,1)
 
       ! MAKE ONLY JP HALO
 
-        call update_halo(q2,1,.TRUE.)
+        call update_halo(q2,1)
 
 #ifdef DEBUG        
         mck1=0.0d0
@@ -354,9 +352,21 @@ c
 #endif
         
         call phcalc
-!       call update_both_ghosts(n1,n2+1,dph,kstart,kend)
 
-        call update_halo(dph,1,.TRUE.)
+!EP this copy can be avoided by changing transpose_x_to_y_real and
+!transpose_y_to_x_real so these routines can handles arrays with
+!halo. This copy is a defacto array temporary. Using inferred size
+!arrays in the transpose calls results in 5 more of these. Time spent on
+!this copy is 0.1% for 65^3 grid.
+        do i=xstart(3),xend(3)
+          do j=xstart(2),xend(2)
+            do k=1,n3m
+              dphhalo(k,j,i) = dph(k,j,i)
+            enddo
+          enddo
+        enddo
+
+        call update_halo(dphhalo,1)
 
 #ifdef DEBUG        
         mck2=0.0d0
@@ -377,9 +387,9 @@ c
         
         call updvp                 !! SOLENOIDAL VEL FIELD
 
-        call update_halo(q1,1,.TRUE.)
-        call update_halo(q2,1,.TRUE.)
-        call update_halo(q3,1,.TRUE.)
+        call update_halo(q1,1)
+        call update_halo(q2,1)
+        call update_halo(q3,1)
 
 #ifdef DEBUG        
         mck1=0.0d0
@@ -412,7 +422,7 @@ c
         
         call prcalc                         !! PRESSURE FIELD
 
-        call update_halo(pr,1,.TRUE.)
+        call update_halo(pr,1)
 
 #ifdef DEBUG        
         if(nrank.eq.0) then
@@ -421,8 +431,6 @@ c
 #endif
         
         call invtrro
-
-        call update_halo(dens,1,.TRUE.)
 
 #ifdef DEBUG        
         mck1=0.0d0
@@ -437,6 +445,35 @@ c
      &      MPI_COMM_WORLD,ierr)
         if(nrank.eq.0) then
         write(*,*) 'denscksum= ',cksum1
+        endif
+#endif
+
+        call update_halo(dens,1)
+
+#ifdef DEBUG        
+        mck1=0.0d0
+        do i=xstart(3),xend(3)
+        do j=xstart(2),xend(2)
+        do k=2,n3m
+        mck1=mck1+abs(dens(k,j,i))
+        enddo
+        enddo
+        enddo
+        call MPI_REDUCE(mck1,cksum1,1,MDP,MPI_SUM,0,
+     &      MPI_COMM_WORLD,ierr)
+        if(nrank.eq.0) then
+        write(*,*) 'denscksum after up= ',cksum1
+        endif
+        mck1=0.0d0
+        do i=xstart(3),xend(3)
+        do j=xstart(2),xend(2)
+        mck1=mck1+abs(dens(1,j,i))
+        enddo
+        enddo
+        call MPI_REDUCE(mck1,cksum1,1,MDP,MPI_SUM,0,
+     &      MPI_COMM_WORLD,ierr)
+        if(nrank.eq.0) then
+        write(*,*) 'denscksum plat= ',cksum1
         endif
 #endif
 

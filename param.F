@@ -6,21 +6,21 @@ c***********************************************************
         integer :: m2,m3,m1
         integer :: m2m,m3m,m2mh,m1m
 c       Grid size        
-       parameter (m1=33,m2=33,m3=65)
+       parameter (m1=33,m2=65,m3=65)
         parameter (m1m=m1-1,m2m=m2-1,m3m=m3-1,m2mh=m2m/2+1)
 c==========================================================			
 c       read from input file bou.in
 c==========================================================
         integer   :: n2, n3,n1
         integer   :: nsst, nwrit, nread, ntst, ireset
-        real      :: tprint,tpin,tmax
+        real      :: walltimemax,tpin,tmax
         real      :: alx3,str3
         integer   :: istr3
         real      :: rext,rext2
         real      :: ray,pra,dt,resid,cflmax
         integer   :: inslws,inslwn
         integer   :: starea,tsta
-        real      :: dtmax,cfllim 
+        real      :: dtmin,dtmax,cfllim,vlim
         integer   :: nson,idtv
         real   :: tframe
 c=================================================
@@ -84,7 +84,7 @@ c******* 2D arrays, dynamically allocated by each process*******
         real,allocatable,dimension(:,:,:) :: q1,q2,q3
         real,allocatable,dimension(:,:,:) :: pr,dens,rhs
         real,allocatable,dimension(:,:,:) :: ru1,ru2,ru3,ruro
-        real,allocatable,dimension(:,:,:) :: dph,qcap,dq,hro
+        real,allocatable,dimension(:,:,:) :: dph,qcap,dq,hro,dphhalo
       end module local_arrays
 
 c===============================================================
@@ -96,6 +96,14 @@ c===============================================================
        real, allocatable,dimension(:) :: disste,dissth,densq3_me
        integer :: timeint_cdsp
       end module stat_arrays
+c=====================================================       
+#ifdef STATS3
+      module stat3_param
+        implicit none
+        integer :: kslab(1:9)
+        real    :: zslab(1:9)
+      end module stat3_param
+#endif
 c=====================================================       
       module stat2_param
        implicit none
@@ -131,13 +139,62 @@ c=====================================================
 c====================================================
       module fftw_params
         use param, only: m2m,m2mh,m1m
-        integer*8 fwd_plan_y, fwd_plan_z
-        integer*8 bck_plan_y, bck_plan_z
-        real     yr(m2m)
-        complex  ya(m2mh)
-        complex  zr(m1m),za(m1m)
-        integer FFTW_PATIENT, FFTW_FORWARD, FFTW_BACK
+        use iso_c_binding
+
+        type, bind(C) :: fftw_iodim
+           integer(C_INT) n, is, os
+        end type fftw_iodim
+
+        interface
+          type(C_PTR) function fftw_plan_guru_dft(rank,dims,
+     %     howmany_rank,howmany_dims,in,out,sign,flags) 
+     %     bind(C, name='fftw_plan_guru_dft')
+           import
+           integer(C_INT), value :: rank
+           type(fftw_iodim), dimension(*), intent(in) :: dims
+           integer(C_INT), value :: howmany_rank
+           type(fftw_iodim), dimension(*), intent(in) :: howmany_dims
+           complex(C_DOUBLE_COMPLEX), dimension(*), intent(out) :: in
+           complex(C_DOUBLE_COMPLEX), dimension(*), intent(out) :: out
+           integer(C_INT), value :: sign
+           integer(C_INT), value :: flags
+         end function fftw_plan_guru_dft
+
+           type(C_PTR) function fftw_plan_guru_dft_r2c(rank,dims,
+     $       howmany_rank,howmany_dims,in,out,flags) 
+     $       bind(C, name='fftw_plan_guru_dft_r2c')
+             import
+             integer(C_INT), value :: rank
+             type(fftw_iodim), dimension(*), intent(in) :: dims
+             integer(C_INT), value :: howmany_rank
+             type(fftw_iodim), dimension(*), intent(in) :: howmany_dims
+             real(C_DOUBLE), dimension(*), intent(out) :: in
+             complex(C_DOUBLE_COMPLEX), dimension(*), intent(out) :: out
+             integer(C_INT), value :: flags
+           end function fftw_plan_guru_dft_r2c
+           
+           type(C_PTR) function fftw_plan_guru_dft_c2r(rank,dims,
+     $       howmany_rank,howmany_dims,in,out,flags) 
+     $       bind(C, name='fftw_plan_guru_dft_c2r')
+             import
+             integer(C_INT), value :: rank
+             type(fftw_iodim), dimension(*), intent(in) :: dims
+             integer(C_INT), value :: howmany_rank
+             type(fftw_iodim), dimension(*), intent(in) :: howmany_dims
+             complex(C_DOUBLE_COMPLEX), dimension(*), intent(out) :: in
+             real(C_DOUBLE), dimension(*), intent(out) :: out
+             integer(C_INT), value :: flags
+           end function fftw_plan_guru_dft_c2r
+
+
+       end interface
+
+        integer FFTW_PATIENT, FFTW_FORWARD, FFTW_BACKWARD
         parameter (FFTW_PATIENT=32)   
         parameter (FFTW_FORWARD=-1)   
-        parameter (FFTW_BACK=1)   
+        parameter (FFTW_BACKWARD=1)   
+        type(C_PTR) :: fwd_guruplan_y,bwd_guruplan_y 
+        type(C_PTR) :: fwd_guruplan_z,bwd_guruplan_z
+        logical :: planned=.false.
+
       end module fftw_params

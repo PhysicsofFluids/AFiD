@@ -10,7 +10,7 @@ c***********************************************************************
       integer :: ihist
       integer :: n1om,n2om,n3o,n2o,n1o
       integer :: xs2og,xe2og,xs3og,xe3og
-      integer :: istro3,j,i,kstarto,kendo
+      integer :: istro3
       integer (kind=MPI_ADDRESS_KIND) :: extent,lb
       real :: stro3
       real :: intinfo(1:4)
@@ -123,13 +123,6 @@ c***********************************************************************
      & ,xstart(3),xend(3),3,q3)
 
       endif
-
-!RO    Set initial conditions for density
-
-       dens(1,xstart(2):xend(2),xstart(3):xend(3)) 
-     5    = denbs(xstart(2):xend(2),xstart(3):xend(3))
-       dens(n3,xstart(2):xend(2),xstart(3):xend(3)) 
-     5    = denbn(xstart(2):xend(2),xstart(3):xend(3))
 
       if (ireset.eq.1) then                                             
        ihist=0                                                          

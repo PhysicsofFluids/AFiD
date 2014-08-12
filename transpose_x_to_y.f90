@@ -104,7 +104,7 @@
     implicit none
 
     integer, intent(IN) :: n1,n2,n3
-    real(mytype), dimension(n1,n2,n3), intent(IN) :: in
+    real(mytype), dimension(1:n1,1:n2,1:n3), intent(IN) :: in
     real(mytype), dimension(*), intent(OUT) :: out
     integer, intent(IN) :: iproc
     integer, dimension(0:iproc-1), intent(IN) :: dist
@@ -181,7 +181,7 @@
     
     integer, intent(IN) :: n1,n2,n3
     real(mytype), dimension(*), intent(IN) :: in
-    real(mytype), dimension(n1,n2,n3), intent(OUT) :: out
+    real(mytype), dimension(1:n1,1:n2,1:n3), intent(OUT) :: out
     integer, intent(IN) :: iproc
     integer, dimension(0:iproc-1), intent(IN) :: dist
     TYPE(DECOMP_INFO), intent(IN) :: decomp

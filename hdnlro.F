@@ -74,14 +74,14 @@ c
 c   11 second derivatives of dens
 c
             dq31=(dens(kc,jc,ip)
-     &           -2.0*dens(kc,jc,ic)
+     &       -2.0*dens(kc,jc,ic)
      &           +dens(kc,jc,im))*udx1q
       
 c
 c   22 second derivatives of dens
 c
             dq32=(dens(kc,jp,ic)
-     &           -2.0*dens(kc,jc,ic)
+     &       -2.0*dens(kc,jc,ic)
      &           +dens(kc,jm,ic))*udx2q
 c
             hro(kc,jc,ic) = -(h31+h32+h33)+dq31+dq32

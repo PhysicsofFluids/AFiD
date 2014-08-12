@@ -5,7 +5,7 @@ c   this depends on the fractional step
 c
       subroutine prcalc
       use param
-      use local_arrays, only: pr,dph
+      use local_arrays, only: pr,dphhalo
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: kp,km,jm,jp,jc,kc,ic,ip,im
@@ -18,7 +18,7 @@ c
       be=al*beta
 !$OMP  PARALLEL DO
 !$OMP$ DEFAULT(none)
-!$OMP$ SHARED(pr,dph,be,amphk,acphk,apphk)
+!$OMP$ SHARED(pr,dphhalo,be,amphk,acphk,apphk)
 !$OMP$ SHARED(xstart,xend,n3m,kmv,kpv,dx1q,dx2q)
 !$OMP$ PRIVATE(ic,jc,kc)
 !$OMP$ PRIVATE(im,jm,km,ip,jp,kp)
@@ -35,16 +35,16 @@ c
             amm=amphk(kc)
             acc=acphk(kc)
             app=apphk(kc)
-              pr(kc,jc,ic)=pr(kc,jc,ic)+dph(kc,jc,ic)-be*(
-     %        (dph(kc,jc,ip)
-     %        -2.0*dph(kc,jc,ic)
-     %        +dph(kc,jc,im))*dx1q+
-     %        (dph(kc,jp,ic)
-     %        -2.0*dph(kc,jc,ic)
-     %        +dph(kc,jm,ic))*dx2q+
-     %        (dph(kp,jc,ic)*app
-     %        +dph(kc,jc,ic)*acc
-     %        +dph(km,jc,ic)*amm))
+              pr(kc,jc,ic)=pr(kc,jc,ic)+dphhalo(kc,jc,ic)-be*(
+     %        (dphhalo(kc,jc,ip)
+     %        -2.0*dphhalo(kc,jc,ic)
+     %        +dphhalo(kc,jc,im))*dx1q+
+     %        (dphhalo(kc,jp,ic)
+     %        -2.0*dphhalo(kc,jc,ic)
+     %        +dphhalo(kc,jm,ic))*dx2q+
+     %        (dphhalo(kp,jc,ic)*app
+     %        +dphhalo(kc,jc,ic)*acc
+     %        +dphhalo(km,jc,ic)*amm))
       enddo
       enddo
       enddo

@@ -25,22 +25,12 @@ module decomp_2d
 
   private        ! Make everything private unless declared public
 
-#ifdef DOUBLE_PREC
   integer, parameter, public :: mytype = KIND(0.0D0)
   integer, parameter, public :: real_type = MPI_DOUBLE_PRECISION
   integer, parameter, public :: complex_type = MPI_DOUBLE_COMPLEX
 #ifdef GLOBAL_ARRAYS
   integer, parameter, public :: ga_real_type = MT_F_DBL
   integer, parameter, public :: ga_complex_type = MT_F_DCPL
-#endif
-#else
-  integer, parameter, public :: mytype = KIND(0.0)
-  integer, parameter, public :: real_type = MPI_REAL
-  integer, parameter, public :: complex_type = MPI_COMPLEX
-#ifdef GLOBAL_ARRAYS
-  integer, parameter, public :: ga_real_type = MT_F_REAL
-  integer, parameter, public :: ga_complex_type = MT_F_SCPL
-#endif
 #endif
 
   integer, save, public :: mytype_bytes
@@ -344,11 +334,6 @@ contains
     zsize  = decomp_main%zsz
       
     decomp_ph=decomp_main
-
-    write(*,*) "NRANK",nrank
-    write(*,*)'xsize:',xstart,xend
-    write(*,*)'ysize:',ystart,yend
-    write(*,*)'zsize:',zstart,zend
 
 #ifdef SHM_DEBUG
     ! print out shared-memory information

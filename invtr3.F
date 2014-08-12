@@ -52,29 +52,11 @@ c
       enddo
 !$OMP END PARALLEL DO
 
-#ifdef SERIAL_DEBUG
-      cksum=0.0d0
-      do kc=1,n3m
-      do jc=1,n2m
-      do ic=1,n1m
-      cksum=cksum+rhs(kc,jc,ic)
-      end do
-      end do
-      end do
-      write(*,*) 'hdnl3, rhs cksum', cksum
-
-      do ic=1,n1m
-      cksum=0.0d0
-      do jc=1,n2m
-      do kc=1,n3m
-      cksum=cksum+ru3(kc,jc,ic)
-      end do
-      end do
-      end do
-      write(*,*) 'hdnl3, ru3 cksum', cksum
-#endif
 
       call solq3k
+
+      q3(1,:,:)=0.0d0
+      q3(n3,:,:)=0.0d0
 
       return
       end
