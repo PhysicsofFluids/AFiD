@@ -19,7 +19,6 @@ c
       integer :: n2mh
       real,allocatable,dimension(:,:,:) :: ry1,rz1
       complex,allocatable,dimension(:,:,:) :: cy1,cz1,dphc
-!JD      complex,allocatable,dimension(:,:,:) :: dphcdum,cz1dum
       logical,save:: printed=.false.
 
       integer ic,jc,kc
@@ -48,13 +47,6 @@ c
       allocate(dphc(sp%xst(1):sp%xen(1),
      &             sp%xst(2):sp%xen(2),
      &             sp%xst(3):sp%xen(3)))
-
-!JD      allocate(cz1dum(sp%zst(1):sp%zen(1),
-!JD     &             sp%zst(2):sp%zen(2),
-!JD     &             sp%zst(3):sp%zen(3)))
-!JD      allocate(dphcdum(sp%xst(1):sp%xen(1),
-!JD     &             sp%xst(2):sp%xen(2),
-!JD     &             sp%xst(3):sp%xen(3)))
 
       n2mh=n2m/2+1
 
@@ -101,7 +93,7 @@ c
         printed=.true.
         allocate(sendcnts(nproc),recvcnts(nproc))
         allocate(sendtypes(nproc),recvtypes(nproc))
-	allocate(sdispls(nproc),rdispls(nproc))
+        allocate(sdispls(nproc),rdispls(nproc))
         sdispls=0
         rdispls=0
         sendcnts=0
@@ -136,14 +128,6 @@ c
 !                   max(sp%zst(2),sp%y1st(kc)):min(sp%zen(2),sp%y1en(kc))
 !JD z-bounds are taken from the x-pencils.
 !                   sp%z2st(ic):sp%z2en(ic)
-             write(*,'(a,i4,i4)')'kc,ic=',kc,ic
-             write(*,'(a,i4,i4)')'sp%zst(1):sp%zen(1)=',sp%zst(1),sp%zen(1)
-             write(*,'(a,i4,i4)')'max(sp%zst(2),sp%y1st(kc)):min(sp%zen(2),sp%y1en(kc))=',
-     &         max(sp%zst(2),sp%y1st(kc)),min(sp%zen(2),sp%y1en(kc))
-             write(*,'(a,i4,i4)')'sp%z2st(ic):sp%z2en(ic)=',sp%z2st(ic),sp%z2en(ic)
-             write(*,'(a,i4,i4,i4,i4,i4,i4)')'cz1(:,:,:)=',sp%zst(1),sp%zen(1),sp%zst(2),sp%zen(2),sp%zst(3),sp%zen(3)
-             write(*,'(a,9i4)')'sends=',sp%zsz,(/sp%zsz(1),subsize_y,sp%z2dist(ic)/),
-     &         (/0,offset_y,sp%z2st(ic)-sp%zst(3)/)
            endif
 !JD      Recvs:
 !JD no checks on x- or z-dimension, since we transform from z- into x-pencils, so these always overlap.
@@ -165,14 +149,6 @@ c
 !                   max(sp%xst(2),sp%y2st(ic)):min(sp%xen(2),sp%y2en(ic))
 !JD z-bounds are taken from the x-pencils.
 !                   sp%xst(3):sp%xen(3)
-             write(*,'(a,i4,i4)')'kc,ic=',kc,ic
-             write(*,'(a,i4,i4)')'sp%x1st(kc):sp%x1en(kc)=',sp%x1st(kc),sp%x1en(kc)
-             write(*,'(a,i4,i4)')'max(sp%xst(2),sp%y2st(ic)):min(sp%xen(2),sp%y2en(ic))=',
-     &         max(sp%xst(2),sp%y2st(ic)),min(sp%xen(2),sp%y2en(ic))
-             write(*,'(a,i4,i4)')'sp%xst(3):sp%xen(3)=',sp%xst(3),sp%xen(3)
-             write(*,'(a,i4,i4,i4,i4,i4,i4)')'dphc(:,:,:)=',sp%xst(1),sp%xen(1),sp%xst(2),sp%xen(2),sp%xst(3),sp%xen(3)
-             write(*,'(a,9i4)')'recvs=',sp%xsz,(/sp%x1dist(kc),subsize_y,sp%xsz(3)/),
-     &         (/sp%x1st(kc)-sp%xst(1),offset_y,0/)
            endif
          enddo
          enddo
@@ -180,10 +156,6 @@ c
       call MPI_Alltoallw(cz1,sendcnts,sdispls,sendtypes,
      &  dphc,recvcnts,rdispls,recvtypes,MPI_COMM_WORLD,ierror)
       if (ierror.ne.MPI_SUCCESS)print*,'ERROR8 ',ierror
-!JD      call transpose_z_to_y(cz1,cy1,sp)
-!JD      call transpose_y_to_x(cy1,dphcdum,sp)
-!JD      ierror=count(dphc.ne.dphcdum)
-!JD      if (ierror.gt.0)print*,'NOT EQUAL1 ',ierror
 
 !RO   Solve the tridiagonal matrix with complex coefficients
 
@@ -221,11 +193,6 @@ c
       call MPI_Alltoallw(dphc,recvcnts,rdispls,recvtypes,
      &  cz1,sendcnts,sdispls,sendtypes,MPI_COMM_WORLD,ierror)
              if (ierror.ne.MPI_SUCCESS)print*,'ERROR9 ',ierror
-
-!JD      call transpose_x_to_y(dphc,cy1,sp)
-!JD      call transpose_y_to_z(cy1,cz1dum,sp)
-!JD      ierror=count(cz1.ne.cz1dum)
-!JD      if (ierror.gt.0)print*,'NOT EQUAL2 ',ierror
 
 !RO   Inverse shitty FFT 1
 
