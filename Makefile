@@ -25,7 +25,6 @@ FC += -fopenmp
 #FC = mpif90 -O0 -cpp -Wextra -fdefault-real-8 -fbounds-check -fdefault-double-8 -fbacktrace
 #FC = mpif90 -O0 -Wall -Wsurprising -Waliasing -Wunused-parameter -fbounds-check -fcheck-array-temporaries -fbacktrace -fdefault-real-8 -fdefault-double-8
 
-FC += -DDOUBLE_PREC
 #FC += -axAVX -xAVX
 #FC += -DSERIAL_DEBUG -DDEBUG
 #FC += -DHALO_DEBUG
