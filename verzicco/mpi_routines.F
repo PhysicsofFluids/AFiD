@@ -66,7 +66,7 @@ c=================================================
       allocate(q3(1:n3,xstart(2)-1:xend(2)+1,xstart(3)-1:xend(3)+1))
       allocate(pr(1:n3,xstart(2)-1:xend(2)+1,xstart(3)-1:xend(3)+1))
       allocate(dens(1:n3,xstart(2)-1:xend(2)+1,xstart(3)-1:xend(3)+1))
-      allocate(dphhalo(1:n3,xstart(2)-1:xend(2)+1,
+      allocate(dphhalo(1:n3m,xstart(2)-1:xend(2)+1,
      & xstart(3)-1:xend(3)+1))
 
       !-----------------------------------------------
