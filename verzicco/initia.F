@@ -16,7 +16,6 @@ cm=================================
       do j=xstart(2),xend(2)
       do k=1,n3
       pr(k,j,i)=0.d0
-      dph(k,j,i)=0.d0
       rhs(k,j,i)=0.d0
       ru1(k,j,i)=0.d0
       ru2(k,j,i)=0.d0
@@ -26,6 +25,8 @@ cm=================================
       enddo
       enddo
 !$OMP END PARALLEL DO
+
+      dph=0.d0
       
 !$OMP PARALLEL DO
 !$OMP$ DEFAULT(none)

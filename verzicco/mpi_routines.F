@@ -78,7 +78,7 @@ c=================================================
 !     call alloc_x(ru3,ph,.TRUE.)
 !     call alloc_x(ruro,ph,.TRUE.)
       allocate(rhs(1:n3,xstart(2):xend(2),xstart(3):xend(3)))
-      allocate(dph(1:n3,xstart(2):xend(2),xstart(3):xend(3)))
+      allocate(dph(1:n3m,xstart(2):xend(2),xstart(3):xend(3)))
       allocate(dq(1:n3,xstart(2):xend(2),xstart(3):xend(3)))
       allocate(qcap(1:n3,xstart(2):xend(2),xstart(3):xend(3)))
       allocate(ru1(1:n3,xstart(2):xend(2),xstart(3):xend(3)))
