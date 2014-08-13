@@ -105,6 +105,12 @@ module decomp_2d
      ! or for padded-alltoall
      integer :: x1count, y1count, y2count, z2count, x2count, z1count
 
+     ! buffer counts, displacements and types for MPI_Alltoallw to transform
+     ! directly between x- and z-pencils
+     ! This is only for the complex datatype
+     integer,dimension(:),allocatable::zcnts_xz,zdispls_xz,ztypes_xz
+     integer,dimension(:),allocatable::xcnts_xz,xdispls_xz,xtypes_xz
+
      ! evenly distributed data
      logical :: even
 
@@ -145,6 +151,7 @@ module decomp_2d
   public :: decomp_2d_init, decomp_2d_finalize, &
        transpose_x_to_y, transpose_y_to_z, &
        transpose_z_to_y, transpose_y_to_x, &
+       transpose_z_to_x, transpose_x_to_z, &
        decomp_info_init, decomp_info_finalize, partition, &
 #ifdef GLOBAL_ARRAYS
        get_global_array, &
@@ -191,6 +198,18 @@ module decomp_2d
      module procedure transpose_y_to_x_real
      module procedure transpose_y_to_x_complex
   end interface transpose_y_to_x
+
+  interface transpose_z_to_x
+! not available
+!     module procedure transpose_z_to_x_real
+     module procedure transpose_z_to_x_complex
+  end interface transpose_z_to_x
+
+  interface transpose_x_to_z
+! not available
+!     module procedure transpose_x_to_z_real
+     module procedure transpose_x_to_z_complex
+  end interface transpose_x_to_z
 
   interface update_halo
      module procedure update_halo_real
@@ -495,6 +514,11 @@ contains
     allocate(decomp%x1disp(0:dims(1)-1),decomp%y1disp(0:dims(1)-1), &
          decomp%y2disp(0:dims(2)-1),decomp%z2disp(0:dims(2)-1), &
          decomp%x2disp(0:dims(2)-1),decomp%z1disp(0:dims(1)-1))
+    ! allocate arrays for MPI_ALLTOALLW calls
+    allocate(decomp%xcnts_xz(nproc),decomp%zcnts_xz(nproc))
+    allocate(decomp%xtypes_xz(nproc),decomp%ztypes_xz(nproc))
+    allocate(decomp%xdispls_xz(nproc))
+    allocate(decomp%zdispls_xz(nproc))
     call prepare_buffer(decomp)
 
 
@@ -504,6 +528,7 @@ contains
     buf_size = max(decomp%xsz(1)*decomp%xsz(2)*decomp%xsz(3), &
          max(decomp%ysz(1)*decomp%ysz(2)*decomp%ysz(3), &
          decomp%zsz(1)*decomp%zsz(2)*decomp%zsz(3)) )
+
 
     ! check if additional memory is required
     ! *** TODO: consider how to share the real/complex buffers 
@@ -535,6 +560,8 @@ contains
 
     implicit none
 
+    integer :: i
+    integer :: ierror
     TYPE(DECOMP_INFO), intent(INOUT) :: decomp
 
     deallocate(decomp%x1dist,decomp%y1dist,decomp%y2dist,decomp%z2dist)
@@ -547,6 +574,18 @@ contains
     deallocate(decomp%z1cnts,decomp%x2cnts)
     deallocate(decomp%x1disp,decomp%y1disp,decomp%y2disp,decomp%z2disp)
     deallocate(decomp%z1disp,decomp%x2disp)
+    do i=1,nproc
+      if (decomp%ztypes_xz(i).ne.MPI_DATATYPE_NULL) then
+        call MPI_Type_free(decomp%ztypes_xz(i),ierror)
+      endif
+      if (decomp%xtypes_xz(i).ne.MPI_DATATYPE_NULL) then
+        call MPI_Type_free(decomp%xtypes_xz(i),ierror)
+      endif
+    enddo    
+    deallocate(decomp%xcnts_xz,decomp%zcnts_xz)
+    deallocate(decomp%xtypes_xz,decomp%ztypes_xz)
+    deallocate(decomp%xdispls_xz)
+    deallocate(decomp%zdispls_xz)
 
     return
   end subroutine decomp_info_finalize
@@ -693,7 +732,10 @@ contains
     
     TYPE(DECOMP_INFO), intent(INOUT) :: decomp
 
-    integer :: i
+    integer :: i, k
+    integer :: rank_x, rank_z
+    integer :: subsize_y, offset_y
+    integer :: ierror
 
     ! MPI_ALLTOALLV buffer information
 
@@ -746,12 +788,62 @@ contains
     decomp%y2count = decomp%y2dist(dims(2)-1) * &
          decomp%z2dist(dims(2)-1) * decomp%zsz(1)
     decomp%z2count = decomp%y2count
-    ! for X <=> Z transposes, check this
-    decomp%x2count = decomp%x2dist(dims(2)-1) * &
-         decomp%z1dist(dims(1)-1) * decomp%xsz(2)
-    decomp%z1count = decomp%x2count
-!   decomp%x2count = decomp%z2count
-    
+
+    ! Information for MPI_Alltoallw for complex X <=> Z transposes
+    decomp%xdispls_xz(:)=0
+    decomp%zdispls_xz(:)=0
+    decomp%xcnts_xz(:)=0
+    decomp%zcnts_xz(:)=0
+    decomp%xtypes_xz(:)=MPI_DATATYPE_NULL
+    decomp%ztypes_xz(:)=MPI_DATATYPE_NULL
+    do k=0,dims(1)-1
+    do i=0,dims(2)-1
+! Actually, rank_x and rank_z are the same..
+           call MPI_Cart_rank(DECOMP_2D_COMM_CART_X,(/k,i/),rank_x,ierror)
+! this call fails, since DECOMP_2D_COMM_CART_Z is not yet created
+!           call MPI_Cart_rank(DECOMP_2D_COMM_CART_Z,(/k,i/),rank_z,ierror)
+           rank_z=rank_x
+!JD no checks on x- or z-dimension, since we transform from z- into x-pencils, so these always overlap.
+           if (decomp%zst(2).le.decomp%y1en(k) .and. &
+               decomp%zen(2).ge.decomp%y1st(k)) then
+             decomp%zcnts_xz(rank_z+1)=1
+             subsize_y=min(decomp%zen(2),decomp%y1en(k))-max(decomp%zst(2),decomp%y1st(k))+1
+             offset_y =max(decomp%zst(2),decomp%y1st(k))-decomp%zst(2)
+             call MPI_Type_create_subarray(3,decomp%zsz, &
+               (/decomp%zsz(1),subsize_y,decomp%z2dist(i)/), &
+               (/0,offset_y,decomp%z2st(i)-decomp%zst(3)/), &
+               MPI_ORDER_FORTRAN,complex_type,decomp%ztypes_xz(rank_z+1),ierror)
+             call MPI_Type_commit(decomp%ztypes_xz(rank_z+1),ierror)
+!JD send to process with x-pencil defined by (k,i)
+!JD x-bounds are taken from the z-pencils
+!             send: decomp%zst(1):decomp%zen(1)
+!JD y-bounds are the overlapping region of both pencils.
+!                   max(decomp%zst(2),decomp%y1st(k)):min(decomp%zen(2),decomp%y1en(k))
+!JD z-bounds are taken from the x-pencils.
+!                   decomp%z2st(i):decomp%z2en(i)
+           endif
+!JD no checks on x- or z-dimension, since we transform from z- into x-pencils, so these always overlap.
+           if (decomp%xst(2).le.decomp%y2en(i) .and. &
+               decomp%xen(2).ge.decomp%y2st(i)) then
+             decomp%xcnts_xz(rank_x+1)=1
+             subsize_y=min(decomp%xen(2),decomp%y2en(i))-max(decomp%xst(2),decomp%y2st(i))+1
+             offset_y =max(decomp%xst(2),decomp%y2st(i))-decomp%xst(2)
+             call MPI_Type_create_subarray(3,decomp%xsz, &
+               (/decomp%x1dist(k),subsize_y,decomp%xsz(3)/), &
+               (/decomp%x1st(k)-decomp%xst(1),offset_y,0/), &
+               MPI_ORDER_FORTRAN,complex_type,decomp%xtypes_xz(rank_x+1),ierror)
+             call MPI_Type_commit(decomp%xtypes_xz(rank_x+1),ierror)
+!JD recv from process with z-pencil defined by (k,i)
+!JD x-bounds are taken from the z-pencils
+!             send: decomp%x1st(k):decomp%x1en(k)
+!JD y-bounds are the overlapping region of both pencils.
+!                   max(decomp%xst(2),decomp%y2st(i)):min(decomp%xen(2),decomp%y2en(i))
+!JD z-bounds are taken from the x-pencils.
+!                   decomp%xst(3):decomp%xen(3)
+           endif
+         enddo
+         enddo
+
     return
   end subroutine prepare_buffer  
 
@@ -891,6 +983,8 @@ contains
 #include "transpose_y_to_z.f90"
 #include "transpose_z_to_y.f90"
 #include "transpose_y_to_x.f90"
+#include "transpose_x_to_z.f90"
+#include "transpose_z_to_x.f90"
 
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

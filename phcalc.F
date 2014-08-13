@@ -20,16 +20,11 @@ c
       integer :: n2mh
       real,allocatable,dimension(:,:,:) :: ry1,rz1
       complex,allocatable,dimension(:,:,:) :: cy1,cz1,dphc
-      logical,save:: printed=.false.
 
       type(fftw_iodim),dimension(1) :: iodim
       type(fftw_iodim),dimension(2) :: iodim_howmany
 
       integer,dimension(2)::dims,dummy_periods,dummy_coords
-      integer,dimension(:),allocatable,save::sendcnts,sdispls,sendtypes
-      integer,dimension(:),allocatable,save::recvcnts,rdispls,recvtypes
-      integer ierror,rank_x,rank_z,subsize_y,offset_y
-
 
 !RO   Stuff for unoptimized FFTW
 
@@ -119,73 +114,7 @@ c
 !EP   Normalize. FFT does not do this
       cz1 = cz1 / (n1m*n2m)
 
-      if (.not.printed)then
-        printed=.true.
-        allocate(sendcnts(nproc),recvcnts(nproc))
-        allocate(sendtypes(nproc),recvtypes(nproc))
-        allocate(sdispls(nproc),rdispls(nproc))
-        sdispls=0
-        rdispls=0
-        sendcnts=0
-        recvcnts=0
-        sendtypes=MPI_INTEGER
-        recvtypes=MPI_INTEGER
-        call MPI_CART_GET(DECOMP_2D_COMM_CART_X, 2, 
-     &    dims, dummy_periods, dummy_coords, ierror)
-             if (ierror.ne.MPI_SUCCESS)print*,'ERROR1 ',ierror
-        do k=0,dims(1)-1
-        do i=0,dims(2)-1
-           call MPI_Cart_rank(DECOMP_2D_COMM_CART_X,(/k,i/),rank_x,ierror)
-             if (ierror.ne.MPI_SUCCESS)print*,'ERROR2 ',ierror
-           call MPI_Cart_rank(DECOMP_2D_COMM_CART_Z,(/k,i/),rank_z,ierror)
-             if (ierror.ne.MPI_SUCCESS)print*,'ERROR3 ',ierror
-!JD no checks on x- or z-dimension, since we transform from z- into x-pencils, so these always overlap.
-           if (sp%zst(2).le.sp%y1en(k) .and. 
-     &          sp%zen(2).ge.sp%y1st(k)) then
-             sendcnts(rank_z+1)=1
-             subsize_y=min(sp%zen(2),sp%y1en(k))-max(sp%zst(2),sp%y1st(k))+1
-             offset_y =max(sp%zst(2),sp%y1st(k))-sp%zst(2)
-             call MPI_Type_create_subarray(3,sp%zsz,(/sp%zsz(1),subsize_y,sp%z2dist(i)/),
-     &         (/0,offset_y,sp%z2st(i)-sp%zst(3)/),MPI_ORDER_FORTRAN,complex_type,
-     &         sendtypes(rank_z+1),ierror)
-             if (ierror.ne.MPI_SUCCESS)print*,'ERROR4 ',ierror
-             call MPI_Type_commit(sendtypes(rank_z+1),ierror)
-             if (ierror.ne.MPI_SUCCESS)print*,'ERROR5 ',ierror
-!JD send to process with x-pencil defined by (k,i)
-!JD x-bounds are taken from the z-pencils
-!             send: sp%zst(1):sp%zen(1)
-!JD y-bounds are the overlapping region of both pencils.
-!                   max(sp%zst(2),sp%y1st(k)):min(sp%zen(2),sp%y1en(k))
-!JD z-bounds are taken from the x-pencils.
-!                   sp%z2st(i):sp%z2en(i)
-           endif
-!JD      Recvs:
-!JD no checks on x- or z-dimension, since we transform from z- into x-pencils, so these always overlap.
-           if (sp%xst(2).le.sp%y2en(i) .and. 
-     &          sp%xen(2).ge.sp%y2st(i)) then
-             recvcnts(rank_x+1)=1
-             subsize_y=min(sp%xen(2),sp%y2en(i))-max(sp%xst(2),sp%y2st(i))+1
-             offset_y =max(sp%xst(2),sp%y2st(i))-sp%xst(2)
-             call MPI_Type_create_subarray(3,sp%xsz,(/sp%x1dist(k),subsize_y,sp%xsz(3)/),
-     &         (/sp%x1st(k)-sp%xst(1),offset_y,0/),MPI_ORDER_FORTRAN,complex_type,
-     &         recvtypes(rank_x+1),ierror)
-             if (ierror.ne.MPI_SUCCESS)print*,'ERROR6 ',ierror
-             call MPI_Type_commit(recvtypes(rank_x+1),ierror)
-             if (ierror.ne.MPI_SUCCESS)print*,'ERROR7 ',ierror
-!JD recv from process with z-pencil defined by (k,i)
-!JD x-bounds are taken from the z-pencils
-!             send: sp%x1st(k):sp%x1en(k)
-!JD y-bounds are the overlapping region of both pencils.
-!                   max(sp%xst(2),sp%y2st(i)):min(sp%xen(2),sp%y2en(i))
-!JD z-bounds are taken from the x-pencils.
-!                   sp%xst(3):sp%xen(3)
-           endif
-         enddo
-         enddo
-      endif
-      call MPI_Alltoallw(cz1,sendcnts,sdispls,sendtypes,
-     &  dphc,recvcnts,rdispls,recvtypes,MPI_COMM_WORLD,ierror)
-      if (ierror.ne.MPI_SUCCESS)print*,'ERROR8 ',ierror
+      call transpose_z_to_x(cz1,dphc,sp)
 
 !RO   Solve the tridiagonal matrix with complex coefficients
 
@@ -220,9 +149,7 @@ c
       enddo
 !$OMP END PARALLEL DO
 
-      call MPI_Alltoallw(dphc,recvcnts,rdispls,recvtypes,
-     &  cz1,sendcnts,sdispls,sendtypes,MPI_COMM_WORLD,ierror)
-             if (ierror.ne.MPI_SUCCESS)print*,'ERROR9 ',ierror
+      call transpose_x_to_z(dphc,cz1,sp)
 
       call dfftw_execute_dft(bwd_guruplan_z,cz1,cz1)
 
