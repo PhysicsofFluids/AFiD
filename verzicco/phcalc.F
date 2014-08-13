@@ -45,7 +45,6 @@ c
 
       n2mh=n2m/2+1
 
-
 !EP   Here array temporaries are created, this should be avoided
 !     call transpose_x_to_y(dph(ph%xst(1):ph%xen(1),
 !    & ph%xst(2):ph%xen(2),
@@ -113,8 +112,7 @@ c
 !EP   Normalize. FFT does not do this
       cz1 = cz1 / (n1m*n2m)
 
-      call transpose_z_to_y(cz1,cy1,sp)
-      call transpose_y_to_x(cy1,dphc,sp)
+      call transpose_z_to_x(cz1,dphc,sp)
 
 !RO   Solve the tridiagonal matrix with complex coefficients
 
@@ -149,10 +147,7 @@ c
       enddo
 !$OMP END PARALLEL DO
 
-
-      call transpose_x_to_y(dphc,cy1,sp)
-
-      call transpose_y_to_z(cy1,cz1,sp)
+      call transpose_x_to_z(dphc,cz1,sp)
 
       call dfftw_execute_dft(bwd_guruplan_z,cz1,cz1)
 
