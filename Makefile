@@ -9,8 +9,8 @@
 #FC += -WF,-DMPI -WF,-DFREESLIP
 #FC = h5pfc -r8 -ip -ipo -O3 -fpp
 #FC = h5pfc -r8 -ip -ipo -O0 -fpp
-FC = h5pfc -r8 -ip -ipo -O3 -fpp -g -traceback -fpe0
-# FC = h5pfc -r8 -O0 -fpp -g -traceback -fpe0 -warn all -debug all -check all
+#FC = h5pfc -r8 -ip -ipo -O3 -fpp -g -traceback -fpe0
+ FC = h5pfc -r8 -O0 -fpp -g -traceback -fpe0 -warn all -debug all -check all
 FC += -fopenmp
 
 #FC += -openmp
