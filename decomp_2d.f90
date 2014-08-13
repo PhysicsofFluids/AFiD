@@ -701,23 +701,12 @@ contains
 
     integer, intent(IN) :: nx, ny, nz
     TYPE(DECOMP_INFO), intent(INOUT) :: decomp
-    integer, allocatable, dimension(:) :: st,en
 
-!JD    allocate(st(0:dims(1)-1))
-!JD    allocate(en(0:dims(1)-1))
     call distribute(nx,dims(1),decomp%x1st,decomp%x1en,decomp%x1dist)
     call distribute(ny,dims(1),decomp%y1st,decomp%y1en,decomp%y1dist)
-!EP X to Z
-    call distribute(nz,dims(1),decomp%z1st,decomp%z1en,decomp%z1dist)
-!JD    deallocate(st,en)
 
-!JD    allocate(st(0:dims(2)-1))
-!JD    allocate(en(0:dims(2)-1))
     call distribute(ny,dims(2),decomp%y2st,decomp%y2en,decomp%y2dist)
     call distribute(nz,dims(2),decomp%z2st,decomp%z2en,decomp%z2dist)
-!EP X to Z
-    call distribute(nx,dims(2),decomp%x2st,decomp%x2en,decomp%x2dist)
-!JD    deallocate(st,en)
 
 
     return

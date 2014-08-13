@@ -24,8 +24,6 @@ c
       type(fftw_iodim),dimension(1) :: iodim
       type(fftw_iodim),dimension(2) :: iodim_howmany
 
-      integer,dimension(2)::dims,dummy_periods,dummy_coords
-
 !RO   Stuff for unoptimized FFTW
 
 
