@@ -35,7 +35,7 @@
       filnam='slab'//charm//'q3_'
       call dump2dslab(q3cc,filnam)
       filnam='slab'//charm//'dens_'
-      call dump2dslab(dens,filnam)
+      call dump2dslab(denscc,filnam)
       enddo
 
 #endif

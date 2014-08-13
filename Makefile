@@ -9,8 +9,8 @@
 #FC += -WF,-DMPI -WF,-DFREESLIP
 #FC = h5pfc -r8 -ip -ipo -O3 -fpp
 #FC = h5pfc -r8 -ip -ipo -O0 -fpp
-#FC = h5pfc -r8 -ip -ipo -O3 -fpp -g -traceback -fpe0
- FC = h5pfc -r8 -O0 -fpp -g -traceback -fpe0 -warn all -debug all -check all
+FC = h5pfc -r8 -ip -ipo -O3 -fpp -g -traceback -fpe0
+# FC = h5pfc -r8 -O0 -fpp -g -traceback -fpe0 -warn all -debug all -check all
 FC += -fopenmp
 
 #FC += -openmp
@@ -24,11 +24,7 @@ FC += -fopenmp
 #FC = mpif90 -O3 -cpp -fdefault-real-8 -fdefault-double-8 -fbounds-check -fbacktrace -Wall -I/usr/include
 #FC = mpif90 -O0 -cpp -Wextra -fdefault-real-8 -fbounds-check -fdefault-double-8 -fbacktrace
 #FC = mpif90 -O0 -Wall -Wsurprising -Waliasing -Wunused-parameter -fbounds-check -fcheck-array-temporaries -fbacktrace -fdefault-real-8 -fdefault-double-8
-#FC += -fopenmp
-#FC = h5pfc -r8 -O2 -fpp -extend-source 132
-FC = h5pfc -r8 -O0 -fpp -g -traceback  -extend-source 132
 
-FC += -DDOUBLE_PREC
 #FC += -axAVX -xAVX
 #FC += -DSERIAL_DEBUG -DDEBUG
 #FC += -DHALO_DEBUG
