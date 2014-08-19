@@ -96,16 +96,16 @@ $(PROGRAM) : $(MODULES) $(OBJECTS)
 #  Dependencies
 #============================================================================
 
-param.o: param.F
-	$(FC) -c $(OP_COMP) param.F
+param.o: param.F90
+	$(FC) -c $(OP_COMP) param.F90
 
-decomp_2d.o: decomp_2d.f90
-	$(FC) -c $(OP_COMP) decomp_2d.f90
+decomp_2d.o: decomp_2d.F90
+	$(FC) -c $(OP_COMP) decomp_2d.F90
 
-decomp_2d_fft.o: decomp_2d_fft.f90
-	$(FC) -c $(OP_COMP) decomp_2d_fft.f90
+decomp_2d_fft.o: decomp_2d_fft.F90
+	$(FC) -c $(OP_COMP) decomp_2d_fft.F90
 
-%.o:   %.F $(MODULES)
+%.o:   %.F90 $(MODULES)
 	$(FC) -c $(OP_COMP) $< 
 
 %.o:   %.f90 $(MODULES)
