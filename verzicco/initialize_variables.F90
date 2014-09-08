@@ -1,14 +1,14 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: initia.F90                                     !
-!    CONTAINS: subroutine initia                          !
+!    FILE: initialize_variables.F90                       !
+!    CONTAINS: subroutine initialize_variables            !
 !                                                         ! 
 !    PURPOSE: Initialization routine. Sets to zero all    !
 !     variables used in the code                          !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine initia
+      subroutine initialize_variables
       use param
       use local_arrays
       use decomp_2d, only: xstart,xend
