@@ -73,9 +73,6 @@
       call indic                                                        
       call cordin
 
-!RO   Make fftw plans
-      call mkfftplans
-
       call h5open_f(hdf_error)
 #ifdef STATS
       call initstst
