@@ -1,4 +1,16 @@
-!***********************************************************************
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: invtr2.F90                                     !
+!    CONTAINS: subroutine invtr2                          !
+!                                                         ! 
+!    PURPOSE: Compute the linear terms associated to      !
+!     the velocity in the second horizontal dimension     !
+!     and call the implicit solver                        !
+!     After this routine, the velocity field in x2 has    !
+!     been updated to the new timestep                    !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine invtr2
       use param
       use local_arrays, only: q2,ru2,pr,rhs,dph
@@ -14,9 +26,6 @@
       alre=al/ren
       udx2=dx2*al
 
-!
-!     h term for the q2 momentum equation at i+1/2,j,k+1/2
-!
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
 !$OMP   SHARED(xstart,xend,n3m,q2,pr) &
@@ -81,8 +90,6 @@
       write(*,*) 'hdnl2, ru2 cksum', cksum
 #endif
 
-!     call solq12k(q2(1:n3,xstart(2):xend(2),xstart(3):xend(3)),
-!    %     rhs(1:n3,xstart(2):xend(2),xstart(3):xend(3)))
       call solq12k(q2,rhs)
 
 #ifdef SERIAL_DEBUG

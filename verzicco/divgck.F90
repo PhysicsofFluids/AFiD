@@ -1,4 +1,13 @@
-!***********************************************************************
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: divgck.F90                                     !
+!    CONTAINS: subroutine divgck                          !
+!                                                         ! 
+!    PURPOSE: Check the maximum divergence of velocity    !
+!     in the domain                                       !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine divgck(qmax)
       use param
       use local_arrays, only: q2,q3,q1

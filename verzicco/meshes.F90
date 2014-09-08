@@ -1,5 +1,13 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: meshes.F90                                     !
+!    CONTAINS: subroutine meshes                          !
+!                                                         ! 
+!    PURPOSE: Compute the metric terms for homogeneous    !
+!     directions                                          !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!***********************************************************************
       subroutine meshes
       use param
       implicit none

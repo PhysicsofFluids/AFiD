@@ -1,8 +1,13 @@
-!
-!     this subroutine calculates the solenoidal vel field.
-!       q(n+1)=qhat-grad(dph)*dt ,  pr=dph
-!    third order runge-kutta is used.
-!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: updvp.F90                                      !
+!    CONTAINS: subroutine updvp                           !
+!                                                         ! 
+!    PURPOSE: Update velocities with the pressure         !
+!     correction to enforce incompresibility              !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine updvp
       use param
       use local_arrays, only: q2,q3,dphhalo,q1

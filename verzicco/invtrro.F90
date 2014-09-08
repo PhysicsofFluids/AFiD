@@ -1,17 +1,14 @@
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!                                                                          !
-!     Name: invtrro (maybe change name)                                    !
-!     Date: July 8th 2014                                                  !
-!                                                                          !
-!     Description: Calculates the right hand side of Eq. 5 from VO96       !
-!       and then calls solrok to solve the implicit equation for           !
-!       temperature at time-step t+dt in solrok.F. At the end of           !
-!       this routine, the temperature field is updated to t+dt.            !
-!                                                                          !
-!     Uses:    rhs, hro, ruro, dens                                        !
-!     Updates: ruro, dens                                                  !
-!                                                                          !
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: invtrro.F90                                    !
+!    CONTAINS: subroutine invtrro                         !
+!                                                         ! 
+!    PURPOSE: Compute the linear terms associated to      !
+!     the temperature and calls the implicit solver.      !                                 !
+!     After this routine, the temperature field has been  ! 
+!     updated to the new timestep                         !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       subroutine invtrro
       use param

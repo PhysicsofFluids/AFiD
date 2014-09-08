@@ -1,10 +1,15 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: interp.F90                                     !
+!    CONTAINS: subroutine interp,gridnew,interptrilin     !
+!                                                         ! 
+!    PURPOSE: Trilinear interpolation to a new grid for   !
+!     continuation files. Assumes alx3=1                  !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine interp(arrold,arrnew,n1o,n2o,n3o, &
      & istro3,stro3,intvar,xs2o,xe2o,xs3o,xe3o)
-! Trilinear interpolation to new grid for MPI
-! continua.dat files.
-! assumes alx3 = 1
-!
-! E.P. van der Poel 2012
       use param
       use mpih
       use decomp_2d, only: xstart,xend

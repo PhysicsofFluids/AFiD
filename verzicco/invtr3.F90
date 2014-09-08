@@ -1,4 +1,16 @@
-!***********************************************************************
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: invtr3.F90                                     !
+!    CONTAINS: subroutine invtr3                          !
+!                                                         ! 
+!    PURPOSE: Compute the linear terms associated to      !
+!     the velocity in the vertical direction and call     !
+!     the implicit solver. After this routine, the        !
+!     vertical velocity has been updated to the new       !
+!     timestep                                            !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine invtr3
       use param
       use local_arrays, only: q3,rhs,ru3,qcap,pr

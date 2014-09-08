@@ -1,4 +1,13 @@
-!***********************************************************************
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: hdnl2.F90                                      !
+!    CONTAINS: subroutine hdnl2                           !
+!                                                         ! 
+!    PURPOSE: Compute the non-linear terms associated to  !
+!     the velocity in the second horizontal dimension.    !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine hdnl2
       use param
       use local_arrays, only: q2,q3,q1,dph
@@ -15,9 +24,7 @@
       udx2q=dx2q/ren
       udx1=dx1*0.25
       udx2=dx2*0.25
-!
-!     h term for the q2 momentum equation at i+1/2,j,k+1/2
-!
+
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
 !$OMP   SHARED(xstart,xend,q1,q2,q3,dx1,dx2) &

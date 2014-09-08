@@ -1,5 +1,13 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: hdnl3.F90                                      !
+!    CONTAINS: subroutine hdnl3                           !
+!                                                         ! 
+!    PURPOSE: Compute the non-linear terms associated to  !
+!     the velocity in the vertical dimension (x3)         !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!***********************************************************************
       subroutine hdnl3
       use param
       use local_arrays, only: q1,q2,q3,dens,qcap

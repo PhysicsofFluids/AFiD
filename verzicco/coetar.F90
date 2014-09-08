@@ -1,12 +1,13 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: coetar.F90                                     !
+!    CONTAINS: subroutine coetar                          !
+!                                                         ! 
+!    PURPOSE: Initialization routine. Calculate metrics   !
+!     for first and second derivatives                    ! 
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!************************************************************************
-!                                                                       *
-! ****************************** subrout coetar  ********************** *
-!                                                                       *
-!    this subroutine calculates the coefficients for the                *
-!    integration in the radial direction with non-uniform coor. trasf.  *
-!                                                                       *
-!************************************************************************
       subroutine coetar
       use param
       implicit none
@@ -74,7 +75,6 @@
       am3sk(kc)=a33m
       ap3sk(kc)=0.d0
       ac3sk(kc)=-(a33m+inslwn*a33p*2.d0)
-!     ac3ssk(kc)=-(a33m)
 !
 
       am3ssk(1)=0.d0

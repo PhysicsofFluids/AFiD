@@ -1,8 +1,13 @@
-!
-!     this subroutine calculates divg(q).
-!     q are the "fluxes"
-!      q2=v(r)     q3=v(zeta)
-!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: divg.F90                                       !
+!    CONTAINS: subroutine divg                            !
+!                                                         ! 
+!    PURPOSE: Compute the divergence of the velocity      !
+!     at every point for the pressure correction          !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine divg
       use param
       use local_arrays, only: q1,q2,q3,dph

@@ -1,9 +1,13 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: densbo.F90                                     !
+!    CONTAINS: subroutine densbo                          !
+!                                                         ! 
+!    PURPOSE: Initialization routine. Calcuates the       !
+!     temperature boundary conditions at the plates       !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!***********************************************************************
-!                                                                      *
-!                       CONDIZIONI AL CONTORNO                         *
-!                                                                      *
-!***********************************************************************
       subroutine densbo
       use param
       implicit none

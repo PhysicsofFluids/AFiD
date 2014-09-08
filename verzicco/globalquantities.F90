@@ -1,3 +1,12 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: globalquantities.F90                           !
+!    CONTAINS: subroutine globalquantities                !
+!                                                         ! 
+!    PURPOSE: Calculate maximum velocity and density,     !
+!     volume averaged Nusselt number and Reynolds number  !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       subroutine globalquantities
 !EP   This routine calculates the maximum velocities, volume averaged nusselt number and other quantities required for sanity checks
       use param

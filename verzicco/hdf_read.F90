@@ -1,3 +1,13 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: hdf_read.F90                                   !
+!    CONTAINS: subroutine hdf_read                        !
+!                                                         ! 
+!    PURPOSE: I/O routine. Read in a 3D array in          !
+!     parallel of size n1o*n2o*n3o.                       !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine hdf_read(n1o,n2o,n3o,xs2,xe2,xs3,xe3,intvar,qua)
       use mpih
       use param
@@ -18,12 +28,12 @@
       integer(HSIZE_T), dimension(3) :: data_count  
       integer(HSSIZE_T), dimension(3) :: data_offset 
 
-      integer :: comm, info,xs2,xe2,xs3,xe3
-      integer :: ndims,n1o,n2o,n3o
+      integer, intent(in) :: intvar,n1o,n2o,n3o
+      integer, intent(in) :: xs2,xe2,xs3,xe3
+      integer :: ndims
+      integer :: comm, info
+      real, dimension(1:n3o,xs2-1:xe2+1,xs3-1:xe3+1),intent(out)::qua
 
-      real, dimension(1:n3o,xs2-1:xe2+1,xs3-1:xe3+1)::qua
-
-      integer, intent(in) :: intvar
       character*70 :: filnam1
 
       comm = mpi_comm_world
