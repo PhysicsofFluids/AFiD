@@ -78,7 +78,7 @@ OBJECTS = cfl.o coetar.o cordin.o densbo.o densmc.o \
           solq12k.o \
           stst.o hdf_write.o hdf_read.o \
           solq3k.o solrok.o invtrro.o \
-          tsch.o updvp.o globalquantities.o phini.o mkfftplans.o \
+          tsch.o updvp.o globalquantities.o phini.o \
           phcalc.o balance.o interp.o divgloc.o \
  	    decomp_2d.o decomp_2d_fft.o continua.o hdf_write_serial_1d.o \
 	    hdf_read_serial_1d.o stst3.o
