@@ -1,6 +1,13 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: cordin.F90                                     !
+!    CONTAINS: subroutine cordin                          !
+!                                                         ! 
+!    PURPOSE: Initialization routine. Calcuates the       !
+!     coordinates of points in the three dimensional grid !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!**************************************************************
-!
       subroutine cordin
       use param                                                 
       use mpih

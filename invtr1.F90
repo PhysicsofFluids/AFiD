@@ -1,3 +1,16 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: invtr1.F90                                     !
+!    CONTAINS: subroutine invtr1                          !
+!                                                         ! 
+!    PURPOSE: Compute the linear terms associated to      !
+!     the velocity in the first horizontal dimension      !
+!     and call the implicit solver.                       !
+!     After this routine, the velocity field in x1 has    !
+!     been updated to the new timestep                    !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine invtr1
       use param
       use local_arrays, only: q1,dq,ru1,rhs,pr
@@ -59,8 +72,6 @@
 !$OMP END PARALLEL DO
 
 
-!     call solq12k(q1(1:n3,xstart(2):xend(2),xstart(3):xend(3)),
-!    %     rhs(1:n3,xstart(2):xend(2),xstart(3):xend(3)))
       call solq12k(q1,rhs)
 
 

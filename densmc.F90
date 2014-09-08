@@ -1,7 +1,12 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: densmc.F90                                     !
+!    CONTAINS: subroutine densmc                          !
+!                                                         ! 
+!    PURPOSE: Compute the Nusselt number at the plates    !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!***********************************************************************
-
-!***********************************************************************
       subroutine densmc
       use param
       use local_arrays, only: dens
@@ -14,10 +19,6 @@
       real ::  anussupp,anusslow
       real :: del,deln,my_surface
   
-!
-!     COMPUTATION OF THE NUSSELT NUMBER AT THE 
-!     LOWER AND UPPER WALLS
-!
 
       anusslow = 0.d0
       my_anusslow = 0.d0

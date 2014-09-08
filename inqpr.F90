@@ -1,8 +1,13 @@
-!***********************************************************************
-!                                                                      *
-!                       INITIAL CONDITION                              *
-!                                                                      *
-!***********************************************************************
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: inqpr.F90                                      !
+!    CONTAINS: subroutine inqpr                           !
+!                                                         ! 
+!    PURPOSE: Initialization routine. Sets initial        !
+!     conditions for velocity and temperature             !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine inqpr
       use param
       use local_arrays, only: q2,q3,dens,q1
@@ -17,7 +22,6 @@
       do j=xstart(2),xend(2)
       do k=1,n3m
            yyy=zm(k) 
-!           q1(k,j,i)=0.1*yyy*(1-yyy)
            q1(k,j,i)=0.0d0
            yyy=zm(k) 
            xxx=rc(j)            
@@ -28,8 +32,6 @@
            xxx=rm(j)
            q3(k,j,i)=-yyy**2*(1.0d0-yyy)**2*cos(3.1*xxx)*eps
 
-!        q2(k,j,i)=0.0d0
-!        q3(k,j,i)=0.0d0
          enddo
         enddo
       enddo
@@ -39,7 +41,6 @@
       do k=2,n3m
              dens(k,j,i)= denbs(j,i) - (denbs(j,i) - denbn(j,i)) &
                          *zz(k)
-!             dens(k,j,i)= (i+j)*k
            enddo
           end do 
         end do

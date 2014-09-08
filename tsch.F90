@@ -1,64 +1,15 @@
-!************************************************************************
-!
-!           SUBROUTINE  TSCHEM
-!
-!   This subroutine manages the whole integration scheme.
-!   The following equations are solved:          
-!   
-!    ~~     n
-!   Q  -  Q                n         n       n-1   alp       2  ~~   n 
-!  --------- = -alp*grad (P ) + gam*H + rho*H   + ----- nabla ( Q + Q )
-!    d t                                          2 Re
-!
-!          i                           i               i
-!   where H  are the nonlinear terms, P  the pressure Q  the velocities
-!       ~~
-!   and Q  the provisional non solenoidal velocity field.
-!   The superscripts (~~, n, n-1) indicate the time step level. 
-!                        n
-!   The nonlinear terms H  are computed in the routines HDNL*, while
-!   in the routines INVTR* are computed the remaining terms, updated
-!   the non linear terms and inverted the equation to find the provisional
-!   field at the new time step.
-!       ~~
-!   The Q  velocity field is projected onto a solenoidal field by a 
-!   scalar Phi computed through the equation
-!
-!                         2            1          ~~
-!                    nabla (Phi ) =  ------ div ( Q  )
-!                                    alp dt
-!
-!   The right hand side of this equation is computed in the routine
-!   DIVG, while the equation is solved in PHCALC.
-!
-!   In the routine UPDVP the solenoidal velocity field at the new time
-!   step is then computed through
-!
-!                n+1  ~~
-!               Q   = Q  - alt*dt grad (Phi)
-!
-!   Finally in the routine PRCALC is updated the pressure field
-!
-!                n+1   n        alp dt      2
-!               P   = P + Phi - ------ nabla (Phi)
-!                                2 Re
-!
-!   When the scalar field is computed (density, concentration,
-!   temperature) the routines HDNLRO and INVTRRO are used. The same
-!   strategy at the velocity field is used, except that the scalar
-!   field does not need any correction.
-!
-!   All variables are located on a staggered grid with the velocities
-!   on the faces of the computational cell and all the scalars at the
-!   centre. This is important when terms belonging to different equations
-!   are avaluated.
-!
-!   Further details of the scheme can be found in the paper
-!   "A finite-difference scheme for three-dimensional incompressible
-!    flows in cylindrical coordinates" by R. Verzicco and P. Orlandi
-!    J. of Comp. Phys. 1996.
-!
-!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: tsch.F90                                       !
+!    CONTAINS: subroutine tschem                          !
+!                                                         ! 
+!    PURPOSE: Main time integrating routine, which calls  !
+!     other subroutines for calculating the Navier-Stokes !
+!     equations and advancing velocity and temperature in !
+!     time                                                !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine tschem
       use param
       use local_arrays
@@ -71,9 +22,8 @@
       integer :: kstartp
       real :: cksum2,cksum3,mck2,mck3,cksum1,mck1,mck4,cksum4
 #endif
+
 ! 
-!m      REAL timef !etime_,t(2)
-!
 !   TIME INTEGRATION : implicit viscous, 3rd order RK (Adams Bashfort)  
 !                                                                       
       do ns=1,nsst                                                 

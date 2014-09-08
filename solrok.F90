@@ -1,17 +1,12 @@
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!                                                                          !
-!     Name: solrok                                                         !
-!     Date: July 8th 2014                                                  !
-!                                                                          !
-!     Description: Solve the implicit Eq. 5 from VO96 by using             !
-!       Thomas' algorithm to solve the tridiagonal matrix in O(N)          !
-!       operations, and uses the solution to update the temperature        !
-!       field.                                                             !
-!                                                                          !
-!     Uses:    rhs                                                         !
-!     Updates: dens                                                        !
-!                                                                          !
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: solrok.F90                                     !
+!    CONTAINS: subroutine solrok                          !
+!                                                         ! 
+!    PURPOSE: Inverts the implicit equation for           !
+!     temperature, and updates it to time t+dt            !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       subroutine solrok
       use param

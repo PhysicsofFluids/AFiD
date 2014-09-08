@@ -1,4 +1,13 @@
-!***********************************************************************
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: hdnlro.F90                                     !
+!    CONTAINS: subroutine hdnlro                          !
+!                                                         ! 
+!    PURPOSE: Compute the non-linear terms associated to  !
+!     the temperature.                                    !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine hdnlro
       use param
       use local_arrays, only: q2,q3,dens,q1,ruro,hro
@@ -9,9 +18,6 @@
       real    :: h32,h33,udx2,udx1,h31
       real    :: udx1q,udx2q
       real    :: dq31,dq32
-!
-!     h term for the q3 momentum equation at i+1/2,j+1/2,k
-!
 
       udx1=dx1*0.25
       udx2=dx2*0.25

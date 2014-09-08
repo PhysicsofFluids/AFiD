@@ -1,3 +1,14 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: cfl.F90                                        !
+!    CONTAINS: subroutine cfl                             !
+!                                                         ! 
+!    PURPOSE: Calculate the maximum CFL condition in the  !
+!     computational domain to adjust the timestep         !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
       subroutine cfl(cflm)
       use param
       use local_arrays, only: q2,q3,q1

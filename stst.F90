@@ -1,3 +1,14 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: stst.F90                                       !
+!    CONTAINS: subroutine stst,initstst,ststwr            !
+!                                                         ! 
+!    PURPOSE: Calculates and writes out statistics for    !
+!     the flow field. All quantities are averaged in the  !
+!     two horizontal (homogeneous) directions             !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine stst
 #ifdef STATS
       use param

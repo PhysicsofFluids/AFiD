@@ -1,3 +1,13 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: indic.F90                                      !
+!    CONTAINS: subroutine indic                           !
+!                                                         ! 
+!    PURPOSE: Initialization routine. Calcuates the       !
+!     indices of the kmv/kpv arrays                       !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine indic
       use param
       implicit none

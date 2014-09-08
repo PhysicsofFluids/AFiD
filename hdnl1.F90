@@ -1,3 +1,13 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: hdnl1.F90                                      !
+!    CONTAINS: subroutine hdnl1                           !
+!                                                         ! 
+!    PURPOSE: Compute the non-linear terms associated to  !
+!     the velocity in the first horizontal dimension.     !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine hdnl1
       use param
       use local_arrays, only: q2,q3,dph,q1,dq

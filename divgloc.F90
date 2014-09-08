@@ -1,7 +1,12 @@
-!***********************************************************************
-!EP      Output the location(s) of excessive divergence
-!EP      i.e. i,j,k where dqcap(i,j,k) > resid
-!***********************************************************************
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: divgloc.F90                                    !
+!    CONTAINS: subroutine divgloc                         !
+!                                                         ! 
+!    PURPOSE: Debugging routine. Output the location(s)   !
+!     of excessive divergence.                            !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       subroutine divgloc
       use param

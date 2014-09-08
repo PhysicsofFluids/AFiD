@@ -1,3 +1,13 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: openfi.F90                                     !
+!    CONTAINS: subroutine openfi,closefi                  !
+!                                                         ! 
+!    PURPOSE: Initialization routine. Open/close all log  !
+!     files and rewind if necessary                       !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine openfi
       use param
       implicit none

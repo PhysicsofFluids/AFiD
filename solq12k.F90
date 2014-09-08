@@ -1,13 +1,16 @@
-!************************************************************************
-!   this subroutine performs the inversion of the q2 momentum equation
-!   by a factored implicit scheme, only the derivatives 11,22,33 of q2
-!   are treated implicitly
-!   in the first part the rhs is calculated
-!        direction x3
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: solq12k.F90                                    !
+!    CONTAINS: subroutine solq12k                         !
+!                                                         ! 
+!    PURPOSE: Inverts the implicit equation for velocity  !
+!     in any of the horizontal directions, and updates    !
+!     it to time t+dt                                     !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !
       subroutine solq12k(q,rhs)
       use param
-!     use local_arrays, only : rhs
       use decomp_2d, only: xstart,xend
       implicit none
       real,intent(inout) :: q(1:n3,xstart(2)-1:xend(2)+1, &
@@ -19,9 +22,6 @@
       real :: betadx,ackl_b
       real :: amkT(m3m-1),ackT(m3m),apkT(m3m-1),appk(m3-3)
 
-!  ************ compute dq2 sweeping along the x3 direction
-!               periodic
-!
       betadx=beta*al
 
       do kc=1,n3m

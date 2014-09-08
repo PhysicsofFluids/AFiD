@@ -1,3 +1,13 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: continua.F90                                   !
+!    CONTAINS: subroutine continua                        !
+!                                                         ! 
+!    PURPOSE: Write down the full flow snapshot for       !
+!     restarting the simulation at a later date           !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine continua
       use param
       use local_arrays, only: q1,q2,q3,dens

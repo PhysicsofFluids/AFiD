@@ -1,8 +1,13 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: prcalc.F90                                     !
+!    CONTAINS: subroutine prcalc                          !
+!                                                         ! 
+!    PURPOSE: Apply the pressure correction to the        !
+!     pressure                                            !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!***********************************************************************
-!   this subroutine performs the calculation of the pressure.
-!   this depends on the fractional step
-!
       subroutine prcalc
       use param
       use local_arrays, only: pr,dphhalo
@@ -10,11 +15,7 @@
       implicit none
       integer :: kp,km,jm,jp,jc,kc,ic,ip,im
       real    :: be,amm,acc,app
-!
-!    the pressure is evaluated at the center of the box.
-!
-!     p^{n+1} = p^{n} + phi^{n+1} - b * Nabla^2 phi^{n+1}
-!
+
       be=al*beta
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
@@ -49,7 +50,6 @@
       enddo
       enddo
 !$OMP END PARALLEL DO
+
       return
       end
-!
-!

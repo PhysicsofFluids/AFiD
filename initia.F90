@@ -1,3 +1,13 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: initia.F90                                     !
+!    CONTAINS: subroutine initia                          !
+!                                                         ! 
+!    PURPOSE: Initialization routine. Sets to zero all    !
+!     variables used in the code                          !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine initia
       use param
       use local_arrays

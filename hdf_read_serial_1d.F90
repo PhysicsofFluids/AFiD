@@ -1,9 +1,19 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: hdf_read_serial_1d.F90                         !
+!    CONTAINS: subroutine hdf_read_serial_1d              !
+!                                                         ! 
+!    PURPOSE: I/O routine. Read in a 1D array in          !
+!     serial.                                             !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine hdf_read_serial_1d(dsetname,filename,n,var)
       use hdf5
       implicit none
       character*30,intent(in) :: dsetname,filename
       integer, intent(in) :: n
-      real :: var(n)
+      real, intent(out) :: var(n)
       integer(HID_T) :: file_id
       integer(HID_T) :: dset
       integer :: hdf_error

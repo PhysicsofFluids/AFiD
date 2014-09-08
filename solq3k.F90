@@ -1,9 +1,14 @@
-!************************************************************************
-!   this subroutine performs the inversion of the q3 momentum equation
-!   by a factored implicit scheme, only the derivatives 11,22,33 of q3
-!   are treated implicitly
-!       direction x3
-!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: solq12k.F90                                    !
+!    CONTAINS: subroutine solq12k                         !
+!                                                         ! 
+!    PURPOSE: Inverts the implicit equation for velocity  !
+!     in any the vertical direction, and updates it to    !
+!     time t+dt                                           !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine solq3k
       use param
       use local_arrays, only : q3,rhs
@@ -17,9 +22,6 @@
       integer :: ipkv(m3)
       real :: betadx,ackl_b
 
-!m    dimension amkl(m3),apkl(m3),ackl(m3),fkl(m1,m3)
-!  ********* compute the dq3* sweeping in the x3 direction
-!
       betadx=beta*al
 
       amkl(1)=0.d0

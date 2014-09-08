@@ -1,3 +1,13 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: hdf_write.F90                                  !
+!    CONTAINS: subroutine hdf_write                       !
+!                                                         ! 
+!    PURPOSE: I/O routine. Write out a 3D array in        !
+!     parallel of size n1o*n2o*n3o.                       !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine hdf_write(filnam1,qua)
       use param
       use mpih

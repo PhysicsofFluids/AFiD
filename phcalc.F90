@@ -1,6 +1,12 @@
-!************************************************************************
-!  this subroutine perform the calculation of dph , periodic direction
-!  along x3 and x1to use the real fourier transform
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: phcalc.F90                                     !
+!    CONTAINS: subroutine phcalc                          !
+!                                                         ! 
+!    PURPOSE: Compute the pressure correction by solving  !
+!     a Poisson equation                                  !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !
       subroutine phcalc
       use, intrinsic :: iso_c_binding
@@ -44,11 +50,6 @@
      &             sp%xst(3):sp%xen(3)))
 
       n2mh=n2m/2+1
-
-!EP   Here array temporaries are created, this should be avoided
-!     call transpose_x_to_y(dph(ph%xst(1):ph%xen(1),
-!    & ph%xst(2):ph%xen(2),
-!    & ph%xst(3):ph%xen(3)),ry1,ph)
 
       call transpose_x_to_y(dph,ry1,ph)
 
@@ -155,9 +156,6 @@
 
       call dfftw_execute_dft_c2r(bwd_guruplan_y,cy1,ry1)
 
-!EP   Here array temporaries are created, this should be avoided
-!     call transpose_y_to_x(ry1,dph(:,ph%xst(2):ph%xen(2),
-!    & ph%xst(3):ph%xen(3)),ph)
       call transpose_y_to_x(ry1,dph,ph)
 
 

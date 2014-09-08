@@ -1,6 +1,14 @@
-!************************************************************************
-!  this subroutine perform the calculation of trigz for temperton fft
-!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: phini.F90                                      !
+!    CONTAINS: subroutine fftqua,phini,tridiag_matrices   !
+!                                                         ! 
+!    PURPOSE: Initialization routines. Compute the metric !
+!     terms and modified wavenumbers for the pressure     !
+!     correction                                          !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine fftqua
       use param
       integer :: n2mh,n2mp,j,i,n1mh,n1mp
