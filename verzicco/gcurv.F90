@@ -14,64 +14,14 @@
       real    :: cflm,dmax
       real    :: ti(2), tin(3)
       real :: ts
-!
-!     Code for the computation of three-dimensional incompressible flows    
-!     in cylindrical polar coordinates.                                             
-!                                                                       
-!     This code solves flow fields bounded in the x3 (axial) and 
-!     x2 (radial) directions. All boundaries can be no-slip or free-slip
-!     by setting the appropriate indices in the input file.
-!     The geometry  (a cylindrical can) is given in the subroutine cordi.
-!     The discretization is uniform in the axial (3) and azimuthal (1)
-!     directions, while can be non-uniform in the radial direction.
-!
-!     The equations for the following variables
-!                                                                       
-!      q1=v(theta)    q2=v(r)*r     q3=v(zeta)                          
-!                                                                       
-!     are discretized by finite-difference schemes.                    
-!     The introduction of the variable q2 is necessary to avoid the
-!     problem of the singularity of the equations at the axis of symmetry
-!     (r=0).
-!
-!     All spatial derivatives are discretized by central second-order
-!     accurate finite-difference schemes including the non linear terms.                                   
-!
-!     The nonlinear terms are treated explicitly, while the viscous terms
-!     are computed implicitly. This would lead to the inversion of a
-!     large banded matrix, that however is avoided by introducing
-!     a factored scheme bringing to the solution of three tridiagonal
-!     matrices for each velocity component (subroutine INVTR*).
-!                              
-!     In time a fractional-step procedure is used in the version of 
-!     Nagi Mansour introducing the pressure in the first step.                         
-!
-!     The non-linear terms and the cross derivatives of the viscous terms
-!     are discretized by explicit  Adams-Bashfort or 3rd order Runge-Kutta
-!     method (A. Wray, personal communication).                      
-!
-!     The scalar quantity Phi, which projects the provisional velocity field
-!     onto  a divergence free field, is solved by a direct method. 
-!     For the axial and azimuthal directions modified wave numbers coupled 
-!     with trigonometric expansions (FFTs) are used. The equation is then
-!     solved by simply inverting a tridiagonal matrix for the radial direction.
-!     No explicit boundary conditions are necessary for this Poisson equation.      
-!                                                                       
-!     Other details of the scheme are given in the introduction of the  
-!     subroutine TSCHEM
-!
-!
+
       ts=MPI_WTIME()
       tin(1) = MPI_WTIME()
       
-!EP   Initialize 
-      call initia
-!                                                                       
-!     grid information                                                 
-!                                                                       
-      call meshes
-      call indic                                                        
-      call cordin
+
+      call initialize_variables
+
+      call make_grid
 
       call h5open_f(hdf_error)
 #ifdef STATS
@@ -163,9 +113,6 @@
         endif
         cflm=cflm*dt
       endif
-
-!EP   Initialize metrics
-      call coetar
 
       if(nrank.eq.0) then
         tin(2) = MPI_WTIME()
