@@ -64,6 +64,7 @@
         real, dimension(1:3) :: gam,rom,alm
         real, allocatable, dimension(:,:) :: denbs,denbn
               
+        logical :: dumpslabs,statcal,balcal
       end module param
       
 !************* End of param module******************************
@@ -88,13 +89,11 @@
        integer :: timeint_cdsp
       end module stat_arrays
 !=====================================================       
-#ifdef STATS3
       module stat3_param
         implicit none
         integer :: kslab(1:9)
         real    :: zslab(1:9)
       end module stat3_param
-#endif
 !=====================================================       
       module stat2_param
        implicit none

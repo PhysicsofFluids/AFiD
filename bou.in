@@ -1,5 +1,5 @@
  N1    N2    N3   NSST(>1=RK,else AB) NWRIT NREAD 
- 33 65 65 3                0  0
+ 33 65 65 3                0  1
  NTST   WALLTIMEMAX    TPIN      TMAX     IRESET    WARNING: SET TO 0
  10     83000          1e-2      1.0      0
  ALX3D      ISTR3   STR3 
@@ -8,11 +8,11 @@
  0.5   0.5   
    RA   PRA      DT      RESID    CFLMAX
  1e+7  1.0   1e-8   1.e-2    1.2
- TSTA  STAREAD
- 0    0
+ STATON  BALANCEON  TSTA  STAREAD
+ 1        1            0    1
  inslws   inslwn 
   1          1   
  IDTV(0=dt fixed,1=var.)   DTMIN(for dt var.)  DTMAX(for dt var.)   CFLLIM(for fixed dt)  VLIM
    1                       1e-8                0.01                 1.0                   1e3
- TFRAME
- 0.02
+ TFRAME  SLABDUMP(STST3)
+ 0.02        0

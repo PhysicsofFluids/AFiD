@@ -44,9 +44,6 @@ FC += -fopenmp
 
 # GENERAL
 #FC += -DDEBUG
-FC += -DSTATS 
-FC += -DSTATS3
-FC += -DBALANCE
 #FC += -DBLSNAP
 #=======================================================================
 # Library
@@ -81,7 +78,8 @@ OBJECTS = AuxiliaryRoutines.o cfl.o densbo.o densmc.o \
           tsch.o updvp.o globalquantities.o phini.o \
           phcalc.o balance.o interp.o divgloc.o quit.o \
  	    decomp_2d.o decomp_2d_fft.o continua.o hdf_write_serial_1d.o \
-	    hdf_read_serial_1d.o stst3.o ReadInputFile.o InitializeTimeMarchScheme.o
+	    hdf_read_serial_1d.o stst3.o ReadInputFile.o InitializeTimeMarchScheme.o \
+          WriteGridInfo.o StatReadReduceWrite.o 
 #          alloc.o decomp_2d.o fft_fftw3.o halo.o halo_common.o
 
 MODULES = param.o decomp_2d.o decomp_2d_fft.o 
@@ -122,4 +120,4 @@ clean :
 	rm *__genmod*
 
 veryclean :
-	rm *.o *.mod *.out *.h5 stats/*.h5 stst3/* boutnp
+	rm *.o *.mod *.out *.h5 stats/*.h5 stst3/* boutnp *.dat

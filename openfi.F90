@@ -24,11 +24,11 @@
        open(94,file='rms_vel.out',status='unknown',position='append', &
         access='sequential')
 
-#ifdef BALANCE
 !EP   nusse3.out in balance.F
+      if (balcal) then
       open(92,file='nusse3.out',status='unknown',access='sequential', &
        position='append')
-#endif
+      end if
 
       if(ireset.eq.1) then    
       rewind(92)
@@ -43,12 +43,11 @@
 
 
       subroutine closefi
+      use param
       implicit none
       close(95)
       close(97)
       close(94)
-#ifdef BALANCE
-      close(92)
-#endif
+      if (balcal) close(92)
       return 
       end
