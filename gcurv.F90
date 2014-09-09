@@ -6,9 +6,6 @@
       use hdf5
       use decomp_2d
       use decomp_2d_fft
-#ifdef STATS
-      use stat_arrays, only: timeint_cdsp
-#endif
       implicit none
       integer :: ntstf, hdf_error, errorcode
       real    :: cflm,dmax

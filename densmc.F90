@@ -11,7 +11,7 @@
       use param
       use local_arrays, only: dens
       use mpih
-      use decomp_2d, only: nrank,xstart,xend,xsize,DECOMP_2D_COMM_CART_X
+      use decomp_2d, only: nrank,xstart,xend,DECOMP_2D_COMM_CART_X
       implicit none
       integer :: j,i
       real :: grtlow,grtupp

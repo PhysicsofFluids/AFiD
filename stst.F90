@@ -13,7 +13,7 @@
 #ifdef STATS
       use param
       use local_arrays, only: q1,q2,q3,dens
-      use decomp_2d, only: xstart,xend,nrank
+      use decomp_2d, only: xstart,xend
       use stat_arrays
       use mpih
       implicit none

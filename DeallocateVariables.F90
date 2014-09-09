@@ -11,7 +11,6 @@
       subroutine DeallocateVariables
       use param
       use local_arrays
-      use decomp_2d, only: xstart,xend
       use AuxiliaryRoutines
       implicit none
       

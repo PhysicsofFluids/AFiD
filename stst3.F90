@@ -45,7 +45,7 @@
       subroutine initstst3
 #ifdef STATS3
       use param
-      use decomp_2d, only: xstart,xend,nrank
+      use decomp_2d, only: nrank
       use stat3_param
       implicit none
       integer :: i,k,j
@@ -92,7 +92,7 @@
       USE param
       use mpih
       USE hdf5
-      use decomp_2d, only: xstart,xend,nrank,xsize
+      use decomp_2d, only: xstart,xend,nrank
       IMPLICIT none
 
       real, intent(in) :: var(xstart(2):xend(2) &

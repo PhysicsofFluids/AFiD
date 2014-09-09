@@ -5,8 +5,7 @@
 !$    use omp_lib
 
       implicit none
-      character(len=4) :: dummy
-      integer :: tfini,tfin,n,ns,nthreads
+      integer :: n,ns,nthreads
 
 !*******************************************************
 !******* Read input file bou.in by all processes********
@@ -31,29 +30,6 @@
 !$    end if
 
 !m============================================
-!m************ End of input file**************
-!m============================================
-!     if( n1>m1 ) then
-!     if(nrank.eq.0) then
-!         write(6,*) 'Error: n1 must be = m1'
-!      call MPI_Abort(MPI_COMM_WORLD, 1, ierr )
-!     endif
-!     endif
-!     
-!     if( n2>m2 ) then
-!     if(nrank.eq.0) then
-!         write(6,*) 'Error: n2 must be = m2'
-!      call MPI_Abort(MPI_COMM_WORLD, 1, ierr )
-!     endif
-!     endif
-!     
-!     if( n3>m3 ) then
-!     if(nrank.eq.0) then
-!         write(6,*) 'Error: n3 must be = m3'
-!      call MPI_Abort(MPI_COMM_WORLD, 1, ierr )
-!     endif
-!     endif
-!m============================================
 !
 !     DEFINITIONS FOR THE NATURAL CONVECTION
 !
@@ -66,8 +42,6 @@
 !m==========================================
 !
       pi=2.d0*dasin(1.d0)                          
-      tfini=dt*ntst                                                     
-      tfin=tfini                                                        
 !m======================                                                          
 !
 !m====================================================
