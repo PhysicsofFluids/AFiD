@@ -11,21 +11,14 @@
       subroutine InitializeVariables
       use param
       use local_arrays
+      use stat_arrays
+      use decomp_2d
       use AuxiliaryRoutines
       implicit none
       
-      pr=0.d0
-      rhs=0.d0
-      ru1=0.d0
-      ru2=0.d0
-      ru3=0.d0
-      ruro=0.d0
-      dph=0.d0
-      dphhalo=0.d0
-      q1=0.d0
-      q2=0.d0
-      q3=0.d0
-      dens=1.d0
+!-------------------------------------------------
+! Arrays for grid making
+!-------------------------------------------------
 
       call AllocateReal1DArray(tc,1,n1)
       call AllocateReal1DArray(tm,1,n1)
@@ -66,8 +59,59 @@
       call AllocateInt1dArray(kmv,1,n3)
       call AllocateInt1dArray(kpv,1,n3)
 
+!-------------------------------------------------
+! Arrays for density boundary conditions    
+!-------------------------------------------------
+
       call AllocateReal2DArray(denbs,1,n2,1,n1)
       call AllocateReal2DArray(denbn,1,n2,1,n1)
+
+!-------------------------------------------------
+! Arrays for statistics    
+!-------------------------------------------------
+
+#ifdef STATS
+      call AllocateReal1DArray(q1_me,1,n3m)
+      call AllocateReal1DArray(q2_me,1,n3m)
+      call AllocateReal1DArray(q3_me,1,n3m)
+
+      call AllocateReal1DArray(q1_rms,1,n3m)
+      call AllocateReal1DArray(q2_rms,1,n3m)
+      call AllocateReal1DArray(q3_rms,1,n3m)
+
+      call AllocateReal1DArray(dens_me,1,n3m)
+      call AllocateReal1DArray(dens_rms,1,n3m)
+      call AllocateReal1DArray(densq3_me,1,n3m)
+
+#ifdef BALANCE
+      call AllocateReal1DArray(disste,1,n3m)
+      call AllocateReal1DArray(dissth,1,n3m)
+#endif
+
+#endif
+
+      !-------------------------------------------------
+      ! Arrays with ghost cells
+      !-------------------------------------------------
+      call AllocateReal3DArray(q1,1,n3,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
+      call AllocateReal3DArray(q2,1,n3,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
+      call AllocateReal3DArray(q3,1,n3,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
+      call AllocateReal3DArray(pr,1,n3,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
+      call AllocateReal3DArray(dens,1,n3,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
+      call AllocateReal3DArray(dphhalo,1,n3m,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
+
+      !-----------------------------------------------
+      ! Arrays without ghost cells
+      !-----------------------------------------------
+      call AllocateReal3DArray(rhs,1,n3,xstart(2),xend(2),xstart(3),xend(3))
+      call AllocateReal3DArray(dph,1,n3m,xstart(2),xend(2),xstart(3),xend(3))
+      call AllocateReal3DArray(dq,1,n3,xstart(2),xend(2),xstart(3),xend(3))
+      call AllocateReal3DArray(qcap,1,n3,xstart(2),xend(2),xstart(3),xend(3))
+      call AllocateReal3DArray(ru1,1,n3,xstart(2),xend(2),xstart(3),xend(3))
+      call AllocateReal3DArray(ru2,1,n3,xstart(2),xend(2),xstart(3),xend(3))
+      call AllocateReal3DArray(ru3,1,n3,xstart(2),xend(2),xstart(3),xend(3))
+      call AllocateReal3DArray(hro,1,n3,xstart(2),xend(2),xstart(3),xend(3))
+      call AllocateReal3DArray(ruro,1,n3,xstart(2),xend(2),xstart(3),xend(3))
 
       return 
       end   

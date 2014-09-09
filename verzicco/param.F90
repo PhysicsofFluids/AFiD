@@ -3,11 +3,6 @@
 !***********************************************************      
       module param
         implicit none
-!       integer :: m2,m3,m1
-!       integer :: m2m,m3m,m2mh,m1m
-!       Grid size        
-!       parameter (m1=33,m2=65,m3=65)
-!        parameter (m1m=m1-1,m2m=m2-1,m3m=m3-1,m2mh=m2m/2+1)
 !==========================================================			
 !       read from input file bou.in
 !==========================================================
@@ -117,21 +112,6 @@
         integer, parameter :: master=0
         integer :: MDP = MPI_DOUBLE_PRECISION
       end module mpih
-
-      
-      module mpi_param
-        implicit none
-        integer :: istart,iend,jstart,jend, kstart,kend
-        integer :: jstartp,jendp
-        integer :: dj,dk,mydata,mydatam
-        integer :: djp
-        integer, allocatable, dimension(:) :: offsetj,offsetk
-        integer, allocatable, dimension(:) :: offsetjp
-        integer, allocatable, dimension(:) :: countj,countk
-        integer, allocatable, dimension(:) :: countjp
-        integer, allocatable, dimension(:) :: countf
-        integer(8), allocatable, dimension(:) :: offsetf 
-      end module mpi_param
 !====================================================
       module fftw_params
 !        use param, only: m2m,m2mh,m1m

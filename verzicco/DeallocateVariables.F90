@@ -11,6 +11,7 @@
       subroutine DeallocateVariables
       use param
       use local_arrays
+      use stat_arrays
       use AuxiliaryRoutines
       implicit none
       
@@ -55,6 +56,37 @@
 
       call DestroyReal2DArray(denbs)
       call DestroyReal2DArray(denbn)
+
+#ifdef STATS
+      call DestroyReal1DArray(q1_me)
+      call DestroyReal1DArray(q2_me)
+      call DestroyReal1DArray(q3_me)
+
+      call DestroyReal1DArray(q1_rms)
+      call DestroyReal1DArray(q2_rms)
+      call DestroyReal1DArray(q3_rms)
+      call DestroyReal1DArray(q3_rms)
+
+      call DestroyReal1DArray(dens_me)
+      call DestroyReal1DArray(dens_rms)
+      call DestroyReal1DArray(densq3_me)
+#endif
+
+      call DestroyReal3DArray(q1)
+      call DestroyReal3DArray(q2)
+      call DestroyReal3DArray(q3)
+      call DestroyReal3DArray(dens)
+
+      call DestroyReal3DArray(pr)
+      call DestroyReal3DArray(rhs)
+
+      call DestroyReal3DArray(dph)
+      call DestroyReal3DArray(dphhalo)
+
+      call DestroyReal3DArray(ru1)
+      call DestroyReal3DArray(ru2)
+      call DestroyReal3DArray(ru3)
+      call DestroyReal3DArray(ruro)
 
       return 
       end   
