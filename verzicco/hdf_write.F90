@@ -11,7 +11,7 @@
       subroutine hdf_write(filnam1,qua)
       use param
       use mpih
-      use decomp_2d, only: xstart,xend,nrank
+      use decomp_2d, only: xstart,xend
       use hdf5
       
       implicit none

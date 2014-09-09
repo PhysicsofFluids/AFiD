@@ -10,7 +10,7 @@
 
       subroutine hdnl1
       use param
-      use local_arrays, only: q2,q3,dph,q1,dq
+      use local_arrays, only: q2,q3,q1,dq
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: kc,kp,jpp,jmm,jc,ic,imm,ipp

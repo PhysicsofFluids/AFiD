@@ -10,7 +10,8 @@
 #FC = h5pfc -r8 -ip -ipo -O3 -fpp
 #FC = h5pfc -r8 -ip -ipo -O0 -fpp
 #FC = h5pfc -r8 -ip -ipo -O3 -fpp -g -traceback -fpe0
- FC = h5pfc -r8 -O0 -fpp -g -traceback -fpe0 -warn all -debug all -check all
+FC = mpif90 -O0 -cpp -Wextra -fdefault-real-8 -fdefault-double-8 -I/usr/include -Wall -fbounds-check
+#FC = h5pfc -r8 -O0 -fpp -g -traceback -fpe0 -warn all -debug all -check all
 FC += -fopenmp
 
 #FC += -openmp
@@ -58,7 +59,8 @@ FC += -DBALANCE
 
 #LINKS = -lfftw3 -llapack -lessl 
 
-LINKS = -lfftw3 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core 
+#LINKS = -lfftw3 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core 
+LINKS = -lfftw3 -llapack -lblas -lz -lhdf5_fortran -lhdf5
 
 #LINKS = -lfftw3 -llapack -lblas -lz -lhdf5_fortran -lhdf5
 #LINKS = -L${FFTW_LIB} -lfftw3 -L${LAPACK_LIB} -llapack -L${ESSL_LIB} -lesslbg -L${BLAS_LIB} -lblas
@@ -72,7 +74,7 @@ OBJECTS = AuxiliaryRoutines.o cfl.o densbo.o densmc.o \
           divg.o divgck.o gcurv.o hdnl1.o hdnl2.o hdnl3.o \
           hdnlro.o inirea.o InitializeVariables.o inqpr.o \
           invtr1.o invtr2.o invtr3.o openfi.o \
-          MakeGrid.o \
+          MakeGrid.o DeallocateVariables.o \
           mpi_routines.o papero.o param.o prcalc.o \
           solq12k.o stst.o hdf_write.o hdf_read.o \
           solq3k.o solrok.o invtrro.o \

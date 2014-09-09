@@ -10,7 +10,7 @@
 
       subroutine hdnlro
       use param
-      use local_arrays, only: q2,q3,dens,q1,ruro,hro
+      use local_arrays, only: q2,q3,dens,q1,hro
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: jc,kc,ic

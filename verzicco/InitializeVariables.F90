@@ -11,7 +11,6 @@
       subroutine InitializeVariables
       use param
       use local_arrays
-      use decomp_2d, only: xstart,xend
       use AuxiliaryRoutines
       implicit none
       
@@ -28,7 +27,6 @@
       q3=0.d0
       dens=1.d0
 
-      write(*,*) 'llego aca'
       call AllocateReal1DArray(tc,1,n1)
       call AllocateReal1DArray(tm,1,n1)
       call AllocateReal1DArray(ak1,1,n1)
