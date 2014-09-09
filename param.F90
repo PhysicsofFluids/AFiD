@@ -3,11 +3,11 @@
 !***********************************************************      
       module param
         implicit none
-        integer :: m2,m3,m1
-        integer :: m2m,m3m,m2mh,m1m
+!       integer :: m2,m3,m1
+!       integer :: m2m,m3m,m2mh,m1m
 !       Grid size        
-       parameter (m1=33,m2=65,m3=65)
-        parameter (m1m=m1-1,m2m=m2-1,m3m=m3-1,m2mh=m2m/2+1)
+!       parameter (m1=33,m2=65,m3=65)
+!        parameter (m1m=m1-1,m2m=m2-1,m3m=m3-1,m2mh=m2m/2+1)
 !==========================================================			
 !       read from input file bou.in
 !==========================================================
@@ -31,29 +31,25 @@
         real :: dx2,dx3,dx1
         real :: dx2q,dx3q,dx1q
 !        
-        real, dimension(1:m1) :: tc,tm
-        real, dimension(1:m2) :: rc,rm
-        real, dimension(1:m3) :: zz,zm,g3rc,g3rm
+        real, allocatable, dimension(:) :: tc,tm
+        real, allocatable, dimension(:) :: rc,rm
+        real, allocatable, dimension(:) :: zz,zm,g3rc,g3rm
 !====================================================
 !******* QUANTITIES FOR DERIVATIVES******************
-        real, dimension(1:m3) :: udx3c,udx3m
+        real, allocatable, dimension(:) :: udx3c,udx3m
 !==========================================================
 !******* Grid indices**************************************
-        integer, dimension(1:m3) :: kmc,kpc,kmv,kpv,kup,kum
+        integer, allocatable, dimension(:) :: kmc,kpc,kmv,kpv
 !===========================================================
 !******* Metric coefficients *******************************
-        real, dimension(1:m2) :: ap3j,ac3j,am3j
-
-        real, dimension(1:m3) :: ap3ck,ac3ck,am3ck
-        real, dimension(1:m3) :: ap3sk,ac3sk,am3sk
-        real, dimension(1:m3) :: ap3ssk,ac3ssk,am3ssk   
+        real, allocatable, dimension(:) :: ap3ck,ac3ck,am3ck
+        real, allocatable, dimension(:) :: ap3sk,ac3sk,am3sk
+        real, allocatable, dimension(:) :: ap3ssk,ac3ssk,am3ssk   
 !============================================================
 !******* Variables for FFTW and Poisson solver****************
-        real, dimension(13) :: ifx1
-        real, dimension(3*m2/2+1) :: trigx1
-        real, dimension(1:m2) :: ak2,ap
-        real, dimension(1:m1) :: ak1,ao
-        real, dimension(1:m3) :: amphk,acphk,apphk
+        real, allocatable, dimension(:) :: ak2,ap
+        real, allocatable, dimension(:) :: ak1,ao
+        real, allocatable, dimension(:) :: amphk,acphk,apphk
         
 !===========================================================
 !******* Other variables ***********************************
@@ -71,7 +67,7 @@
         integer, parameter:: ndv=3
         real, dimension(1:ndv) :: vmax
         real, dimension(1:3) :: gam,rom,alm
-        real, dimension(1:m2,1:m1) :: denbs,denbn
+        real, allocatable, dimension(:,:) :: denbs,denbn
               
       end module param
       
@@ -138,7 +134,7 @@
       end module mpi_param
 !====================================================
       module fftw_params
-        use param, only: m2m,m2mh,m1m
+!        use param, only: m2m,m2mh,m1m
         use iso_c_binding
 
         type, bind(C) :: fftw_iodim

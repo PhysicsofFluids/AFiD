@@ -19,10 +19,10 @@
       implicit none
       integer :: i,j,k,info
       complex :: acphT_b
-      complex :: appph(m3m-2)
-      complex :: amphT(m3m-1), apphT(m3m-1)
-      complex, dimension(m3m) :: acphT,drhs,apph,amph
-      integer :: phpiv(m3m)
+      complex :: appph(n3m-2)
+      complex :: amphT(n3m-1), apphT(n3m-1)
+      complex, dimension(n3m) :: acphT,drhs,apph,amph
+      integer :: phpiv(n3m)
       integer :: n2mh
       real,allocatable,dimension(:,:,:) :: ry1,rz1
       complex,allocatable,dimension(:,:,:) :: cy1,cz1,dphc
@@ -66,12 +66,12 @@
         fwd_guruplan_z=fftw_plan_guru_dft(1,iodim,                      &
      &    2,iodim_howmany,cz1,cz1,                                      &
      &    FFTW_FORWARD,FFTW_PATIENT)
-        iodim(1)%n=m1m
+        iodim(1)%n=n1m
         bwd_guruplan_z=fftw_plan_guru_dft(1,iodim,                      &
      &    2,iodim_howmany,cz1,cz1,                                      &
      &    FFTW_BACKWARD,FFTW_PATIENT)
 
-        iodim(1)%n=m2m
+        iodim(1)%n=n2m
         iodim(1)%is=ph%yen(1)-ph%yst(1)+1
         iodim(1)%os=sp%yen(1)-sp%yst(1)+1
         iodim_howmany(1)%n=(ph%yen(1)-ph%yst(1)+1)
@@ -86,7 +86,7 @@
      &    2,iodim_howmany,ry1,cy1,                                      &
      &    FFTW_PATIENT)
 
-        iodim(1)%n=m2m
+        iodim(1)%n=n2m
         iodim(1)%is=sp%yen(1)-sp%yst(1)+1
         iodim(1)%os=ph%yen(1)-ph%yst(1)+1
         iodim_howmany(1)%n=(sp%yen(1)-sp%yst(1)+1)

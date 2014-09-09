@@ -1,16 +1,17 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: make_grid.F90                                  !
-!    CONTAINS: subroutine make_grid                       !
+!    FILE: MakeGrid.F90                                   !
+!    CONTAINS: subroutine MakeGrid                        !
 !                                                         ! 
 !    PURPOSE: Compute the indices, grid, grid metrics     !
 !     and coefficients for differentiation                !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine make_grid
+      subroutine MakeGrid
       use param
       use decomp_2d, only: nrank
+      use AuxiliaryRoutines
       implicit none
 
       real :: x1,x2,x3
@@ -18,10 +19,11 @@
       real :: delet, etain, tstr3
       real :: z2dp
 
-      real, dimension(m3+500) :: etaz, etazm
+      real, allocatable, dimension(:) :: etaz, etazm
 
       integer :: i, j, kc, km, kp
       integer :: n3mo, nclip
+
 
       do kc=1,n3m
         kmv(kc)=kc-1
@@ -33,8 +35,6 @@
       do kc=1,n3m
         kpc(kc)=kpv(kc)-kc
         kmc(kc)=kc-kmv(kc)
-        kup(kc)=1-kpc(kc)
-        kum(kc)=1-kmc(kc)
       end do
 
 
@@ -64,6 +64,8 @@
 !
 !     OPTION 0: UNIFORM CLUSTERING
 !
+      call AllocateReal1DArray(etaz,1,n3+500)
+      call AllocateReal1DArray(etazm,1,n3+500)
 
       if (istr3.eq.0) then
         do kc=1,n3
@@ -116,6 +118,9 @@
       end do
       zz(n3) = alx3
       endif
+
+      call DestroyReal1DArray(etaz)
+      call DestroyReal1DArray(etazm)
       
 !m-----------------------------------------
 !

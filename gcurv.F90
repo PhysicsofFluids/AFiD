@@ -19,9 +19,9 @@
       tin(1) = MPI_WTIME()
       
 
-      call initialize_variables
+      call InitializeVariables
 
-      call make_grid
+      call MakeGrid
 
       call h5open_f(hdf_error)
 #ifdef STATS
@@ -223,7 +223,7 @@
 !EP   mass not conserved
           if(nrank.eq.0) then
             write(6,178) dmax                                 
-178         format(10x,'too large local residue for mass conservation : ',e12.5,' at ')
+178         format(10x,'too large local residue for mass conservation: ',e12.5,' at ')
           endif
           call divgloc
           call quit(tin,0)
@@ -288,6 +288,7 @@
 
       call closefi
       call mem_dealloc
+      call DeallocateVariables
       call h5close_f(hdf_error)
       call decomp_2d_fft_finalize
 

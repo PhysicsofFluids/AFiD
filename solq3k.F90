@@ -14,12 +14,12 @@
       use local_arrays, only : q3,rhs
       use decomp_2d, only: xstart,xend
       implicit none
-      real, dimension(m3) :: amkl,apkl,ackl, fkl
-      real :: amkT(m3-1),apkT(m3-1)
-      real :: appk(m3-2)
-      real :: ackT(m3)
+      real, dimension(n3) :: amkl,apkl,ackl, fkl
+      real :: amkT(n3-1),apkT(n3-1)
+      real :: appk(n3-2)
+      real :: ackT(n3)
       integer :: jc,kc,info,ic
-      integer :: ipkv(m3)
+      integer :: ipkv(n3)
       real :: betadx,ackl_b
 
       betadx=beta*al
