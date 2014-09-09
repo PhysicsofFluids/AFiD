@@ -69,10 +69,32 @@
                 'Memory allocation failed when creating new arrays')
         end if
   
-        var =0
+        var =0.0
   
         return
         end subroutine AllocateReal2DArray
+
+!===========================================================================
+
+        subroutine AllocateReal3DArray(var,st1,en1,st2,en2,st3,en3)
+        use decomp_2d
+        implicit none
+        integer, intent(in) :: st1,en1,st2,en2,st3,en3
+        real,allocatable,dimension(:,:,:),intent(inout) :: var
+        integer :: alloc_stat, errorcode
+  
+        if (.not. allocated(var)) allocate(var(st1:en1,st2:en2,st3:en3), stat=alloc_stat)
+      
+        if (alloc_stat /= 0) then
+           errorcode = 8
+           call decomp_2d_abort(errorcode, &
+                'Memory allocation failed when creating new arrays')
+        end if
+  
+        var =0.0
+  
+        return
+        end subroutine AllocateReal3DArray
 
 !===========================================================================
 
@@ -109,5 +131,17 @@
 
         return
         end subroutine DestroyReal2DArray
+
+!===========================================================================
+
+        subroutine DestroyReal3DArray(var)
+        use decomp_2d
+        implicit none
+        real,allocatable,dimension(:,:,:),intent(inout) :: var
+
+        if (allocated(var)) deallocate(var)      
+
+        return
+        end subroutine DestroyReal3DArray
       
       end module AuxiliaryRoutines

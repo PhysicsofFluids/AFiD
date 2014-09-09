@@ -1,7 +1,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
 !    FILE: stst.F90                                       !
-!    CONTAINS: subroutine stst,initstst,ststwr            !
+!    CONTAINS: subroutine stst,ststwr                     !
 !                                                         ! 
 !    PURPOSE: Calculates and writes out statistics for    !
 !     the flow field. All quantities are averaged in the  !
@@ -325,35 +325,3 @@
       return  
       end
 ! 
-!***********************************************************************
-
-      subroutine initstst
-#ifdef STATS
-      use param
-      use stat_arrays
-      implicit none
-      integer :: k
-
-!EP   Read or initialize stat arrays
-
-      timeint_cdsp = 0
-
-!EP   Initialize to 0
-
-      do k=1,n3m
-       q1_me(k)    =0.0d0
-       q2_me(k)    =0.0d0
-       q3_me(k)    =0.0d0
-       dens_me(k)  =0.0d0
-       q1_rms(k)   =0.0d0
-       q2_rms(k)   =0.0d0
-       q3_rms(k)   =0.0d0
-       dens_rms(k) =0.0d0
-       disste(k) = 0.0d0
-       dissth(k) = 0.0d0
-       densq3_me(k) = 0.0d0
-      enddo
-
-#endif
-      return
-      end

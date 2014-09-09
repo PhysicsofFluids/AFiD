@@ -27,5 +27,14 @@
       n2m=n2-1                                                          
       n3m=n3-1
 
+!m============================================
+!
+!     DEFINITIONS FOR THE NATURAL CONVECTION
+!
+      ren = dsqrt(ray/pra)
+      pec = dsqrt(pra*ray)
+!                                                                       
+!
+
       return 
       end

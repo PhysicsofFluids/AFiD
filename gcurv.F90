@@ -1,29 +1,83 @@
-!************************************************************************
-      subroutine gcurv
+      program gcurv
       use mpih
       use param
       use local_arrays, only: q2,q3,dens,pr,q1
       use hdf5
       use decomp_2d
       use decomp_2d_fft
+#ifdef STATS
+      use stat_arrays, only: timeint_cdsp
+#endif
+!$    use omp_lib
       implicit none
-      integer :: ntstf, hdf_error, errorcode
+      integer :: ntstf, hdf_error, errorcode, nthreads
       real    :: cflm,dmax
       real    :: ti(2), tin(3)
       real :: ts
 
+!*******************************************************
+!******* Read input file bou.in by all processes********
+!*******************************************************
+!
       ts=MPI_WTIME()
       tin(1) = MPI_WTIME()
-      
+
+      call ReadInputFile
+
+      call decomp_2d_init(n3m,n2m,n1m,0,0, &
+     & (/ .false.,.true.,.true. /))
+
+      call MPI_BARRIER(MPI_COMM_WORLD,ierr)
+
+      if (nrank .eq. 0)write(6,*) 'MPI tasks=', nproc
+
+!$    if (nrank .eq. 0) then 
+!$OMP PARALLEL
+!$OMP MASTER
+!$        nthreads = omp_get_num_threads()
+!$OMP END MASTER
+!$OMP END PARALLEL
+!$        write(6,*) 'OMP threads=', nthreads
+!$    end if
+
+!m==========================================    
+      call openfi
+!m==========================================
+!
+      pi=2.d0*dasin(1.d0)                          
+!m======================                                                          
+!
+!m====================================================
+      if(nrank.eq.0) then
+!m====================================================                                                                             
+      write(6,112)rext/alx3
+  112 format(//,20x,'R A Y B E N ',//,10x, &
+       '2D Cell with aspect-ratio:  D/H = ',f5.2)
+      write(6,142) 
+  142 format(//,8x,'Periodic lateral wall boundary condition')
+      write(6,202) ray,pra
+  202 format(/,5x,'Parameters: ',' Ra=',e10.3,' Pr= ',e10.3)
+      if(idtv.eq.1) then
+         write(6,204) cflmax
+  204 format(/,5x,'Variable dt and fixed cfl= ', &
+       e11.4,/ )            
+      else 
+         write(6,205) dtmax,cfllim
+  205 format(/,5x,'Fixed dt= ',e11.4,' and maximum cfl=', &
+        e11.4,/ )            
+      endif
+!m====================================================    
+      endif
+
+      call InitializeTimeMarchScheme
 
       call InitializeVariables
 
       call MakeGrid
 
       call h5open_f(hdf_error)
-#ifdef STATS
-      call initstst
-#endif
+
+
 #ifdef STATS3
       call initstst3
 #endif
@@ -46,6 +100,11 @@
 !m===================================     
       
       time=0.d0
+
+#ifdef STATS
+!EP   Read or initialize stat arrays
+      timeint_cdsp = 0
+#endif
 
 !EP   Initialize the pressure solver
       call phini
@@ -258,37 +317,6 @@
       endif
       call quit(tin,1)
       
-      return                                                            
+      stop                                                              
       end                                                               
 
-      subroutine quit(tin,cond)
-      use hdf5
-      use mpih
-      use decomp_2d, only: nrank
-      use decomp_2d_fft
-      implicit none
-      integer, intent(in) :: cond
-      integer :: hdf_error
-      real :: tin(3)
-
-      tin(3) = MPI_WTIME()
-      if(nrank.eq.0) then
-          write(6,*) 'Total Iteration Time = ',tin(3) -tin(2),' sec.'
-      endif
-
-      if(cond.eq.1) then
-#ifdef STATS
-        call ststwr
-#endif
-        call continua
-      endif
-
-      call closefi
-      call mem_dealloc
-      call DeallocateVariables
-      call h5close_f(hdf_error)
-      call decomp_2d_fft_finalize
-
-      stop
-
-      end subroutine quit

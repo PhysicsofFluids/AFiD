@@ -75,16 +75,16 @@ OBJECTS = AuxiliaryRoutines.o cfl.o densbo.o densmc.o \
           hdnlro.o inirea.o InitializeVariables.o inqpr.o \
           invtr1.o invtr2.o invtr3.o openfi.o \
           MakeGrid.o DeallocateVariables.o \
-          mpi_routines.o papero.o param.o prcalc.o \
+          param.o prcalc.o \
           solq12k.o stst.o hdf_write.o hdf_read.o \
           solq3k.o solrok.o invtrro.o \
           tsch.o updvp.o globalquantities.o phini.o \
-          phcalc.o balance.o interp.o divgloc.o \
+          phcalc.o balance.o interp.o divgloc.o quit.o \
  	    decomp_2d.o decomp_2d_fft.o continua.o hdf_write_serial_1d.o \
-	    hdf_read_serial_1d.o stst3.o ReadInputFile.o
+	    hdf_read_serial_1d.o stst3.o ReadInputFile.o InitializeTimeMarchScheme.o
 #          alloc.o decomp_2d.o fft_fftw3.o halo.o halo_common.o
 
-MODULES = param.o decomp_2d.o decomp_2d_fft.o
+MODULES = param.o decomp_2d.o decomp_2d_fft.o 
 #============================================================================ 
 # Linking    
 #============================================================================
