@@ -26,11 +26,11 @@
       if (nrank.eq.0) then
 
        if(starea.eq.1) then
-        call hdf_read_serial_1d(dsetname,filename,n3m,var_old)
+        call HdfSerialReadReal1D(dsetname,filename,var_old,n3m)
         var_new = var_new + var_old
        endif
 
-       call hdf_write_serial_1d(dsetname,filename,n3m,var_new)
+       call HdfSerialWriteReal1D(dsetname,filename,var_new,n3m)
 
       end if
 
