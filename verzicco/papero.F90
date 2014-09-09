@@ -1,47 +1,3 @@
-!     this code is made for simulating two-dimensional flows in 
-!     cartesian coordinates.
-!     boundary condition are no-slip on the horizontal plates and either
-!     periodic, no-slip or free-slip on the lateral wall
-!                                                                       
-!      navier-stokes equations are solved by a fractional step method   
-!     ( Kim and Moin ) with the pressure in the first step.              
-!            
-!     The time advancement of the solution is obtained by a
-!     Runge-Kutta 3rd order low storage scheme (Wray) or a 2nd   
-!     order Adams-Bashfort scheme.                                      
-!
-!     The Poisson  equation for the pressure is solved directly                
-!     introducing FFT in the azimutal and vertical direction.
-!     Because of the presence of the walls in the vertical direction
-!     the cosFFT in that direction is required
-!                                                                       
-!                 Roberto Verzicco and Paolo Orlandi                       
-!                 dipartimento di meccanica ed aeronautica              
-!                 universita' la sapienza di roma                 
-!                                                                       
-!     All variables are calculated in a staggered grid:
-!   
-!        q1=vx, q2= vy, q3= vz       
-!
-!        dq2,dq3 : velocity correction                              
-!
-!        qcap :divergence of the  non free divergent velocity field    
-!
-!        non linear terms:
-!
-!        ru2, ru3, ruro : old step      
-!        h2,h3, hro : new step           
-!        dens : density
-!        pr : pressure                                                  
-!        dph : pressure correction                                      
-!       pressure solver is in the package press.f                      
-!       non linear terms are calculated in hdnl routines                
-!       the invertions of momentum equations is performed in invtr      
-!       routines                                             
-! 
-!======================================================================
-!     Cartesian version and hybrid parallelization by Erwin P. van der Poel, University of Twente
-!======================================================================                                                                     
       program papero
       use mpih
       use decomp_2d
@@ -56,39 +12,10 @@
 !******* Read input file bou.in by all processes********
 !*******************************************************
 !
-      open(unit=15,file='bou.in',status='old')
-        read(15,301) dummy
-        read(15,*) n1,n2,n3,nsst,nwrit,nread
-        read(15,301) dummy
-        read(15,*) ntst,walltimemax,tpin,tmax,ireset
-        read(15,301) dummy
-        read(15,*) alx3,istr3,str3
-        read(15,301) dummy
-        read(15,*) rext,rext2
-        read(15,301) dummy
-        read(15,*) ray,pra,dt,resid,cflmax
-        read(15,301) dummy
-        read(15,*) tsta,starea
-        read(15,301) dummy
-        read(15,*) inslws,inslwn
-        read(15,301) dummy       
-        read(15,*) idtv,dtmin,dtmax,cfllim,vlim
-        read(15,301) dummy       
-        read(15,*) tframe
-301     format(a4)                
-      close(15)
-
-!EP INIT
-      n1m=n1-1                                                          
-      n2m=n2-1                                                          
-      n3m=n3-1
+      call ReadInputFile
 
       call decomp_2d_init(n3m,n2m,n1m,0,0, &
      & (/ .false.,.true.,.true. /))
-
-!EP   DEBUG:
-!     call decomp_2d_init(n3m,n2m,n1m,2,1,
-!    & (/ .false.,.true.,.true. /))
 
       call MPI_BARRIER(MPI_COMM_WORLD,ierr)
 
@@ -106,28 +33,27 @@
 !m============================================
 !m************ End of input file**************
 !m============================================
-      if( n1>m1 ) then
-      if(nrank.eq.0) then
-          write(6,*) 'Error: n1 must be = m1'
-       call MPI_Abort(MPI_COMM_WORLD, 1, ierr )
-      endif
-      endif
-      
-      if( n2>m2 ) then
-      if(nrank.eq.0) then
-          write(6,*) 'Error: n2 must be = m2'
-       call MPI_Abort(MPI_COMM_WORLD, 1, ierr )
-      endif
-      endif
-      
-      if( n3>m3 ) then
-      if(nrank.eq.0) then
-          write(6,*) 'Error: n3 must be = m3'
-       call MPI_Abort(MPI_COMM_WORLD, 1, ierr )
-      endif
-      endif
+!     if( n1>m1 ) then
+!     if(nrank.eq.0) then
+!         write(6,*) 'Error: n1 must be = m1'
+!      call MPI_Abort(MPI_COMM_WORLD, 1, ierr )
+!     endif
+!     endif
+!     
+!     if( n2>m2 ) then
+!     if(nrank.eq.0) then
+!         write(6,*) 'Error: n2 must be = m2'
+!      call MPI_Abort(MPI_COMM_WORLD, 1, ierr )
+!     endif
+!     endif
+!     
+!     if( n3>m3 ) then
+!     if(nrank.eq.0) then
+!         write(6,*) 'Error: n3 must be = m3'
+!      call MPI_Abort(MPI_COMM_WORLD, 1, ierr )
+!     endif
+!     endif
 !m============================================
-      rint = 0.d0
 !
 !     DEFINITIONS FOR THE NATURAL CONVECTION
 !

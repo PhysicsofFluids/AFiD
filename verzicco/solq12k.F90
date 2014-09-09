@@ -17,10 +17,10 @@
      &      xstart(3)-1:xend(3)+1)
       real,intent(inout) :: rhs(1:n3,xstart(2):xend(2), &
      &      xstart(3):xend(3))
-      real, dimension(m3) :: amkl,apkl,ackl,fkl
-      integer :: jc,kc,info,ipkv(m3m),ic
+      real, dimension(n3) :: amkl,apkl,ackl,fkl
+      integer :: jc,kc,info,ipkv(n3m),ic
       real :: betadx,ackl_b
-      real :: amkT(m3m-1),ackT(m3m),apkT(m3m-1),appk(m3-3)
+      real :: amkT(n3m-1),ackT(n3m),apkT(n3m-1),appk(n3-3)
 
       betadx=beta*al
 

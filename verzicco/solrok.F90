@@ -13,10 +13,10 @@
       use local_arrays, only : dens,rhs
       use decomp_2d, only: xstart,xend
       implicit none
-      real, dimension(m3) :: amkl,apkl,ackl, fkl
-      integer :: jc,kc,info,ipkv(m3),ic
+      real, dimension(n3) :: amkl,apkl,ackl, fkl
+      integer :: jc,kc,info,ipkv(n3),ic
       real :: betadx,ackl_b
-      real :: amkT(m3-1),ackT(m3),apkT(m3-1),appk(m3-2)
+      real :: amkT(n3-1),ackT(n3),apkT(n3-1),appk(n3-2)
 
 !     Calculate the coefficients of the tridiagonal matrix
 !     The coefficients are normalized to prevent floating

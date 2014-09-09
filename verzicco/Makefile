@@ -68,18 +68,18 @@ LINKS = -lfftw3 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core
 
 PROGRAM = boutnp
 
-OBJECTS = cfl.o densbo.o densmc.o \
+OBJECTS = AuxiliaryRoutines.o cfl.o densbo.o densmc.o \
           divg.o divgck.o gcurv.o hdnl1.o hdnl2.o hdnl3.o \
-          hdnlro.o inirea.o initialize_variables.o inqpr.o \
+          hdnlro.o inirea.o InitializeVariables.o inqpr.o \
           invtr1.o invtr2.o invtr3.o openfi.o \
-          make_grid.o \
+          MakeGrid.o \
           mpi_routines.o papero.o param.o prcalc.o \
           solq12k.o stst.o hdf_write.o hdf_read.o \
           solq3k.o solrok.o invtrro.o \
           tsch.o updvp.o globalquantities.o phini.o \
           phcalc.o balance.o interp.o divgloc.o \
  	    decomp_2d.o decomp_2d_fft.o continua.o hdf_write_serial_1d.o \
-	    hdf_read_serial_1d.o stst3.o
+	    hdf_read_serial_1d.o stst3.o ReadInputFile.o
 #          alloc.o decomp_2d.o fft_fftw3.o halo.o halo_common.o
 
 MODULES = param.o decomp_2d.o decomp_2d_fft.o
