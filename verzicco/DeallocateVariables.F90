@@ -57,7 +57,6 @@
       call DestroyReal2DArray(denbs)
       call DestroyReal2DArray(denbn)
 
-#ifdef STATS
       call DestroyReal1DArray(q1_me)
       call DestroyReal1DArray(q2_me)
       call DestroyReal1DArray(q3_me)
@@ -70,7 +69,6 @@
       call DestroyReal1DArray(dens_me)
       call DestroyReal1DArray(dens_rms)
       call DestroyReal1DArray(densq3_me)
-#endif
 
       call DestroyReal3DArray(q1)
       call DestroyReal3DArray(q2)

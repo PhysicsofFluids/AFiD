@@ -70,25 +70,24 @@
 ! Arrays for statistics    
 !-------------------------------------------------
 
-#ifdef STATS
-      call AllocateReal1DArray(q1_me,1,n3m)
-      call AllocateReal1DArray(q2_me,1,n3m)
-      call AllocateReal1DArray(q3_me,1,n3m)
+      if (statcal) then
+       call AllocateReal1DArray(q1_me,1,n3m)
+       call AllocateReal1DArray(q2_me,1,n3m)
+       call AllocateReal1DArray(q3_me,1,n3m)
+ 
+       call AllocateReal1DArray(q1_rms,1,n3m)
+       call AllocateReal1DArray(q2_rms,1,n3m)
+       call AllocateReal1DArray(q3_rms,1,n3m)
+ 
+       call AllocateReal1DArray(dens_me,1,n3m)
+       call AllocateReal1DArray(dens_rms,1,n3m)
+       call AllocateReal1DArray(densq3_me,1,n3m)
 
-      call AllocateReal1DArray(q1_rms,1,n3m)
-      call AllocateReal1DArray(q2_rms,1,n3m)
-      call AllocateReal1DArray(q3_rms,1,n3m)
-
-      call AllocateReal1DArray(dens_me,1,n3m)
-      call AllocateReal1DArray(dens_rms,1,n3m)
-      call AllocateReal1DArray(densq3_me,1,n3m)
-
-#ifdef BALANCE
-      call AllocateReal1DArray(disste,1,n3m)
-      call AllocateReal1DArray(dissth,1,n3m)
-#endif
-
-#endif
+       if (balcal) then
+        call AllocateReal1DArray(disste,1,n3m)
+        call AllocateReal1DArray(dissth,1,n3m)
+       end if
+      end if
 
       !-------------------------------------------------
       ! Arrays with ghost cells

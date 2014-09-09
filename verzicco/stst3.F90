@@ -1,5 +1,4 @@
       subroutine stst3
-#ifdef STATS3
       use param
       use local_arrays, only: dens,q1,q2,q3
       use stat3_param
@@ -38,12 +37,10 @@
       call dump2dslab(denscc,filnam)
       enddo
 
-#endif
       return
       end subroutine stst3
 
-      subroutine initstst3
-#ifdef STATS3
+      subroutine InitializeSlabDump
       use param
       use decomp_2d, only: nrank
       use stat3_param
@@ -83,12 +80,10 @@
       close(23)
       endif
 
-#endif
       return
-      end subroutine initstst3
+      end subroutine InitializeSlabDump
       
       subroutine dump2dslab(var,filnam)
-#ifdef STATS3
       USE param
       use mpih
       USE hdf5
@@ -207,6 +202,6 @@
       call h5sclose_f(filespace, hdf_error)
       call h5fclose_f(file_id, hdf_error)
       endif
-#endif
+
       return                                                          
       end subroutine dump2dslab

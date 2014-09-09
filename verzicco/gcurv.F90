@@ -5,9 +5,7 @@
       use hdf5
       use decomp_2d
       use decomp_2d_fft
-#ifdef STATS
       use stat_arrays, only: timeint_cdsp
-#endif
 !$    use omp_lib
       implicit none
       integer :: ntstf, hdf_error, errorcode, nthreads
@@ -28,6 +26,8 @@
      & (/ .false.,.true.,.true. /))
 
       call MPI_BARRIER(MPI_COMM_WORLD,ierr)
+
+      call h5open_f(hdf_error)
 
       if (nrank .eq. 0)write(6,*) 'MPI tasks=', nproc
 
@@ -75,16 +75,11 @@
 
       call MakeGrid
 
-      call h5open_f(hdf_error)
+      call WriteGridInfo
 
+      if (dumpslabs) call InitializeSlabDump
 
-#ifdef STATS3
-      call initstst3
-#endif
 !m===================================                                                      
-#ifdef MOVIE
-      call inimov
-#endif
 !m===================================
 !m===================================
       if(nrank.eq.0) then
@@ -101,10 +96,8 @@
       
       time=0.d0
 
-#ifdef STATS
 !EP   Read or initialize stat arrays
-      timeint_cdsp = 0
-#endif
+      if(statcal) timeint_cdsp = 0
 
 !EP   Initialize the pressure solver
       call phini
@@ -208,15 +201,11 @@
             call divgck(dmax)
             call densmc
             if(time.gt.tsta) then
-#ifdef STATS
-            call stst
-#endif
-#ifdef STATS3
-            call stst3
-#endif
-#ifdef BALANCE
-            call balance
-#endif
+
+             if (statcal)  call stst
+             if (dumpslabs) call stst3
+             if (balcal.and.statcal) call balance
+
             endif
             if(idtv.eq.0) then
               cflm=cflm*dt

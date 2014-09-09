@@ -1,12 +1,9 @@
       subroutine balance
-#ifdef BALANCE
       use mpih
       use param
       use local_arrays,only: q1,q2,q3,dens
       use decomp_2d, only: xstart,xend,nrank
-#ifdef STATS
       use stat_arrays
-#endif
 
       implicit none
       integer :: i,j,k
@@ -89,12 +86,10 @@
        my_dissipth = my_dissipth+dissipth*g3rm(k)
 
 
-#ifdef STATS
 !$OMP CRITICAL
        disste(k) =  disste(k) + dissipte / ren / real(n1m) / real(n2m)
        dissth(k) =  dissth(k) + dissipth / pec / real(n1m) / real(n2m)
 !$OMP END CRITICAL
-#endif
 
        end do
 
@@ -115,6 +110,6 @@
       nuth = nuth*volt 
       write(92,*) time,nute,nuth
       endif
-#endif
+
       return   
       end

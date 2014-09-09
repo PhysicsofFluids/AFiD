@@ -1,6 +1,7 @@
       subroutine quit(tin,cond)
       use hdf5
       use mpih
+      use param
       use decomp_2d, only: nrank
       use decomp_2d_fft
       implicit none
@@ -14,9 +15,7 @@
       endif
 
       if(cond.eq.1) then
-#ifdef STATS
-        call ststwr
-#endif
+        if (statcal) call ststwr
         call continua
       endif
 
