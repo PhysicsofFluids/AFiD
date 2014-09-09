@@ -1,0 +1,49 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: WriteFlowField.F90                             !
+!    CONTAINS: subroutine WriteFlowField                  !
+!                                                         ! 
+!    PURPOSE: Write down the full flow snapshot for       !
+!     restarting the simulation at a later date           !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      subroutine WriteFlowField
+      use param
+      use local_arrays, only: q1,q2,q3,dens
+      use decomp_2d, only: nrank
+      character*30 :: filnam1,dsetname
+
+      filnam1 = trim('continua_dens.h5')
+      call hdf_write(filnam1,dens)
+      filnam1 = trim('continua_q1.h5')
+      call hdf_write(filnam1,q1)
+      filnam1 = trim('continua_q2.h5')
+      call hdf_write(filnam1,q2)
+      filnam1 = trim('continua_q3.h5')
+      call hdf_write(filnam1,q3)
+
+      if (nrank .eq. 0) then !EP only write once
+       filnam1 = trim('continua_master.h5')
+       call HdfCreateBlankFile(filnam1)
+ 
+       dsetname = trim('n1')
+       call HdfSerialWriteIntScalar(dsetname,filnam1,n1)
+       dsetname = trim('n2')
+       call HdfSerialWriteIntScalar(dsetname,filnam1,n2)
+       dsetname = trim('n3')
+       call HdfSerialWriteIntScalar(dsetname,filnam1,n3)
+       dsetname = trim('rext')
+       call HdfSerialWriteRealScalar(dsetname,filnam1,rext)
+       dsetname = trim('rext2')
+       call HdfSerialWriteRealScalar(dsetname,filnam1,rext2)
+       dsetname = trim('time')
+       call HdfSerialWriteRealScalar(dsetname,filnam1,time)
+       dsetname = trim('istr3')
+       call HdfSerialWriteIntScalar(dsetname,filnam1,istr3)
+       dsetname = trim('str3')
+       call HdfSerialWriteRealScalar(dsetname,filnam1,str3)
+
+      endif
+
+      end subroutine WriteFlowField

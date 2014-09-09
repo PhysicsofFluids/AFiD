@@ -15,8 +15,7 @@
       use local_arrays
       use param
       IMPLICIT NONE
-      real ::  aaa
-      character*70 :: filcnw2
+      character*70 :: filnam1,dsetname
       integer :: ihist
       integer :: n1om,n2om,n3o,n2o,n1o
       integer :: xs2og,xe2og,xs3og,xe3og
@@ -27,14 +26,21 @@
       real, allocatable, dimension(:,:,:) :: densold,q2old,q3old,q1old
       
 !EP   Reading old grid information by rank0
+      filnam1 = trim('continua_master.h5')
+
       if (nrank .eq. 0) then
-      filcnw2 = 'continua_grid.dat'
-      open(13,file=filcnw2,status='unknown')
-      rewind(13)                                                      
-      read(13,*) n1o,n2o,n3o
-      read(13,*) aaa,time
-      read(13,*) istro3,stro3
-      close(13)
+       dsetname = trim('n1')
+       call HdfSerialReadIntScalar(dsetname,filnam1,n1o)
+       dsetname = trim('n2')
+       call HdfSerialReadIntScalar(dsetname,filnam1,n2o)
+       dsetname = trim('n3')
+       call HdfSerialReadIntScalar(dsetname,filnam1,n3o)
+       dsetname = trim('time')
+       call HdfSerialReadRealScalar(dsetname,filnam1,time)
+       dsetname = trim('istr3')
+       call HdfSerialReadIntScalar(dsetname,filnam1,istro3)
+       dsetname = trim('str3')
+       call HdfSerialReadRealScalar(dsetname,filnam1,stro3)
       endif
       
       call MPI_BARRIER(MPI_COMM_WORLD,ierr)

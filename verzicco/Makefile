@@ -77,9 +77,9 @@ OBJECTS = AuxiliaryRoutines.o cfl.o densbo.o densmc.o \
           solq3k.o solrok.o invtrro.o \
           tsch.o updvp.o globalquantities.o phini.o \
           phcalc.o balance.o interp.o divgloc.o quit.o \
- 	    decomp_2d.o decomp_2d_fft.o continua.o hdf_write_serial_1d.o \
+ 	    decomp_2d.o decomp_2d_fft.o WriteFlowField.o hdf_write_serial_1d.o \
 	    hdf_read_serial_1d.o stst3.o ReadInputFile.o InitializeTimeMarchScheme.o \
-          WriteGridInfo.o StatReadReduceWrite.o 
+          WriteGridInfo.o StatReadReduceWrite.o HdfRoutines.o
 #          alloc.o decomp_2d.o fft_fftw3.o halo.o halo_common.o
 
 MODULES = param.o decomp_2d.o decomp_2d_fft.o 
