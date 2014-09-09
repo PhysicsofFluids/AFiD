@@ -9,7 +9,7 @@
    RA   PRA      DT      RESID    CFLMAX
  1e+7  1.0   1e-8   1.e-2    1.2
  STATON  BALANCEON  TSTA  STAREAD
- 1        1            0    0
+ 1        1            0    1
  inslws   inslwn 
   1          1   
  IDTV(0=dt fixed,1=var.)   DTMIN(for dt var.)  DTMAX(for dt var.)   CFLLIM(for fixed dt)  VLIM
