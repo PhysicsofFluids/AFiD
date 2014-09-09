@@ -46,7 +46,7 @@
       end
 !    
 !***********************************************************************
-      subroutine ststwr
+      subroutine WriteStats
       use mpih
       use param
       use stat_arrays
@@ -55,17 +55,7 @@
 
       implicit none
 
-      integer hdf_error
-
-      integer(HID_T) :: file_id
-
-      integer(HSIZE_T) :: dims_grid(1)
-      integer(HID_T) :: dset_grid
-      integer(HID_T) :: dspace_grid
-
-      integer(HID_T) :: plist_full
-
-      integer :: ndims,timeint_cdsp_old
+      integer :: timeint_cdsp_old
 
       character*30 filename_q1me,dsetname_q1me
       character*30 filename_q2me,dsetname_q2me
@@ -78,7 +68,7 @@
       character*30 filename_densq3me,dsetname_densq3me
       character*30 filename_dissth,dsetname_dissth
       character*30 filename_disste,dsetname_disste
-      character*30 filnamgrid
+      character*30 filnamgrid,dsetname
 
       filename_q1me = trim('stats/q1_mean.h5')
       filename_q2me = trim('stats/q2_mean.h5')
@@ -104,6 +94,17 @@
       dsetname_dissth = trim('dissth.h5')
       dsetname_disste = trim('disste.h5')
 
+      filnamgrid = trim('stafield_master.h5')
+      dsetname = trim('averaging_time')
+      if (nrank.eq.0) then
+       if(starea.eq.1) then
+        call HdfSerialReadIntScalar(dsetname,filnamgrid,timeint_cdsp_old)
+  
+        timeint_cdsp = timeint_cdsp + timeint_cdsp_old
+
+       endif
+      end if
+
       call StatReadReduceWrite(q1_me,filename_q1me,dsetname_q1me)
       call StatReadReduceWrite(q2_me,filename_q2me,dsetname_q2me)
       call StatReadReduceWrite(q3_me,filename_q3me,dsetname_q3me)
@@ -121,98 +122,19 @@
        call StatReadReduceWrite(disste,filename_disste,dsetname_disste)
       end if
 
-
-      filnamgrid = 'stafield_master.h5'
-      ndims=1
-
       if (nrank.eq.0) then
-       if(starea.eq.1) then
-        dims_grid(1)=1
-  
-        call h5fopen_f(filnamgrid, H5F_ACC_RDONLY_F, file_id, hdf_error)
-  
-        call h5screate_simple_f(ndims, dims_grid, dspace_grid, hdf_error)
-  
-        call h5dopen_f(file_id, 'averaging_time', dset_grid, hdf_error)
-  
-        call h5dread_f(dset_grid, H5T_NATIVE_INTEGER, timeint_cdsp_old, &
-               dims_grid,hdf_error)
-  
-        call h5dclose_f(dset_grid, hdf_error)
-        call h5sclose_f(dspace_grid, hdf_error)
-  
-        call h5pclose_f(plist_full, hdf_error)
-        call h5fclose_f(file_id, hdf_error)
-  
-        timeint_cdsp = timeint_cdsp + timeint_cdsp_old
 
-       endif
+       call HdfCreateBlankFile(filnamgrid)
+       call HdfSerialWriteIntScalar(dsetname,filnamgrid,timeint_cdsp)
 
-!RO   Write the grid & statistics information
-!RO   only if master process
+       dsetname = trim('Rayleigh Number')
+       call HdfSerialWriteRealScalar(dsetname,filnamgrid,ray)
 
+       dsetname = trim('Prandtl Number')
+       call HdfSerialWriteRealScalar(dsetname,filnamgrid,pra)
 
-      call h5fcreate_f(filnamgrid,H5F_ACC_TRUNC_F, file_id, hdf_error)
-
-!RO   Write amount of averages 
-
-      dims_grid(1)=1
-      call h5screate_simple_f(ndims, dims_grid, dspace_grid, hdf_error)
-
-      call h5dcreate_f(file_id, 'averaging_time', H5T_NATIVE_INTEGER, &
-     &                dspace_grid, dset_grid, hdf_error)
-
-      call h5dwrite_f(dset_grid, H5T_NATIVE_INTEGER, timeint_cdsp, &
-     &       dims_grid,hdf_error)
-
-      call h5dclose_f(dset_grid, hdf_error)
-      call h5sclose_f(dspace_grid, hdf_error)
-
-!RO   Write Reynolds number
-
-      dims_grid(1)=1
-      call h5screate_simple_f(ndims, dims_grid, dspace_grid, hdf_error)
-
-      call h5dcreate_f(file_id, 'Ra', H5T_NATIVE_DOUBLE, &
-     &                dspace_grid, dset_grid, hdf_error)
-
-      call h5dwrite_f(dset_grid, H5T_NATIVE_DOUBLE, ray, &
-     &       dims_grid,hdf_error)
-
-      call h5dclose_f(dset_grid, hdf_error)
-      call h5sclose_f(dspace_grid, hdf_error)
-
-!EP   Write Prandtl number
-
-      dims_grid(1)=1
-      call h5screate_simple_f(ndims, dims_grid, dspace_grid, hdf_error)
-
-      call h5dcreate_f(file_id, 'Pr', H5T_NATIVE_DOUBLE, &
-     &                dspace_grid, dset_grid, hdf_error)
-
-      call h5dwrite_f(dset_grid, H5T_NATIVE_DOUBLE, pra, &
-     &       dims_grid,hdf_error)
-
-      call h5dclose_f(dset_grid, hdf_error)
-      call h5sclose_f(dspace_grid, hdf_error)
-
-!RO   Write the grid information 
-
-      dims_grid(1)=n3m
-      call h5screate_simple_f(ndims, dims_grid, dspace_grid, hdf_error)
-      call h5dcreate_f(file_id, 'Z_cordin', H5T_NATIVE_DOUBLE, &
-     &                dspace_grid, dset_grid, hdf_error)
-
-      call h5dwrite_f(dset_grid, H5T_NATIVE_DOUBLE, zm(1:n3m), &
-     &        dims_grid, hdf_error)
-
-
-      call h5dclose_f(dset_grid, hdf_error)
-      call h5sclose_f(dspace_grid, hdf_error)
-
-!RO   Close file
-
-      call h5fclose_f(file_id, hdf_error)
+       dsetname = trim('Z_cordin')
+       call HdfSerialWriteReal1D(dsetname,filnamgrid,zm,1,n3m)
 
       endif
 

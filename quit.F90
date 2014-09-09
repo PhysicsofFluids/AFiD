@@ -15,8 +15,8 @@
       endif
 
       if(cond.eq.1) then
-        if (statcal) call ststwr
-        call continua
+        if (statcal) call WriteStats
+        call WriteFlowField
       endif
 
       call closefi
