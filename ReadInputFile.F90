@@ -36,6 +36,7 @@
 !
       ren = dsqrt(ray/pra)
       pec = dsqrt(pra*ray)
+      pi=2.d0*dasin(1.d0)                          
 !                                                                       
 !
       if(flagstat.eq.0) then

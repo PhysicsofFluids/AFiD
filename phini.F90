@@ -42,7 +42,7 @@
       return
       end
 !=====================================================
-      subroutine phini
+      subroutine InitPressureSolver
       use param
       use decomp_2d_fft
       implicit none

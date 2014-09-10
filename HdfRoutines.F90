@@ -218,4 +218,22 @@
       
       end subroutine HdfSerialReadReal1D
 
+!====================================================================
+      subroutine HdfStart
+      use hdf5
+      implicit none
+      integer :: hdf_error
 
+      call h5open_f(hdf_error)
+
+      end subroutine HdfStart
+
+!====================================================================
+      subroutine HdfClose
+      use hdf5
+      implicit none
+      integer :: hdf_error
+
+      call h5close_f(hdf_error)
+
+      end subroutine HdfClose

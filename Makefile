@@ -67,16 +67,16 @@ LINKS = -lfftw3 -llapack -lblas -lz -lhdf5_fortran -lhdf5
 
 PROGRAM = boutnp
 
-OBJECTS = AuxiliaryRoutines.o cfl.o densbo.o densmc.o \
+OBJECTS = AuxiliaryRoutines.o cfl.o SetTempBCs.o densmc.o \
           divg.o divgck.o gcurv.o hdnl1.o hdnl2.o hdnl3.o \
-          hdnlro.o inirea.o InitializeVariables.o inqpr.o \
+          hdnlro.o inirea.o InitializeVariables.o CreateInitialConditions.o \
           invtr1.o invtr2.o invtr3.o openfi.o \
           MakeGrid.o DeallocateVariables.o \
           param.o prcalc.o \
           solq12k.o stst.o hdf_write.o hdf_read.o \
           solq3k.o solrok.o invtrro.o \
           tsch.o updvp.o globalquantities.o phini.o \
-          phcalc.o balance.o interp.o divgloc.o quit.o \
+          phcalc.o balance.o interp.o divgloc.o QuitRoutine.o \
  	    decomp_2d.o decomp_2d_fft.o WriteFlowField.o  \
 	    stst3.o ReadInputFile.o InitializeTimeMarchScheme.o \
           WriteGridInfo.o StatReadReduceWrite.o HdfRoutines.o
