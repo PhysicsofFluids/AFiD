@@ -69,6 +69,7 @@
       character*30 dsetname_dissth
       character*30 dsetname_disste
       character*30 filnam,dsetname
+      logical :: fexist
 
       filnam = trim('stafield_master.h5')
 
@@ -85,6 +86,13 @@
       dsetname_disste = trim('disste.h5')
 
       dsetname = trim('averaging_time')
+
+      inquire(file=filnam,exist=fexist)
+      if (.not.fexist) then 
+        write(*,*) 'Unable to read statistical files, restarting statistics'
+        starea=0
+      end if
+       
 
       if (nrank.eq.0) then
        if(starea.eq.1) then

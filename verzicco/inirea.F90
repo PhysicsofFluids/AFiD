@@ -24,9 +24,16 @@
       real :: stro3
       real :: intinfo(1:4)
       real, allocatable, dimension(:,:,:) :: densold,q2old,q3old,q1old
+      logical :: fexist
       
 !EP   Reading old grid information by rank0
       filnam1 = trim('continua_master.h5')
+
+      inquire(file=filnam1,exist=fexist)
+      if (.not.fexist) then 
+        write(*,*) 'Continuation files not found'
+        stop
+      end if
 
       if (nrank .eq. 0) then
        dsetname = trim('n1')

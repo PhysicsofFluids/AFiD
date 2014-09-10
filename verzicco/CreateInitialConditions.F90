@@ -1,14 +1,14 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: inqpr.F90                                      !
-!    CONTAINS: subroutine inqpr                           !
+!    FILE: CreateInitialConditions.F90                    !
+!    CONTAINS: subroutine CreateInitialConditions         !
 !                                                         ! 
 !    PURPOSE: Initialization routine. Sets initial        !
 !     conditions for velocity and temperature             !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine inqpr
+      subroutine CreateInitialConditions
       use param
       use local_arrays, only: q2,q3,dens,q1
       use decomp_2d, only: xstart,xend
@@ -49,27 +49,5 @@
         dens(1,:,:)=1.0d0
         dens(n3,:,:)=0.0d0
 
-#ifdef SERIAL_DEBUG        
-        mck1=0.0d0
-        mck2=0.0d0
-        mck3=0.0d0
-        mck4=0.0d0
-        do k=1,n3m
-        do j=1,n2m
-        do i=1,n1m
-        mck1=mck1+q1(k,j,i)
-        mck2=mck2+q2(k,j,i)
-        mck3=mck3+q3(k,j,i)
-        mck4=mck3+dens(k,j,i)
-        enddo
-        enddo
-        enddo
-        write(*,*) 'q1cksum= ',mck1
-        write(*,*) 'q2cksum= ',mck2
-        write(*,*) 'q3cksum= ',mck3
-        write(*,*) 'denscksum= ',mck4
-        write(*,*) 'starting tsch'
-#endif
       return                                                            
       end                                                               
-!

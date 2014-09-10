@@ -8,7 +8,7 @@
       use stat_arrays, only: timeint_cdsp
 !$    use omp_lib
       implicit none
-      integer :: ntstf, hdf_error, errorcode, nthreads
+      integer :: ntstf, errorcode, nthreads
       real    :: cflm,dmax
       real    :: ti(2), tin(3)
       real :: ts
@@ -27,7 +27,7 @@
 
       call MPI_BARRIER(MPI_COMM_WORLD,ierr)
 
-      call h5open_f(hdf_error)
+      call HdfStart
 
       if (nrank .eq. 0)write(6,*) 'MPI tasks=', nproc
 
@@ -42,11 +42,6 @@
 
 !m==========================================    
       call openfi
-!m==========================================
-!
-      pi=2.d0*dasin(1.d0)                          
-!m======================                                                          
-!
 !m====================================================
       if(nrank.eq.0) then
 !m====================================================                                                                             
@@ -96,15 +91,11 @@
       
       time=0.d0
 
-!EP   Read or initialize stat arrays
       if(statcal) timeint_cdsp = 0
 
-!EP   Initialize the pressure solver
-      call phini
+      call InitPressureSolver
  
-
-!EP   Set the temperature boundary conditions
-      call densbo
+      call SetTempBCs
 !
 !      create the initial conditions
 !
@@ -112,13 +103,13 @@
         if(nrank.eq.0) then
           write(6,*)' nread = 0: creating initial condition'
         endif
-!EP   Set times to 0
+
         ntime=0                                                         
         time=0.d0
         cflm=0.d0
         
-!EP   Create an initial condition
-        call inqpr
+        call CreateInitialConditions
+
       else
         if(nrank.eq.0) then
           write(6,*)' nread = 1: reading initial condition from file'
@@ -237,74 +228,29 @@
 !EP   Conditional exits
       if(errorcode.ne.0) then
 
-        if(errorcode.eq.166) then
 !EP    dt too small
-          if(nrank.eq.0) then
-            write(6,168) dt 
-168         format(10x,'dt too small, DT= ',e14.7)
-          endif
-          call quit(tin,0)
-        endif
+        if(errorcode.eq.166) call QuitRoutine(tin,0,errorcode)
 
-        if(errorcode.eq.165) then
 !EP   cfl too high    
-          if(nrank.eq.0) then
-            write(6,164) 
-164         format(10x,'cfl too large  ')
-          endif
-          call quit(tin,0)
-        endif
+        if(errorcode.eq.165) call QuitRoutine(tin,0,errorcode)
       
-        if(errorcode.eq.266) then
 !EP   velocities diverged
-          if(nrank.eq.0) then
-            write(6,268)
-268         format(10x,'velocities diverged')
-          endif
-          call quit(tin,0)
-        endif
+        if(errorcode.eq.266) call QuitRoutine(tin,0,errorcode)
           
-        if(errorcode.eq.169) then
 !EP   mass not conserved
-          if(nrank.eq.0) then
-            write(6,178) dmax                                 
-178         format(10x,'too large local residue for mass conservation: ',e12.5,' at ')
-          endif
-          call divgloc
-          call quit(tin,0)
-        endif
+        if(errorcode.eq.169) call QuitRoutine(tin,0,errorcode)
 
-        if(errorcode.eq.333) then
 !EP   Physical time exceeded tmax, no error; normal quit
-          if(nrank.eq.0) then
-            write(*,*) "time greater than tmax"
-            write(*,*) "statistics and continuation updated"
-          endif
-          call quit(tin,1)
-        endif
+        if(errorcode.eq.333) call QuitRoutine(tin,1,errorcode)
 
-        if(errorcode.eq.334) then
 !EP   walltime exceeded walltimemax, no error; normal quit
-          if(nrank.eq.0) then
-            write(*,*) "walltime greater than walltimemax"
-            write(*,*) "statistics and continuation updated"
-          endif
-          call quit(tin,1)
-        endif
+        if(errorcode.eq.334) call QuitRoutine(tin,1,errorcode)
 
-        if(nrank.eq.0) then
-          write(*,*) "unknown error"
-        endif
-        call quit(tin,0)
-
-        endif
+       endif
 
       enddo !EP main loop
 
-      if(nrank.eq.0) then
-        write(*,*) "Maximum number of timesteps reached"
-      endif
-      call quit(tin,1)
+      call QuitRoutine(tin,1,errorcode)
       
       stop                                                              
       end                                                               
