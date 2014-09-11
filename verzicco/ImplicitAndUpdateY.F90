@@ -11,7 +11,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine invtr2
+      subroutine ImplicitAndUpdateY
       use param
       use local_arrays, only: q2,ru2,pr,rhs,dph
       use decomp_2d, only: xstart,xend

@@ -8,7 +8,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine hdnl3
+      subroutine ExplicitZ
       use param
       use local_arrays, only: q1,q2,q3,dens,qcap
       use decomp_2d, only: xstart,xend

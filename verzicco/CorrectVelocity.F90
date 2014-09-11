@@ -8,7 +8,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine updvp
+      subroutine CorrectVelocity
       use param
       use local_arrays, only: q2,q3,dphhalo,q1
       use decomp_2d, only: xstart,xend

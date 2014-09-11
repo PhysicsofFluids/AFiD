@@ -8,7 +8,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine divg
+      subroutine CalculateLocalDivergence
       use param
       use local_arrays, only: q1,q2,q3,dph
       use decomp_2d, only: xstart,xend

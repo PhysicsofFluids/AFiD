@@ -10,7 +10,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine invtrro
+      subroutine ImplicitAndUpdateTemp
       use param
       use local_arrays, only: dens,hro,ruro,rhs
       use decomp_2d, only: xstart,xend

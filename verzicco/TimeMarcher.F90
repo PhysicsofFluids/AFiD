@@ -18,14 +18,6 @@
       implicit none
       integer :: ns
       integer :: j,k,i
-#ifdef DEBUG
-      integer :: kstartp
-      real :: cksum2,cksum3,mck2,mck3,cksum1,mck1,mck4,cksum4
-#endif
-
-! 
-!   TIME INTEGRATION : implicit viscous, 3rd order RK (Adams Bashfort)  
-!                                                                       
 
       beta=dt/ren*0.5d0
 
@@ -33,277 +25,21 @@
         al=alm(ns)
         ga=gam(ns)
         ro=rom(ns)
-#ifdef DEBUG        
-        mck1=0.0d0
-        mck2=0.0d0
-        mck3=0.0d0
-        do i=xstart(3),xend(3)
-        do j=xstart(2),xend(2)
-        do k=1,n3m
-        mck1=mck1+q1(k,j,i)
-        mck2=mck2+q2(k,j,i)
-        mck3=mck3+q3(k,j,i)
-        enddo
-        enddo
-        enddo
-        call MPI_REDUCE(mck1,cksum1,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck2,cksum2,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck3,cksum3,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        if(nrank.eq.0) then
-        write(*,*) 'i_last cksum'
-        write(*,*) 'q1cksum= ',cksum1
-        write(*,*) 'q2cksum= ',cksum2
-        write(*,*) 'q3cksum= ',cksum3
-        endif
-        mck1=0.0d0
-        mck2=0.0d0
-        mck3=0.0d0
-        do j=xstart(2),xend(2)
-        do i=xstart(3),xend(3)
-        do k=1,n3m
-        mck1=mck1+q1(k,j,i)
-        mck2=mck2+q2(k,j,i)
-        mck3=mck3+q3(k,j,i)
-        enddo
-        enddo
-        enddo
-        call MPI_REDUCE(mck1,cksum1,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck2,cksum2,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck3,cksum3,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        if(nrank.eq.0) then
-        write(*,*) 'j_last cksum'
-        write(*,*) 'q1cksum= ',cksum1
-        write(*,*) 'q2cksum= ',cksum2
-        write(*,*) 'q3cksum= ',cksum3
-        write(*,*) 'starting tsch'
-        endif
-#endif
 
-#ifdef DEBUG 
-        if(nrank.eq.0) then
-        write(*,*) 'starting hdnl1'
-        endif
-#endif
-        call hdnl1
-#ifdef DEBUG 
-        if(nrank.eq.0) then
-        write(*,*) 'starting hdnl2'
-        endif
-#endif
-        call hdnl2
+        call ExplicitX
+        call ExplicitY
+        call ExplicitZ
+        call ExplicitTemp     
 
-#ifdef DEBUG        
-        if(nrank.eq.0) then
-        write(*,*) 'starting hdnl3'
-        endif
-#endif
-        
-        call hdnl3
+        call ImplicitAndUpdateX
+        call ImplicitAndUpdateY
+        call ImplicitAndUpdateZ
 
-#ifdef DEBUG        
-        mck1=0.0d0
-        mck2=0.0d0
-        mck3=0.0d0
-        do k=1,n3m
-        do i=xstart(3),xend(3)
-        do j=xstart(2),xend(2)
-        mck1=mck1+dph(k,j,i)
-        mck2=mck2+qcap(k,j,i)
-        mck3=mck3+dq(k,j,i)
-        enddo
-        enddo
-        enddo
-        call MPI_REDUCE(mck1,cksum1,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck3,cksum3,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck2,cksum2,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        if(nrank.eq.0) then
-        write(*,*) 'j_last cksum'
-        write(*,*) 'dqcksum= ',cksum3
-        write(*,*) 'dphcksum= ',cksum1
-        write(*,*) 'qcapcksum= ',cksum2
-        endif
-        mck1=0.0d0
-        mck2=0.0d0
-        mck3=0.0d0
-        do k=1,n3m
-        do j=xstart(2),xend(2)
-        do i=xstart(3),xend(3)
-        mck1=mck1+dph(k,j,i)
-        mck2=mck2+qcap(k,j,i)
-        mck3=mck3+dq(k,j,i)
-        enddo
-        enddo
-        enddo
-        call MPI_REDUCE(mck1,cksum1,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck3,cksum3,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck2,cksum2,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        if(nrank.eq.0) then
-        write(*,*) 'i_last cksum'
-        write(*,*) 'dqcksum= ',cksum3
-        write(*,*) 'dphcksum= ',cksum1
-        write(*,*) 'qcapcksum= ',cksum2
-        endif
-#endif
-
-#ifdef DEBUG        
-        if(nrank.eq.0) then
-        write(*,*) 'starting hdnlro'
-        endif
-#endif
-        call hdnlro                         !!  "    "      "
-
-#ifdef DEBUG        
-        mck1=0.0d0
-        do k=1,n3m
-        do i=xstart(3),xend(3)
-        do j=xstart(2),xend(2)
-        mck1=mck1+hro(k,j,i)
-        enddo
-        enddo
-        enddo
-        call MPI_REDUCE(mck1,cksum1,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        if(nrank.eq.0) then
-        write(*,*) 'j_last'
-        write(*,*) 'hrosum= ',cksum1
-        endif
-        mck1=0.0d0
-        do k=1,n3m
-        do j=xstart(2),xend(2)
-        do i=xstart(3),xend(3)
-        mck1=mck1+hro(k,j,i)
-        enddo
-        enddo
-        enddo
-        call MPI_REDUCE(mck1,cksum1,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        if(nrank.eq.0) then
-        write(*,*) 'i_last'
-        write(*,*) 'hrosum= ',cksum1
-        endif
-#endif
-
-#ifdef DEBUG 
-        if(nrank.eq.0) then
-        write(*,*) 'starting invtr1'
-        endif
-#endif
-        call invtr1
-#ifdef DEBUG 
-        if(nrank.eq.0) then
-        write(*,*) 'starting invtr2'
-        endif
-#endif
-        call invtr2
-
-#ifdef DEBUG        
-        if(nrank.eq.0) then
-        write(*,*) 'starting invtr3'
-        endif
-#endif
-        
-        call invtr3
-
-
-      ! MAKE ONLY IP HALO
         call update_halo(q1,1)
-
-      ! MAKE ONLY JP HALO
-
         call update_halo(q2,1)
 
-#ifdef DEBUG        
-        mck1=0.0d0
-        mck2=0.0d0
-        mck3=0.0d0
-        mck4=0.0d0
-        do k=1,n3m
-        do j=xstart(2),xend(2)
-        do i=xstart(3),xend(3)
-        mck1=mck1+q1(k,j,i)
-        mck2=mck2+q2(k,j,i)
-        mck3=mck3+q3(k,j,i)
-        mck4=mck4+dens(k,j,i)
-        enddo
-        enddo
-        enddo
-        call MPI_REDUCE(mck1,cksum1,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck2,cksum2,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck3,cksum3,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck4,cksum4,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        if(nrank.eq.0) then
-        write(*,*) 'i_last_cksum'
-        write(*,*) 'q1cksum= ',cksum1
-        write(*,*) 'q2cksum= ',cksum2
-        write(*,*) 'q3cksum= ',cksum3
-        write(*,*) 'densckm= ',cksum4
-        endif
-        mck1=0.0d0
-        mck2=0.0d0
-        mck3=0.0d0
-        mck4=0.0d0
-        do k=1,n3m
-        do i=xstart(3),xend(3)
-        do j=xstart(2),xend(2)
-        mck1=mck1+q1(k,j,i)
-        mck2=mck2+q2(k,j,i)
-        mck3=mck3+q3(k,j,i)
-        mck4=mck4+dens(k,j,i)
-        enddo
-        enddo
-        enddo
-        call MPI_REDUCE(mck1,cksum1,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck2,cksum2,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck3,cksum3,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck4,cksum4,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        if(nrank.eq.0) then
-        write(*,*) 'j_last_cksum'
-        write(*,*) 'q1cksum= ',cksum1
-        write(*,*) 'q2cksum= ',cksum2
-        write(*,*) 'q3cksum= ',cksum3
-        write(*,*) 'densckm= ',cksum4
-        endif
-#endif
-
-        call divg 
-#ifdef DEBUG        
-        mck2=0.0d0
-        do i=xstart(3),xend(3)
-        do j=xstart(2),xend(2)
-        do k=1,n3m
-        mck2=mck2+abs(dph(k,j,i))
-        enddo
-        enddo
-        enddo
-        call MPI_REDUCE(mck2,cksum2,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        if(nrank.eq.0) then
-        write(*,*) 'dphcksum= ',cksum2
-        write(*,*) 'starting phcalcTP'
-        endif
-#endif
-        
-        call phcalc
+        call CalculateLocalDivergence
+        call SolvePressureCorrection
 
 !EP this copy can be avoided by changing transpose_x_to_y_real and
 !transpose_y_to_x_real so these routines can handles arrays with
@@ -320,128 +56,19 @@
 
         call update_halo(dphhalo,1)
 
-#ifdef DEBUG        
-        mck2=0.0d0
-        do k=1,n3m
-        do j=xstart(2),xend(2)
-        do i=xstart(3),xend(3)
-        mck2=mck2+abs(dph(k,j,i))
-        enddo
-        enddo
-        enddo
-        call MPI_REDUCE(mck2,cksum2,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        if(nrank.eq.0) then
-        write(*,*) 'dphcksum= ',cksum2
-        write(*,*) 'starting updvp'
-        endif
-#endif
-        
-        call updvp                 !! SOLENOIDAL VEL FIELD
+        call CorrectVelocity
+        call CorrectPressure
 
         call update_halo(q1,1)
         call update_halo(q2,1)
         call update_halo(q3,1)
-
-#ifdef DEBUG        
-        mck1=0.0d0
-        mck2=0.0d0
-        mck3=0.0d0
-        do i=xstart(3),xend(3)
-        do j=xstart(2),xend(2)
-        do k=1,n3m
-        mck1=mck1+abs(q1(k,j,i))
-        mck2=mck2+abs(q2(k,j,i))
-        mck3=mck3+abs(q3(k,j,i))
-        enddo
-        enddo
-        enddo
-        call MPI_REDUCE(mck1,cksum1,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck3,cksum3,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        call MPI_REDUCE(mck2,cksum2,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        if(nrank.eq.0) then
-        write(*,*) 'q1cksum= ',cksum1
-        write(*,*) 'q2cksum= ',cksum2
-        write(*,*) 'q3cksum= ',cksum3
-        endif
-#endif
-        
-!       call update_both_ghosts(n1,n2,dens,kstart,kend)
-
-        
-        call prcalc                         !! PRESSURE FIELD
-
         call update_halo(pr,1)
 
-#ifdef DEBUG        
-        if(nrank.eq.0) then
-        write(*,*) 'starting invtrro'
-        endif
-#endif
-        
-        call invtrro
-
-#ifdef DEBUG        
-        mck1=0.0d0
-        do i=xstart(3),xend(3)
-        do j=xstart(2),xend(2)
-        do k=2,n3m
-        mck1=mck1+abs(dens(k,j,i))
-        enddo
-        enddo
-        enddo
-        call MPI_REDUCE(mck1,cksum1,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        if(nrank.eq.0) then
-        write(*,*) 'denscksum= ',cksum1
-        endif
-#endif
-
+        call ImplicitAndUpdateTemp
         call update_halo(dens,1)
 
-#ifdef DEBUG        
-        mck1=0.0d0
-        do i=xstart(3),xend(3)
-        do j=xstart(2),xend(2)
-        do k=2,n3m
-        mck1=mck1+abs(dens(k,j,i))
         enddo
-        enddo
-        enddo
-        call MPI_REDUCE(mck1,cksum1,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        if(nrank.eq.0) then
-        write(*,*) 'denscksum after up= ',cksum1
-        endif
-        mck1=0.0d0
-        do i=xstart(3),xend(3)
-        do j=xstart(2),xend(2)
-        mck1=mck1+abs(dens(1,j,i))
-        enddo
-        enddo
-        call MPI_REDUCE(mck1,cksum1,1,MDP,MPI_SUM,0, &
-     &      MPI_COMM_WORLD,ierr)
-        if(nrank.eq.0) then
-        write(*,*) 'denscksum plat= ',cksum1
-        endif
-#endif
-
-        enddo
-!m================================       
-!m================================
-        if(mod(time,tpin).lt.dt) then
-        if(nrank.eq.0) then
-        write(6,*) ' ---------------------------------------- '
-        write(6,*) ' T = ',time,' NTIME = ',ntime,' DT = ',dt
-        endif
-        endif
-!m================================       
-!m================================
 
 
       return                                                            
       end                                                               
-!
