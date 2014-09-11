@@ -47,7 +47,7 @@
       else if(errorcode.eq.169) then
         write(6,178) 
 178     format(10x,'too large local residue for mass conservation at:')
-        call divgloc
+        call LocateLargeDivergence
       else if(errorcode.eq.333) then
          write(*,*) "time greater than tmax"
          write(*,*) "statistics and continuation updated"

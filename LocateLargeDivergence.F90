@@ -8,7 +8,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine divgloc
+      subroutine LocateLargeDivergence
       use param
       use local_arrays, only: q2,q3,q1
       use mpih
