@@ -11,7 +11,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine ImplicitAndUpdateX
+      subroutine ImplicitAndUpdateVX
       use param
       use local_arrays, only: q1,dq,ru1,rhs,pr
       use decomp_2d, only: xstart,xend
@@ -72,7 +72,7 @@
 !$OMP END PARALLEL DO
 
 
-      call solq12k(q1,rhs)
+      call SolveImpEqnUpdate_XY(q1,rhs)
 
 
       return

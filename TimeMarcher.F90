@@ -26,14 +26,14 @@
         ga=gam(ns)
         ro=rom(ns)
 
-        call ExplicitX
-        call ExplicitY
-        call ExplicitZ
-        call ExplicitTemp     
+        call ExplicitTermsVX
+        call ExplicitTermsVY
+        call ExplicitTermsVZ
+        call ExplicitTermsTemp     
 
-        call ImplicitAndUpdateX
-        call ImplicitAndUpdateY
-        call ImplicitAndUpdateZ
+        call ImplicitAndUpdateVX
+        call ImplicitAndUpdateVY
+        call ImplicitAndUpdateVZ
 
         call update_halo(q1,1)
         call update_halo(q2,1)
@@ -58,13 +58,12 @@
 
         call CorrectVelocity
         call CorrectPressure
+        call ImplicitAndUpdateTemp
 
         call update_halo(q1,1)
         call update_halo(q2,1)
         call update_halo(q3,1)
         call update_halo(pr,1)
-
-        call ImplicitAndUpdateTemp
         call update_halo(dens,1)
 
         enddo

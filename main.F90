@@ -1,4 +1,4 @@
-      program gcurv
+      program AFiD
       use mpih
       use param
       use local_arrays, only: q2,q3,dens,pr,q1

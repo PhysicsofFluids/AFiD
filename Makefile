@@ -68,13 +68,14 @@ LINKS = -lfftw3 -llapack -lblas -lz -lhdf5_fortran -lhdf5
 PROGRAM = boutnp
 
 OBJECTS = AuxiliaryRoutines.o CalcMaxCFL.o SetTempBCs.o CalculatePlateNu.o \
-          CalculateLocalDivergence.o CheckDivergence.o gcurv.o ExplicitX.o ExplicitY.o ExplicitZ.o \
-          ExplicitTemp.o inirea.o InitializeVariables.o CreateInitialConditions.o \
-          ImplicitAndUpdateX.o ImplicitAndUpdateY.o ImplicitAndUpdateZ.o openfi.o \
+          CalculateLocalDivergence.o CheckDivergence.o main.o ExplicitTermsVX.o \
+          ExplicitTermsVY.o ExplicitTermsVZ.o hdf_read.o \
+          ExplicitTermsTemp.o inirea.o InitializeVariables.o CreateInitialConditions.o \
+          ImplicitAndUpdateVX.o ImplicitAndUpdateVY.o ImplicitAndUpdateVZ.o openfi.o \
           MakeGrid.o DeallocateVariables.o \
           param.o CorrectPressure.o \
-          solq12k.o StatRoutines.o hdf_write.o hdf_read.o \
-          solq3k.o ImplicitAndUpdateTemp.o solrok.o DebugRoutines.o \
+          SolveImpEqnUpdate_XY.o StatRoutines.o \
+          SolveImpEqnUpdate_Z.o ImplicitAndUpdateTemp.o SolveImpEqnUpdate_Temp.o DebugRoutines.o \
           TimeMarcher.o CorrectVelocity.o GlobalQuantities.o InitPressureSolver.o \
           SolvePressureCorrection.o CalcDissipationNu.o interp.o LocateLargeDivergence.o QuitRoutine.o \
  	    decomp_2d.o decomp_2d_fft.o WriteFlowField.o  \

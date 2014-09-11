@@ -11,7 +11,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine ImplicitAndUpdateZ
+      subroutine ImplicitAndUpdateVZ
       use param
       use local_arrays, only: q3,rhs,ru3,qcap,pr
       use decomp_2d, only: xstart,xend
@@ -65,7 +65,7 @@
 !$OMP END PARALLEL DO
 
 
-      call solq3k
+      call SolveImpEqnUpdate_Z
 
       q3(1,:,:)=0.0d0
       q3(n3,:,:)=0.0d0

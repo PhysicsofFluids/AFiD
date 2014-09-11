@@ -11,7 +11,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine ImplicitAndUpdateY
+      subroutine ImplicitAndUpdateVY
       use param
       use local_arrays, only: q2,ru2,pr,rhs,dph
       use decomp_2d, only: xstart,xend
@@ -68,41 +68,7 @@
       enddo
       enddo
 
-#ifdef SERIAL_DEBUG
-      cksum=0.0d0
-      do kc=1,n3m
-      do jc=1,n2m
-      do ic=1,n1m
-      cksum=cksum+rhs(kc,jc,ic)
-      end do
-      end do
-      end do
-      write(*,*) 'hdnl2, rhs cksum', cksum
-
-      cksum=0.0d0
-      do kc=1,n3m
-      do jc=1,n2m
-      do ic=1,n1m
-      cksum=cksum+ru2(kc,jc,ic)
-      end do
-      end do
-      end do
-      write(*,*) 'hdnl2, ru2 cksum', cksum
-#endif
-
-      call solq12k(q2,rhs)
-
-#ifdef SERIAL_DEBUG
-      cksum=0.0d0
-      do kc=1,n3m
-      do jc=1,n2m
-      do ic=1,n1m
-      cksum=cksum+q2(kc,jc,ic)
-      end do
-      end do
-      end do
-      write(*,*) 'hdnl2, q2 cksum', cksum
-#endif
+      call SolveImpEqnUpdate_XY(q2,rhs)
       
       return
       end
