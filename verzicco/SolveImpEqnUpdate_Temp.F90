@@ -8,7 +8,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine solrok
+      subroutine SolveImpEqnUpdate_Temp
       use param
       use local_arrays, only : dens,rhs
       use decomp_2d, only: xstart,xend

@@ -9,7 +9,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !
-      subroutine solq12k(q,rhs)
+      subroutine SolveImpEqnUpdate_XY(q,rhs)
       use param
       use decomp_2d, only: xstart,xend
       implicit none

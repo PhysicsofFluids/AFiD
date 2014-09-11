@@ -8,7 +8,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine ExplicitY
+      subroutine ExplicitTermsVY
       use param
       use local_arrays, only: q2,q3,q1,dph
       use decomp_2d, only: xstart,xend

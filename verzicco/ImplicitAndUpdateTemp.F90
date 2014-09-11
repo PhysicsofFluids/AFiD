@@ -63,7 +63,7 @@
 
 !  Solve equation and update temperature
 
-      call solrok
+      call SolveImpEqnUpdate_Temp
 
 !  Set boundary conditions on the temperature field at top
 !  and bottom plates. This seems necessary.

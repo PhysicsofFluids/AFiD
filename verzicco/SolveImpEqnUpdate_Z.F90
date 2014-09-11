@@ -1,6 +1,6 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: solq12k.F90                                    !
+!    FILE: solq3k.F90                                    !
 !    CONTAINS: subroutine solq12k                         !
 !                                                         ! 
 !    PURPOSE: Inverts the implicit equation for velocity  !
@@ -9,7 +9,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine solq3k
+      subroutine SolveImpEqnUpdate_Z
       use param
       use local_arrays, only : q3,rhs
       use decomp_2d, only: xstart,xend
