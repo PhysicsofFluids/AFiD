@@ -152,7 +152,7 @@
         ti(1) = MPI_WTIME()
 
 !EP   Determine timestep size
-        call CalculateMaxCFL(cflm)
+        call CalcMaxCFL(cflm)
 
         if(variabletstep) then
           if(ntime.ne.1) then
@@ -173,14 +173,14 @@
           call GlobalQuantities
           if(vmax(1).gt.vlim.and.vmax(2).gt.vlim) errorcode = 266
 
-            call CalculateMaxCFL(cflm)
+            call CalcMaxCFL(cflm)
             call CheckDivergence(dmax)
             call CalculatePlateNu
 
             if(time.gt.tsta) then
 
              if (statcal)  call CalcStats
-             if (dumpslabs) call stst3
+             if (dumpslabs) call SlabDumper
              if (disscal.and.statcal) call CalcDissipationNu
 
             endif

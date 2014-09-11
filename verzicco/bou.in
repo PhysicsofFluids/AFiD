@@ -15,4 +15,4 @@
  IDTV(0=dt fixed,1=var.)   DTMIN(for dt var.)  DTMAX(for dt var.)   CFLLIM(for fixed dt)  VLIM
    1                       1e-8                0.01                 1.0                   1e3
  TFRAME  SLABDUMP(STST3)
- 0.02        0
+ 0.02        1

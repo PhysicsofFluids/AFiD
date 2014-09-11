@@ -98,15 +98,6 @@
         real    :: zslab(1:9)
       end module stat3_param
 !=====================================================       
-      module stat2_param
-       implicit none
-       integer :: idprobe1,idprobe2
-       integer :: idslab1,idslab2,idslab3,idslab4,idslab5
-       integer :: jprobe1,jprobe2,jprobe3
-       integer :: kslab1,kslab2,kslab3,kslab4,kslab5,kprobe1,kprobe2
-       real :: probez1,probez2,prober1,prober2,prober3,slabdumpz
-      end module stat2_param
-!=====================================================       
       module mpih
         implicit none
         include 'mpif.h'
