@@ -167,6 +167,14 @@
 
 !EP   Integrate
         call TimeMarcher
+
+        if(mod(time,tpin).lt.dt) then
+         if(ismaster) then
+          write(6,*) ' ---------------------------------------- '
+          write(6,*) ' T = ',time,' NTIME = ',ntime,' DT = ',dt
+         endif
+        endif
+
         time=time+dt
 
         if(ntime.eq.1.or.mod(time,tpin).lt.dt) then

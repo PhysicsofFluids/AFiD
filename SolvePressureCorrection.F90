@@ -8,7 +8,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !
-      subroutine phcalc
+      subroutine SolvePressureCorrection
       use, intrinsic :: iso_c_binding
       use param
       use fftw_params

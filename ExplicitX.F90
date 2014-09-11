@@ -8,7 +8,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine hdnl1
+      subroutine ExplicitX
       use param
       use local_arrays, only: q2,q3,q1,dq
       use decomp_2d, only: xstart,xend

@@ -8,7 +8,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine prcalc
+      subroutine CorrectPressure
       use param
       use local_arrays, only: pr,dphhalo
       use decomp_2d, only: xstart,xend

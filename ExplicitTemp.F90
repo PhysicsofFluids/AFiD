@@ -8,7 +8,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine hdnlro
+      subroutine ExplicitTemp
       use param
       use local_arrays, only: q2,q3,dens,q1,hro
       use decomp_2d, only: xstart,xend
