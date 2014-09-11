@@ -1,7 +1,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: phini.F90                                      !
-!    CONTAINS: subroutine fftqua,phini,tridiag_matrices   !
+!    FILE: InitPressureSolver.F90                         !
+!    CONTAINS: subroutine InitPressureSolver              !
 !                                                         ! 
 !    PURPOSE: Initialization routines. Compute the metric !
 !     terms and modified wavenumbers for the pressure     !
@@ -9,16 +9,21 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine fftqua
+      subroutine InitPressureSolver
       use param
+      use decomp_2d_fft
+      implicit none
       integer :: n2mh,n2mp,j,i,n1mh,n1mp
+      integer  :: kc,km,kp
+      real :: ugmmm,a33icc,a33icp
+    
+!    Initialize wave number definitions
+
       n1mh=n1m/2+1
       n1mp=n1mh+1
       n2mh=n2m/2+1
       n2mp=n2mh+1
-!
-!     wave number definition
-!
+
       do i=1,n1mh
         ao(i)=(i-1)*2.d0*pi
       enddo
@@ -38,39 +43,8 @@
       do j=1,n2m
         ak2(j)=2.d0*(1.d0-dcos(ap(j)/n2m))*(float(n2m)/rext2)**2
       enddo
- 
-      return
-      end
-!=====================================================
-      subroutine InitPressureSolver
-      use param
-      use decomp_2d_fft
-      implicit none
-    
-!RO   Initialize tridiag matrices
-      call tridiag_matrices   
 
-!m    Initialize FFTW
-      call fftqua
-
-!EP   Planning
-      call decomp_2d_fft_init
-
-      return
-      end
-      
-      
-!=======================================================================
-      subroutine tridiag_matrices
-      use param
-      implicit none
-      integer  :: kc,km,kp
-      real :: ugmmm,a33icc,a33icp
-!
-!
-!   tridiagonal matrix coefficients at each k and i
-!   x1 and x3 cartesian coordinates
-!
+!RO   Initialize Tridiagonal matrices for Poisson solver
       do kc=1,n3m
         km=kmv(kc)
         kp=kpv(kc)
@@ -81,6 +55,10 @@
         apphk(kc)=a33icp*ugmmm
         acphk(kc)=-(amphk(kc)+apphk(kc))
       enddo
-!
-      end subroutine tridiag_matrices
-!==================================================
+
+!EP   Initialize planning
+      call decomp_2d_fft_init
+
+      return
+      end
+      

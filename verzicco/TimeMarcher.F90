@@ -10,7 +10,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine tschem
+      subroutine TimeMarcher
       use param
       use local_arrays
       use mpih
@@ -26,6 +26,9 @@
 ! 
 !   TIME INTEGRATION : implicit viscous, 3rd order RK (Adams Bashfort)  
 !                                                                       
+
+      beta=dt/ren*0.5d0
+
       do ns=1,nsst                                                 
         al=alm(ns)
         ga=gam(ns)
@@ -292,7 +295,6 @@
         enddo
         enddo
         enddo
-        call MPI_BARRIER(MPI_COMM_WORLD,ierr)
         call MPI_REDUCE(mck2,cksum2,1,MDP,MPI_SUM,0, &
      &      MPI_COMM_WORLD,ierr)
         if(nrank.eq.0) then
@@ -438,6 +440,8 @@
         endif
 !m================================       
 !m================================
+
+
       return                                                            
       end                                                               
 !

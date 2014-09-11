@@ -1,4 +1,4 @@
-      subroutine balance
+      subroutine CalcDissipationNu
       use mpih
       use param
       use local_arrays,only: q1,q2,q3,dens
@@ -10,12 +10,12 @@
       integer :: imm,ipp,jmm,jpp,kmm,kpp,kp
       real :: udx3_m,udx3_c
       real :: h11,h12,h13,h21,h22,h23,h31,h32,h33
-      real :: my_dissipth,nuth,nute,volt
-      real :: udx1,udx2,dissipte,my_dissipte,dissipth
+      real :: nuth,nute,volt
+      real :: udx1,udx2,dissipte,dissipth
 
       
-      my_dissipth = 0.0d0
-      my_dissipte = 0.0d0
+      nute = 0.0d0
+      nuth = 0.0d0
 
       udx1=dx1
       udx2=dx2
@@ -39,8 +39,8 @@
 !$OMP  PRIVATE(i,j,k,imm,ipp,jmm,jpp,kp,kpp,kmm) &
 !$OMP  PRIVATE(udx3_m,udx3_c,dissipte,dissipth) &
 !$OMP  PRIVATE(h11,h12,h13,h21,h22,h23,h31,h32,h33) &
-!$OMP  REDUCTION(+:my_dissipth) &
-!$OMP  REDUCTION(+:my_dissipte)
+!$OMP  REDUCTION(+:nute) &
+!$OMP  REDUCTION(+:nuth)
       do i=xstart(3),xend(3)
        imm= i-1
        ipp= i+1
@@ -75,7 +75,7 @@
      &         (h32+h23)**2
 
 
-       my_dissipte = my_dissipte+dissipte*g3rm(k)*pra
+       nute = nute + dissipte*g3rm(k)*pra
 
        h31=(dens(k,j,ipp)-dens(k,j,imm))*udx1*0.5
        h32=(dens(k,jpp,i)-dens(k,jmm,i))*udx2*0.5
@@ -83,7 +83,7 @@
 
        dissipth  = h31*h31 + h32*h32 + h33*h33 
 
-       my_dissipth = my_dissipth+dissipth*g3rm(k)
+       nuth = nuth+dissipth*g3rm(k)
 
 
 !$OMP CRITICAL
@@ -98,11 +98,8 @@
 !$OMP  END PARALLEL DO
 
 
-       call MPI_REDUCE(my_dissipth,nuth,1,MDP,MPI_SUM,0,MPI_COMM_WORLD, &
-     &      ierr)
-       call MPI_REDUCE(my_dissipte,nute,1,MDP,MPI_SUM,0,MPI_COMM_WORLD, &
-     &      ierr)
-
+       call MpiSumRealScalar(nuth)
+       call MpiSumRealScalar(nute)
       
        volt = 1.d0/(real(n3m)*real(n1m)*real(n2m))
       if(nrank.eq.0) then

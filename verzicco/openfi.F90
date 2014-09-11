@@ -25,7 +25,7 @@
         access='sequential')
 
 !EP   nusse3.out in balance.F
-      if (balcal) then
+      if (disscal) then
       open(92,file='nusse3.out',status='unknown',access='sequential', &
        position='append')
       end if
@@ -48,6 +48,6 @@
       close(95)
       close(97)
       close(94)
-      if (balcal) close(92)
+      if (disscal) close(92)
       return 
       end

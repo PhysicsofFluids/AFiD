@@ -1,7 +1,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
 !    FILE: stst.F90                                       !
-!    CONTAINS: subroutine stst,ststwr                     !
+!    CONTAINS: subroutine CalcStats,WriteStats            !
 !                                                         ! 
 !    PURPOSE: Calculates and writes out statistics for    !
 !     the flow field. All quantities are averaged in the  !
@@ -9,7 +9,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine stst
+      subroutine CalcStats
       use param
       use local_arrays, only: q1,q2,q3,dens
       use decomp_2d, only: xstart,xend
@@ -89,13 +89,14 @@
 
       inquire(file=filnam,exist=fexist)
       if (.not.fexist) then 
-        write(*,*) 'Unable to read statistical files, restarting statistics'
-        starea=0
+        write(6,*) 'Unable to read statistical files'
+        write(6,*) 'Restarting statistics from zero' 
+        readstats=.false.
       end if
        
 
       if (nrank.eq.0) then
-       if(starea.eq.1) then
+       if(readstats) then
         call HdfSerialReadIntScalar(dsetname,filnam,timeint_cdsp_old)
         timeint_cdsp = timeint_cdsp + timeint_cdsp_old
        else 
@@ -115,7 +116,7 @@
  
       call StatReadReduceWrite(densq3_me,filnam,dsetname_densq3me)
 
-      if(balcal) then 
+      if(disscal) then 
        call StatReadReduceWrite(dissth,filnam,dsetname_dissth)
        call StatReadReduceWrite(disste,filnam,dsetname_disste)
       end if

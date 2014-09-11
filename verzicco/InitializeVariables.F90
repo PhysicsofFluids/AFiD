@@ -83,7 +83,7 @@
        call AllocateReal1DArray(dens_rms,1,n3m)
        call AllocateReal1DArray(densq3_me,1,n3m)
 
-       if (balcal) then
+       if (disscal) then
         call AllocateReal1DArray(disste,1,n3m)
         call AllocateReal1DArray(dissth,1,n3m)
        end if
