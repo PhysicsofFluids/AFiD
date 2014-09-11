@@ -9,7 +9,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine inirea
+      subroutine ReadFlowField
       use mpih
       use decomp_2d
       use local_arrays
@@ -50,14 +50,13 @@
        call HdfSerialReadRealScalar(dsetname,filnam1,stro3)
       endif
       
-      call MPI_BARRIER(MPI_COMM_WORLD,ierr)
-!EP   Bcasting old grid information and time
-      call MPI_BCAST(n1o,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
-      call MPI_BCAST(n2o,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
-      call MPI_BCAST(n3o,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
-      call MPI_BCAST(istro3,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
-      call MPI_BCAST(stro3,1,MDP,0,MPI_COMM_WORLD,ierr)
-      call MPI_BCAST(time,1,MDP,0,MPI_COMM_WORLD,ierr)
+      call MpiBarrier
+      call MpiBcastInt(n1o)
+      call MpiBcastInt(n2o)
+      call MpiBcastInt(n3o)
+      call MpiBcastReal(istro3)
+      call MpiBcastReal(stro3)
+      call MpiBcastReal(time)
       
 !EP   Check whether grid specifications have been updated
       if(n2o.ne.n2.or.n3o.ne.n3.or.n1o.ne.n1 &
@@ -151,6 +150,10 @@
        ihist=0                                                          
       time=0.
       endif                                                             
+
+!EP   Increase the maximum simulation time by the end time in the
+!continuation files
+        tmax = tmax + time
 
       return                                                            
       end                                                               

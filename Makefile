@@ -67,19 +67,20 @@ LINKS = -lfftw3 -llapack -lblas -lz -lhdf5_fortran -lhdf5
 
 PROGRAM = boutnp
 
-OBJECTS = AuxiliaryRoutines.o cfl.o SetTempBCs.o densmc.o \
-          divg.o divgck.o gcurv.o hdnl1.o hdnl2.o hdnl3.o \
+OBJECTS = AuxiliaryRoutines.o cfl.o SetTempBCs.o CalculatePlateNu.o \
+          divg.o CheckDivergence.o gcurv.o hdnl1.o hdnl2.o hdnl3.o \
           hdnlro.o inirea.o InitializeVariables.o CreateInitialConditions.o \
           invtr1.o invtr2.o invtr3.o openfi.o \
           MakeGrid.o DeallocateVariables.o \
           param.o prcalc.o \
-          solq12k.o stst.o hdf_write.o hdf_read.o \
+          solq12k.o StatRoutines.o hdf_write.o hdf_read.o \
           solq3k.o solrok.o invtrro.o \
-          tsch.o updvp.o globalquantities.o phini.o \
-          phcalc.o balance.o interp.o divgloc.o QuitRoutine.o \
+          TimeMarcher.o updvp.o GlobalQuantities.o InitPressureSolver.o \
+          phcalc.o CalcDissipationNu.o interp.o divgloc.o QuitRoutine.o \
  	    decomp_2d.o decomp_2d_fft.o WriteFlowField.o  \
 	    stst3.o ReadInputFile.o InitializeTimeMarchScheme.o \
-          WriteGridInfo.o StatReadReduceWrite.o HdfRoutines.o
+          WriteGridInfo.o StatReadReduceWrite.o HdfRoutines.o \
+          MpiAuxRoutines.o
 #          alloc.o decomp_2d.o fft_fftw3.o halo.o halo_common.o
 
 MODULES = param.o decomp_2d.o decomp_2d_fft.o 

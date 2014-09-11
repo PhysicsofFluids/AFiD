@@ -10,28 +10,22 @@
 
       subroutine StatReadReduceWrite(var,filename,dsetname)
       use param
-      use decomp_2d, only: xstart,xend,nrank
       use mpih
       implicit none
       character*30,intent(in) :: filename, dsetname
-      real :: var(1:n3m,xstart(2):xend(2))
+      real :: var(1:n3m)
       real :: var_old(1:n3m)
-      real :: var_new(1:n3m)
 
 
 
-      call MPI_REDUCE(var,var_new,n3m, &
-       MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierr)
+      call MpiSumReal1D(var,n3m)
 
-      if (nrank.eq.0) then
-
-       if(starea.eq.1) then
+      if (ismaster) then
+       if(readstats) then
         call HdfSerialReadReal1D(dsetname,filename,var_old,n3m)
-        var_new = var_new + var_old
+        var = var + var_old
        endif
-
-       call HdfSerialWriteReal1D(dsetname,filename,var_new,n3m)
-
+       call HdfSerialWriteReal1D(dsetname,filename,var,n3m)
       end if
 
        return

@@ -45,10 +45,16 @@
         statcal = .true.
       endif
 
-      if(flagbal.eq.0) then
-        balcal = .false.
+      if(idtv.eq.0) then
+        variabletstep = .false.
       else
-        balcal = .true.
+        variabletstep = .true.
+      endif
+
+      if(flagbal.eq.0) then
+        disscal = .false.
+      else
+        disscal = .true.
       endif
 
       if(stst3flag.eq.0) then
@@ -56,6 +62,20 @@
       else
         dumpslabs = .true.
       endif
+
+      if(nread.eq.0) then
+         readflow = .false.
+      else
+        readflow = .true.
+      endif
+
+      if(starea.eq.0) then
+        readstats = .false.
+      else
+        readstats = .true.
+        if (.not. readflow) write(6,*) 'Warning: Restarting flowfield with statistics read'
+      endif
+
 
       return 
       end

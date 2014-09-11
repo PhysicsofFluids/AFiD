@@ -25,13 +25,15 @@
       call decomp_2d_init(n3m,n2m,n1m,0,0, &
      & (/ .false.,.true.,.true. /))
 
-      call MPI_BARRIER(MPI_COMM_WORLD,ierr)
+      call MpiBarrier
 
       call HdfStart
 
-      if (nrank .eq. 0)write(6,*) 'MPI tasks=', nproc
+      if (nrank.eq.master) ismaster = .true.
 
-!$    if (nrank .eq. 0) then 
+      if (ismaster) write(6,*) 'MPI tasks=', nproc
+
+!$    if (ismaster) then 
 !$OMP PARALLEL
 !$OMP MASTER
 !$        nthreads = omp_get_num_threads()
@@ -43,8 +45,7 @@
 !m==========================================    
       call openfi
 !m====================================================
-      if(nrank.eq.0) then
-!m====================================================                                                                             
+      if(ismaster) then
       write(6,112)rext/alx3
   112 format(//,20x,'R A Y B E N ',//,10x, &
        '2D Cell with aspect-ratio:  D/H = ',f5.2)
@@ -52,7 +53,7 @@
   142 format(//,8x,'Periodic lateral wall boundary condition')
       write(6,202) ray,pra
   202 format(/,5x,'Parameters: ',' Ra=',e10.3,' Pr= ',e10.3)
-      if(idtv.eq.1) then
+      if(variabletstep) then
          write(6,204) cflmax
   204 format(/,5x,'Variable dt and fixed cfl= ', &
        e11.4,/ )            
@@ -61,7 +62,6 @@
   205 format(/,5x,'Fixed dt= ',e11.4,' and maximum cfl=', &
         e11.4,/ )            
       endif
-!m====================================================    
       endif
 
       call InitializeTimeMarchScheme
@@ -77,7 +77,7 @@
 !m===================================                                                      
 !m===================================
 !m===================================
-      if(nrank.eq.0) then
+      if(ismaster) then
       write(6,754)n1,n2,n3                                              
   754 format(/,5x,'grid resolution: ',' n1= ',i5,' n2= ',i5, &
       ' n3= ',i5/)                       
@@ -90,19 +90,20 @@
 !m===================================     
       
       time=0.d0
-
       if(statcal) timeint_cdsp = 0
 
       call InitPressureSolver
- 
       call SetTempBCs
-!
-!      create the initial conditions
-!
-      if(nread.eq.0) then
-        if(nrank.eq.0) then
-          write(6,*)' nread = 0: creating initial condition'
-        endif
+
+      if(readflow) then
+
+        if(ismaster) write(6,*) 'Reading initial condition from file'
+
+        call ReadFlowField
+
+      else
+
+        if(ismaster) write(6,*) 'Creating initial condition'
 
         ntime=0                                                         
         time=0.d0
@@ -110,16 +111,6 @@
         
         call CreateInitialConditions
 
-      else
-        if(nrank.eq.0) then
-          write(6,*)' nread = 1: reading initial condition from file'
-        endif
-!EP   Read (and interpolate) continuation files
-        call inirea
-
-!EP   Increase the maximum simulation time by the end time in the
-!continuation files
-        tmax = tmax + time
       endif                                                             
 
 !EP   Update all relevant halos
@@ -131,30 +122,26 @@
 
 !EP   Check divergence. Should be reduced to machine precision after the first
 !phcalc. Here it can still be high.
-      call divgck(dmax)
-      if(nrank.eq.0) then
-        write(6,*)' initial maximum divergence: ',dmax
-      endif
+
+      call CheckDivergence(dmax)
+
+      if(ismaster) write(6,*)' Initial maximum divergence: ',dmax
 
       ntstf=ntst                                                   
-      if(nrank.eq.0) then
-        write(6,711) ntstf,tpin
+
+      if(ismaster) write(6,711) ntstf,tpin
+
 711     format(3x,'check in cond : ','  ntstf =',i8,2x,'tpin =',f10.1//)
-      endif
 
 !EP   Write some values
-      if(idtv.eq.1) then
-        if(nrank.eq.0) then
-          write(6,*)ntime,time,dt,dmax,densm,denmax,denmin
-        endif
-        else
-        if(nrank.eq.0) then
-          write(6,*)ntime,time,cflm,dmax, densm,denmax,denmin
-        endif
-        cflm=cflm*dt
+      if(variabletstep) then
+       if(ismaster) write(6,*)ntime,time,dt,dmax,densm,denmax,denmin
+      else
+       if(ismaster) write(6,*)ntime,time,cflm,dmax, densm,denmax,denmin
+       cflm=cflm*dt
       endif
 
-      if(nrank.eq.0) then
+      if(ismaster) then
         tin(2) = MPI_WTIME()
         write(6,*) 'Initialization Time = ', tin(2) -tin(1), ' sec.'
       endif
@@ -165,12 +152,11 @@
         ti(1) = MPI_WTIME()
 
 !EP   Determine timestep size
-        call cfl(cflm)
+        call CalculateMaxCFL(cflm)
 
-        if(idtv.eq.1) then
+        if(variabletstep) then
           if(ntime.ne.1) then
             dt=cflmax/cflm
-!EP   Restrict dt
             if(dt.gt.dtmax) dt=dtmax
           endif
             if(dt.lt.dtmin) errorcode = 166
@@ -178,29 +164,29 @@
           cflm=cflm*dt
           if(cflm.gt.cfllim) errorcode = 165
         endif
-        beta=dt/ren*0.5d0
 
 !EP   Integrate
-        call tschem
+        call TimeMarcher
         time=time+dt
 
-
         if(ntime.eq.1.or.mod(time,tpin).lt.dt) then
-          call globalquantities
+          call GlobalQuantities
           if(vmax(1).gt.vlim.and.vmax(2).gt.vlim) errorcode = 266
-            call cfl(cflm)
-            call divgck(dmax)
-            call densmc
+
+            call CalculateMaxCFL(cflm)
+            call CheckDivergence(dmax)
+            call CalculatePlateNu
+
             if(time.gt.tsta) then
 
-             if (statcal)  call stst
+             if (statcal)  call CalcStats
              if (dumpslabs) call stst3
-             if (balcal.and.statcal) call balance
+             if (disscal.and.statcal) call CalcDissipationNu
 
             endif
-            if(idtv.eq.0) then
-              cflm=cflm*dt
-            endif
+
+            if(.not.variabletstep) cflm=cflm*dt
+
             if(dmax.gt.resid) errorcode = 169
 
         endif
@@ -215,7 +201,7 @@
 
         ti(2) = MPI_WTIME()
         if(mod(time,tpin).lt.dt) then
-          if(nrank.eq.0) then
+          if(ismaster) then
           write(6,*) 'Maximum divergence = ', dmax
           write(6,*)ntime,time,vmax(1),vmax(2),vmax(3),dmax,densm,denmax,denmin
           write(6,*) 'Iteration Time = ', ti(2) -ti(1), ' sec.'

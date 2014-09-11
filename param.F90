@@ -64,7 +64,10 @@
         real, dimension(1:3) :: gam,rom,alm
         real, allocatable, dimension(:,:) :: denbs,denbn
               
-        logical :: dumpslabs,statcal,balcal
+        logical :: dumpslabs,statcal,disscal
+        logical :: readflow, readstats, ismaster=.false.
+        logical :: resetlogs,variabletstep
+
       end module param
       
 !************* End of param module******************************
