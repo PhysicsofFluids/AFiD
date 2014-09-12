@@ -68,7 +68,7 @@
 
       call InitializeVariables
 
-      call MakeGrid
+      call CreateGrid
 
       call WriteGridInfo
 

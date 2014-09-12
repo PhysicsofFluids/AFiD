@@ -1,14 +1,14 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: MakeGrid.F90                                   !
-!    CONTAINS: subroutine MakeGrid                        !
+!    FILE: CreateGrid.F90                                   !
+!    CONTAINS: subroutine CreateGrid                        !
 !                                                         ! 
 !    PURPOSE: Compute the indices, grid, grid metrics     !
 !     and coefficients for differentiation                !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine MakeGrid
+      subroutine CreateGrid
       use param
       use decomp_2d, only: nrank
       use AuxiliaryRoutines

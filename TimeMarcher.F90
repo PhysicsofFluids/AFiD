@@ -34,6 +34,7 @@
         call ImplicitAndUpdateVX
         call ImplicitAndUpdateVY
         call ImplicitAndUpdateVZ
+        call ImplicitAndUpdateTemp
 
         call update_halo(q1,1)
         call update_halo(q2,1)
@@ -58,7 +59,6 @@
 
         call CorrectVelocity
         call CorrectPressure
-        call ImplicitAndUpdateTemp
 
         call update_halo(q1,1)
         call update_halo(q2,1)

@@ -72,7 +72,7 @@ OBJECTS = AuxiliaryRoutines.o CalcMaxCFL.o SetTempBCs.o CalculatePlateNu.o \
           ExplicitTermsVY.o ExplicitTermsVZ.o hdf_read.o \
           ExplicitTermsTemp.o inirea.o InitializeVariables.o CreateInitialConditions.o \
           ImplicitAndUpdateVX.o ImplicitAndUpdateVY.o ImplicitAndUpdateVZ.o openfi.o \
-          MakeGrid.o DeallocateVariables.o \
+          CreateGrid.o DeallocateVariables.o \
           param.o CorrectPressure.o \
           SolveImpEqnUpdate_XY.o StatRoutines.o \
           SolveImpEqnUpdate_Z.o ImplicitAndUpdateTemp.o SolveImpEqnUpdate_Temp.o DebugRoutines.o \
