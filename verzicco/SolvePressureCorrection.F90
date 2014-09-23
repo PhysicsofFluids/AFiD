@@ -65,12 +65,15 @@
         iodim_howmany(2)%os=(sp%zen(1)-sp%zst(1)+1)
         fwd_guruplan_z=fftw_plan_guru_dft(1,iodim,                      &
      &    2,iodim_howmany,cz1,cz1,                                      &
-     &    FFTW_FORWARD,FFTW_PATIENT)
+     &    FFTW_FORWARD,FFTW_ESTIMATE)
         iodim(1)%n=n1m
         bwd_guruplan_z=fftw_plan_guru_dft(1,iodim,                      &
      &    2,iodim_howmany,cz1,cz1,                                      &
-     &    FFTW_BACKWARD,FFTW_PATIENT)
-
+     &    FFTW_BACKWARD,FFTW_ESTIMATE)
+        if (.not.c_associated(bwd_guruplan_z)) then
+          if (ismaster) print*,'Failed to create guru plan. You should link with FFTW3 before MKL, please check.'
+          call MPI_Abort(MPI_COMM_WORLD,1,info)
+        endif
         iodim(1)%n=n2m
         iodim(1)%is=ph%yen(1)-ph%yst(1)+1
         iodim(1)%os=sp%yen(1)-sp%yst(1)+1
@@ -84,7 +87,7 @@
      &    *(sp%yen(2)-sp%yst(2)+1)
         fwd_guruplan_y=fftw_plan_guru_dft_r2c(1,iodim,                  &
      &    2,iodim_howmany,ry1,cy1,                                      &
-     &    FFTW_PATIENT)
+     &    FFTW_ESTIMATE)
 
         iodim(1)%n=n2m
         iodim(1)%is=sp%yen(1)-sp%yst(1)+1
@@ -99,7 +102,7 @@
      &    *(ph%yen(2)-ph%yst(2)+1)
         bwd_guruplan_y=fftw_plan_guru_dft_c2r(1,iodim,                  &
      &    2,iodim_howmany,cy1,ry1,                                      &
-     &    FFTW_PATIENT)
+     &    FFTW_ESTIMATE)
         planned=.true.
       endif
 
