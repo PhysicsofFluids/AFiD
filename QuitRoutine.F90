@@ -10,7 +10,7 @@
       real :: tin(3)
 
       tin(3) = MPI_WTIME()
-      if(nrank.eq.0) then
+      if(ismaster) then
        call NotifyError(errorcode) 
       endif
 
@@ -20,7 +20,9 @@
         call WriteFlowField
       endif
 
+      if(ismaster) then
       call closefi
+      endif
       call DeallocateVariables
       call HdfClose
       call decomp_2d_fft_finalize
