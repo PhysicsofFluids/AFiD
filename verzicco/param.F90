@@ -158,8 +158,9 @@
 
        end interface
 
-        integer FFTW_PATIENT, FFTW_FORWARD, FFTW_BACKWARD
+        integer FFTW_PATIENT, FFTW_FORWARD, FFTW_BACKWARD,FFTW_ESTIMATE
         parameter (FFTW_PATIENT=32)   
+        parameter (FFTW_ESTIMATE=64)   
         parameter (FFTW_FORWARD=-1)   
         parameter (FFTW_BACKWARD=1)   
         type(C_PTR) :: fwd_guruplan_y,bwd_guruplan_y 
