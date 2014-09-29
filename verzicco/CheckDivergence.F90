@@ -22,7 +22,7 @@
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
-!$OMP   SHARED(xstart,xend,n3m,q1,q2,q3,dx1,dx2,udx3m) &
+!$OMP   SHARED(xstart,xend,nxm,q1,q2,q3,dx1,dx2,udx3m) &
 !$OMP   PRIVATE(ic,jc,kc,ip,jp,kp) &
 !$OMP   PRIVATE(dqcap) &
 !$OMP   REDUCTION(max:qmax)
@@ -30,7 +30,7 @@
         ip=ic+1
         do jc=xstart(2),xend(2)
           jp=jc+1
-            do kc=1,n3m
+            do kc=1,nxm
             kp=kc+1
               dqcap= (q1(kc,jc,ip)-q1(kc,jc,ic))*dx1 &
                     +(q2(kc,jp,ic)-q2(kc,jc,ic))*dx2 &

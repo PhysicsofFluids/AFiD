@@ -20,7 +20,7 @@
       eps=1.0d0
       do i=xstart(3),xend(3)
       do j=xstart(2),xend(2)
-      do k=1,n3m
+      do k=1,nxm
            yyy=zm(k) 
            q1(k,j,i)=0.0d0
            yyy=zm(k) 
@@ -38,7 +38,7 @@
 
       do i=xstart(3),xend(3)
       do j=xstart(2),xend(2)
-      do k=2,n3m
+      do k=2,nxm
              dens(k,j,i)= denbs(j,i) - (denbs(j,i) - denbn(j,i)) &
                          *zz(k)
            enddo
@@ -47,7 +47,7 @@
       
 
         dens(1,:,:)=1.0d0
-        dens(n3,:,:)=0.0d0
+        dens(nx,:,:)=0.0d0
 
       return                                                            
       end                                                               

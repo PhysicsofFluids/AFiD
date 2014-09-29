@@ -22,14 +22,14 @@
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
 !$OMP   SHARED(q1,q2,q3,dphhalo,udx1,udx2,udx3c) &
-!$OMP   SHARED(xstart,xend,n3m,kmv,dt,al) &
+!$OMP   SHARED(xstart,xend,nxm,kmv,dt,al) &
 !$OMP   PRIVATE(ic,jc,kc) &
 !$OMP   PRIVATE(im,jm,km,usukm,locdph)
       do ic=xstart(3),xend(3)
         im=ic-1
         do jc=xstart(2),xend(2)
           jm=jc-1
-          do kc=1,n3m
+          do kc=1,nxm
           km=kmv(kc)
           usukm = al*dt*udx3c(kc)
           locdph=dphhalo(kc,jc,ic)

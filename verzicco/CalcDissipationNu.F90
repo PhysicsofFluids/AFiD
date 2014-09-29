@@ -2,7 +2,7 @@
       use mpih
       use param
       use local_arrays,only: q1,q2,q3,dens
-      use decomp_2d, only: xstart,xend,nrank
+      use decomp_2d, only: xstart,xend
       use stat_arrays
 
       implicit none
@@ -33,7 +33,7 @@
 !$OMP  DEFAULT(none) &
 !$OMP  SHARED(xstart,xend,g3rm,pra,q1,q2,q3,dens) &
 !$OMP  SHARED(udx1,udx2,udx3m,udx3c) &
-!$OMP  SHARED(n1m,n2m,n3m,ren,pec) &
+!$OMP  SHARED(nzm,nym,nxm,ren,pec) &
 !$OMP  SHARED(kpv,kmv,zz,zm) &
 !$OMP  SHARED(disste,dissth) &
 !$OMP  PRIVATE(i,j,k,imm,ipp,jmm,jpp,kp,kpp,kmm) &
@@ -48,7 +48,7 @@
         jmm=j-1
         jpp=j+1
 
-        do k=1,n3m
+        do k=1,nxm
         kp=k+1
         kpp=kpv(k)
         kmm=kmv(k)
@@ -70,9 +70,7 @@
        h33=(q3(kp,j,i)-q3(k,j,i))*udx3c(k)
 
        dissipte = 2.0*(h11**2+h22**2+h33**2)+ &
-     &         (h21+h12)**2+ &
-     &         (h31+h13)**2+ &
-     &         (h32+h23)**2
+               (h21+h12)**2+(h31+h13)**2+(h32+h23)**2
 
 
        nute = nute + dissipte*g3rm(k)*pra
@@ -87,8 +85,8 @@
 
 
 !$OMP CRITICAL
-       disste(k) =  disste(k) + dissipte / ren / real(n1m) / real(n2m)
-       dissth(k) =  dissth(k) + dissipth / pec / real(n1m) / real(n2m)
+       disste(k) =  disste(k) + dissipte / ren / real(nzm) / real(nym)
+       dissth(k) =  dissth(k) + dissipth / pec / real(nzm) / real(nym)
 !$OMP END CRITICAL
 
        end do
@@ -101,8 +99,8 @@
        call MpiSumRealScalar(nuth)
        call MpiSumRealScalar(nute)
       
-       volt = 1.d0/(real(n3m)*real(n1m)*real(n2m))
-      if(nrank.eq.0) then
+       volt = 1.d0/(real(nxm)*real(nzm)*real(nym))
+      if(ismaster) then
       nute = nute*volt + 1
       nuth = nuth*volt 
       write(92,*) time,nute,nuth

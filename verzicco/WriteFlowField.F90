@@ -11,6 +11,7 @@
       subroutine WriteFlowField
       use param
       use local_arrays, only: q1,q2,q3,dens
+      implicit none
       character*30 :: filnam1,dsetname
 
       filnam1 = trim('continua_dens.h5')
@@ -26,12 +27,12 @@
        filnam1 = trim('continua_master.h5')
        call HdfCreateBlankFile(filnam1)
  
-       dsetname = trim('n1')
-       call HdfSerialWriteIntScalar(dsetname,filnam1,n1)
-       dsetname = trim('n2')
-       call HdfSerialWriteIntScalar(dsetname,filnam1,n2)
-       dsetname = trim('n3')
-       call HdfSerialWriteIntScalar(dsetname,filnam1,n3)
+       dsetname = trim('nx')
+       call HdfSerialWriteIntScalar(dsetname,filnam1,nx)
+       dsetname = trim('ny')
+       call HdfSerialWriteIntScalar(dsetname,filnam1,ny)
+       dsetname = trim('nz')
+       call HdfSerialWriteIntScalar(dsetname,filnam1,nz)
        dsetname = trim('rext')
        call HdfSerialWriteRealScalar(dsetname,filnam1,rext)
        dsetname = trim('rext2')

@@ -13,25 +13,25 @@
       anusslow = 0.d0
       anussupp = 0.d0
       del  = 1.0/(zz(2)-zz(1))
-      deln = 1.0/(zz(n3)-zz(n3m))
+      deln = 1.0/(zz(nx)-zz(nxm))
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
 !$OMP   SHARED(xstart,xend,dens,del,deln) &
-!$OMP   SHARED(n3m,n3) &
+!$OMP   SHARED(nxm,nx) &
 !$OMP   PRIVATE(i,j) &
 !$OMP   REDUCTION(+:anusslow) &
 !$OMP   REDUCTION(+:anussupp)
       do i=xstart(3),xend(3)
          do j=xstart(2),xend(2)
            anusslow = anusslow + (dens(1,j,i)-dens(2,j,i))*del
-           anussupp = anussupp + (dens(n3m,j,i)-dens(n3,j,i))*deln
+           anussupp = anussupp + (dens(nxm,j,i)-dens(nx,j,i))*deln
         enddo
       end do
 !$OMP END PARALLEL DO
 
-      anusslow = anusslow / (n1m*n2m)
-      anussupp = anussupp / (n1m*n2m)
+      anusslow = anusslow / (nzm*nym)
+      anussupp = anussupp / (nzm*nym)
 
       call MpiSumRealScalar(anusslow)
       call MpiSumRealScalar(anussupp)

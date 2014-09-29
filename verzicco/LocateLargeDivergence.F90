@@ -22,7 +22,7 @@
         ip=ic+1
         do jc=xstart(2),xend(2)
           jp=jc+1
-            do kc=1,n3m
+            do kc=1,nxm
             kp=kc+1
               dqcap= (q1(kc,jc,ip)-q1(kc,jc,ic))*dx1 &
      &              +(q2(kc,jp,ic)-q2(kc,jc,ic))*dx2 &

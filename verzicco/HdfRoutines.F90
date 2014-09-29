@@ -164,8 +164,8 @@
       info = MPI_INFO_NULL
 
       ndims = 2
-      dims(1)=n2m
-      dims(2)=n1m
+      dims(1)=nym
+      dims(2)=nzm
 
       call h5screate_simple_f(ndims, dims,  &
      &                        filespace, hdf_error)
@@ -410,7 +410,7 @@
       integer :: comm, info
       integer :: ndims
 
-      real, intent(in), dimension(1:n3,xstart(2)-1:xend(2)+1, &
+      real, intent(in), dimension(1:nx,xstart(2)-1:xend(2)+1, &
      & xstart(3)-1:xend(3)+1)::qua
 
       character*30,intent(in) :: filnam1
@@ -424,14 +424,14 @@
    
       ndims = 3
 
-      dims(1)=n3
-      dims(2)=n2m
-      dims(3)=n1m
+      dims(1)=nx
+      dims(2)=nym
+      dims(3)=nzm
 
       call h5screate_simple_f(ndims, dims,  &
      &                        filespace, hdf_error)
 
-      data_count(1) = n3
+      data_count(1) = nx
       data_count(2) = xend(2)-xstart(2)+1
       data_count(3) = xend(3)-xstart(3)+1
 
@@ -462,7 +462,7 @@
       call h5pset_dxpl_mpio_f(plist_id, H5FD_MPIO_COLLECTIVE_F, &
      &                        hdf_error)
        call h5dwrite_f(dset, H5T_NATIVE_DOUBLE, &
-     &   qua(1:n3,xstart(2):xend(2),xstart(3):xend(3)), dims,  &
+     &   qua(1:nx,xstart(2):xend(2),xstart(3):xend(3)), dims,  &
      &   hdf_error, file_space_id = slabspace, mem_space_id = memspace,  &
      &   xfer_prp = plist_id)
       call h5pclose_f(plist_id, hdf_error)

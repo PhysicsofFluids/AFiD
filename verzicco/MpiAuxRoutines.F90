@@ -40,8 +40,8 @@
       
        call MPI_REDUCE(var,buf,1, &
         MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierr)
- 
-       buf = var
+
+       var = buf
 
       return
       end subroutine MpiSumRealScalar
@@ -56,7 +56,7 @@
        call MPI_REDUCE(var,buf,1, &
         MPI_DOUBLE_PRECISION,MPI_MAX,0,MPI_COMM_WORLD,ierr)
  
-       buf = var
+       var = buf
 
       return
       end subroutine MpiMaxRealScalar
@@ -71,7 +71,7 @@
        call MPI_REDUCE(var,buf,1, &
         MPI_DOUBLE_PRECISION,MPI_MIN,0,MPI_COMM_WORLD,ierr)
  
-       buf = var
+       var = buf
 
       return
       end subroutine MpiMinRealScalar
@@ -87,7 +87,7 @@
        call MPI_REDUCE(var,buf,sz, &
         MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierr)
  
-       buf = var
+       var = buf
 
       return
       end subroutine MpiSumReal1D

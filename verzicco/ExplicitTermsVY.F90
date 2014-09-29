@@ -29,7 +29,7 @@
 !$OMP   DEFAULT(none) &
 !$OMP   SHARED(xstart,xend,q1,q2,q3,dx1,dx2) &
 !$OMP   SHARED(kmv,kpv,am3sk,ac3sk,ap3sk,udx1) &
-!$OMP   SHARED(udx2,udx1q,udx2q,udx3m,dph,n3m) &
+!$OMP   SHARED(udx2,udx1q,udx2q,udx3m,dph,nxm) &
 !$OMP   PRIVATE(ic,jc,kc,imm,ipp,kmm,kp,kpp) &
 !$OMP   PRIVATE(jmm,jpp) &
 !$OMP   PRIVATE(h21,h22,h23,d11q2,d22q2)
@@ -39,7 +39,7 @@
        do jc=xstart(2),xend(2)
         jmm=jc-1
         jpp=jc+1
-        do kc=1,n3m
+        do kc=1,nxm
          kmm=kmv(kc)
          kpp=kpv(kc)
          kp=kc+1

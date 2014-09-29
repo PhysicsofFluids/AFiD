@@ -13,7 +13,7 @@
 !                                                                       
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
-!$OMP   SHARED(xstart,xend,n3m,q1,q2,q3) &
+!$OMP   SHARED(xstart,xend,nxm,q1,q2,q3) &
 !$OMP   SHARED(dx1,dx2,udx3m) &
 !$OMP   PRIVATE(i,j,k,ip,jp,kp,udx3,qcf) &
 !$OMP   REDUCTION(max:cflm)
@@ -21,7 +21,7 @@
         ip=i+1
         do j=xstart(2),xend(2)
           jp=j+1
-          do k=1,n3m
+          do k=1,nxm
            udx3=udx3m(k)
            kp=k+1
             qcf=( abs((q1(k,j,i)+q1(k,j,ip))*0.5d0*dx1) &

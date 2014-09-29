@@ -32,13 +32,13 @@
       q3_rms_vol = 0.0d0
       q1q2q3_rms_vol = 0.0d0
       vmax = 0.0d0
-      vol = 1.d0/(alx3*dx3*real(n1m)*real(n2m))
+      vol = 1.d0/(alx3*dx3*real(nzm)*real(nym))
 
 
 !EP   Loop over volume
       do ic=xstart(3),xend(3)
         do jc=xstart(2),xend(2)
-          do kc=1,n3m
+          do kc=1,nxm
           kp = kc + 1
           fac2 = g3rc(kc)
           vmax(1) = max(vmax(1),abs(q1(kc,jc,ic)))

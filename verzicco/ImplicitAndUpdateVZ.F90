@@ -25,7 +25,7 @@
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
-!$OMP   SHARED(xstart,xend,n3m,q3,pr) &
+!$OMP   SHARED(xstart,xend,nxm,q3,pr) &
 !$OMP   SHARED(kmv,kpv,am3ck,ac3ck,ap3ck) &
 !$OMP   SHARED(al,ga,ro,alre,dt,qcap) &
 !$OMP   SHARED(udx3c,rhs,ru3) &
@@ -34,7 +34,7 @@
 !$OMP   PRIVATE(dq33,dpx33)
       do ic=xstart(3),xend(3)
       do jc=xstart(2),xend(2)
-      do kc=2,n3m
+      do kc=2,nxm
       km=kc-1
       kp=kc+1
       udx3 = al*udx3c(kc)
@@ -68,7 +68,7 @@
       call SolveImpEqnUpdate_Z
 
       q3(1,:,:)=0.0d0
-      q3(n3,:,:)=0.0d0
+      q3(nx,:,:)=0.0d0
 
       return
       end
