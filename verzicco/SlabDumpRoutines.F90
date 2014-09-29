@@ -60,7 +60,7 @@
 
 !EP   Compute which kslab corresponds to which zslab
       
-      kslab = 1
+      kslab = 2
       
         do k=2,nxm
           zmloc=zm(k)

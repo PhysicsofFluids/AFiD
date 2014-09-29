@@ -42,10 +42,10 @@
 !$        write(6,*) 'OMP threads=', nthreads
 !$    end if
 
+      if(ismaster) then
 !m==========================================    
       call openfi
 !m====================================================
-      if(ismaster) then
       write(6,112)rext/alx3
   112 format(//,20x,'R A Y B E N ',//,10x, &
        '2D Cell with aspect-ratio:  D/H = ',f5.2)
