@@ -5,7 +5,7 @@
         implicit none
         integer i,j,k
 
-      real, intent(in), dimension(1:n3,xstart(2)-1:xend(2)+1, &
+      real, intent(in), dimension(1:nx,xstart(2)-1:xend(2)+1, &
      & xstart(3)-1:xend(3)+1)::qua
         real, intent(out) :: cksum
 
@@ -13,7 +13,7 @@
 
         do i=xstart(3),xend(3)
          do j=xstart(2),xend(2)
-          do k=1,n3m
+          do k=1,nxm
            cksum=cksum+qua(k,j,i)
           enddo
          enddo

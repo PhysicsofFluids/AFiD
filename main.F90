@@ -22,7 +22,7 @@
 
       call ReadInputFile
 
-      call decomp_2d_init(n3m,n2m,n1m,0,0, &
+      call decomp_2d_init(nxm,nym,nzm,0,0, &
      & (/ .false.,.true.,.true. /))
 
       call MpiBarrier
@@ -78,9 +78,9 @@
 !m===================================
 !m===================================
       if(ismaster) then
-      write(6,754)n1,n2,n3                                              
-  754 format(/,5x,'grid resolution: ',' n1= ',i5,' n2= ',i5, &
-      ' n3= ',i5/)                       
+      write(6,754)nz,ny,nx                                              
+  754 format(/,5x,'grid resolution: ',' nx= ',i5,' ny= ',i5, &
+      ' nz= ',i5/)                       
       write(6,755) 1.d0/dx1,1.d0/dx2,1.d0/dx3,dt,ntst                  
   755 format(/,2x,' dx1=',e10.3,' dx2=',e10.3,' dx3=',e10.3,' dt=' &
       ,e10.3,' ntst=',i7,/)
@@ -199,12 +199,6 @@
 
         endif
 
-#ifdef MOVIE
-        if(mod(time,tframe).lt.dt) then
-          call mkmov
-        endif
-#endif
-         
         if(time.gt.tmax) errorcode = 333
 
         ti(2) = MPI_WTIME()

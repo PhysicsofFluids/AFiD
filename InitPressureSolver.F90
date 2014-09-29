@@ -13,39 +13,39 @@
       use param
       use decomp_2d_fft
       implicit none
-      integer :: n2mh,n2mp,j,i,n1mh,n1mp
+      integer :: nymh,nymp,j,i,nzmh,nzmp
       integer  :: kc,km,kp
       real :: ugmmm,a33icc,a33icp
     
 !    Initialize wave number definitions
 
-      n1mh=n1m/2+1
-      n1mp=n1mh+1
-      n2mh=n2m/2+1
-      n2mp=n2mh+1
+      nzmh=nzm/2+1
+      nzmp=nzmh+1
+      nymh=nym/2+1
+      nymp=nymh+1
 
-      do i=1,n1mh
+      do i=1,nzmh
         ao(i)=(i-1)*2.d0*pi
       enddo
-      do i=n1mp,n1m
-        ao(i)=-(n1m-i+1)*2.d0*pi
+      do i=nzmp,nzm
+        ao(i)=-(nzm-i+1)*2.d0*pi
       enddo
-      do i=1,n1m
-        ak1(i)=2.d0*(1.d0-dcos(ao(i)/n1m))*(float(n1m)/rext)**2
+      do i=1,nzm
+        ak1(i)=2.d0*(1.d0-dcos(ao(i)/nzm))*(float(nzm)/rext)**2
       enddo
 
-      do j=1,n2mh
+      do j=1,nymh
         ap(j)=(j-1)*2.d0*pi
       enddo
-      do j=n2mp,n2m
-        ap(j)=-(n2m-j+1)*2.d0*pi
+      do j=nymp,nym
+        ap(j)=-(nym-j+1)*2.d0*pi
       enddo
-      do j=1,n2m
-        ak2(j)=2.d0*(1.d0-dcos(ap(j)/n2m))*(float(n2m)/rext2)**2
+      do j=1,nym
+        ak2(j)=2.d0*(1.d0-dcos(ap(j)/nym))*(float(nym)/rext2)**2
       enddo
 
 !RO   Initialize Tridiagonal matrices for Poisson solver
-      do kc=1,n3m
+      do kc=1,nxm
         km=kmv(kc)
         kp=kpv(kc)
         a33icc=kmc(kc)*dx3q/g3rc(kc)

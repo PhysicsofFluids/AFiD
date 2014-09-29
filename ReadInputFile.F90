@@ -6,7 +6,7 @@
 
       open(unit=15,file='bou.in',status='old')
         read(15,301) dummy
-        read(15,*) n1,n2,n3,nsst,nwrit,nread
+        read(15,*) nz,ny,nx,nsst,nwrit,nread
         read(15,301) dummy
         read(15,*) ntst,walltimemax,tpin,tmax,ireset
         read(15,301) dummy
@@ -26,9 +26,9 @@
 301     format(a4)                
       close(15)
 
-      n1m=n1-1                                                          
-      n2m=n2-1                                                          
-      n3m=n3-1
+      nzm=nz-1                                                          
+      nym=ny-1                                                          
+      nxm=nx-1
 
 !m============================================
 !

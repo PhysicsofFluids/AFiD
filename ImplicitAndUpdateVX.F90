@@ -27,7 +27,7 @@
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
-!$OMP   SHARED(xstart,xend,n3m,q1,pr) &
+!$OMP   SHARED(xstart,xend,nxm,q1,pr) &
 !$OMP   SHARED(kmv,kpv,am3sk,ac3sk,ap3sk) &
 !$OMP   SHARED(dx1,al,ga,ro,alre,dt,dq) &
 !$OMP   SHARED(udx3m,rhs,ru1) &
@@ -37,7 +37,7 @@
       do ic=xstart(3),xend(3)
       imm=ic-1
       do jc=xstart(2),xend(2)
-      do kc=1,n3m
+      do kc=1,nxm
       kmm=kmv(kc)
       kpp=kpv(kc)
       amm=am3sk(kc)

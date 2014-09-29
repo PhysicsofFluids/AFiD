@@ -6,7 +6,7 @@
 !==========================================================			
 !       read from input file bou.in
 !==========================================================
-        integer   :: n2, n3,n1
+        integer   :: nz, ny, nx
         integer   :: nsst, nwrit, nread, ntst, ireset
         real      :: walltimemax,tpin,tmax
         real      :: alx3,str3
@@ -48,7 +48,7 @@
         
 !===========================================================
 !******* Other variables ***********************************
-        integer  :: n2m, n3m, n1m
+        integer  :: nzm, nym, nxm
         integer  :: iaxsy
         real :: rint
         real :: ren, pec

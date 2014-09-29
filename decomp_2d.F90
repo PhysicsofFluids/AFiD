@@ -1005,6 +1005,48 @@ contains
     call findfactor(iproc, factors, nfact)
     if (nrank==0) write(*,*) 'factors: ', (factors(i), i=1,nfact)
 
+!    Make initial communication to un-bias results
+
+    row = factors(1)
+    col = iproc / row
+
+       if (min(nx_global,ny_global)>=row .and. &
+            min(ny_global,nz_global)>=col) then
+
+          ! 2D Catersian topology
+          dims(1) = row
+          dims(2) = col
+          periodic(1) = .false.
+          periodic(2) = .false.
+          call MPI_CART_CREATE(MPI_COMM_WORLD,2,dims,periodic, &
+               .false.,DECOMP_2D_COMM_CART_X, ierror)
+          call MPI_CART_COORDS(DECOMP_2D_COMM_CART_X,nrank,2,coord,ierror)
+          
+          ! communicators defining sub-groups for ALLTOALL(V)
+          call MPI_CART_SUB(DECOMP_2D_COMM_CART_X,(/.true.,.false./), &
+               DECOMP_2D_COMM_COL,ierror)
+          call MPI_CART_SUB(DECOMP_2D_COMM_CART_X,(/.false.,.true./), &
+               DECOMP_2D_COMM_ROW,ierror)
+          
+          ! generate 2D decomposition information for this row*col
+          call decomp_info_init(nx_global,ny_global,nz_global,decomp)
+
+          ! arrays for X,Y and Z-pencils
+          allocate(u1(decomp%xsz(1),decomp%xsz(2),decomp%xsz(3)))
+          allocate(u2(decomp%ysz(1),decomp%ysz(2),decomp%ysz(3)))
+
+          ! timing the transposition routines
+          t1 = MPI_WTIME()
+          call transpose_x_to_y(u1,u2,decomp)
+          call transpose_y_to_x(u2,u1,decomp)
+          t2 = MPI_WTIME() - t1
+
+          deallocate(u1,u2)
+          call decomp_info_finalize(decomp)
+
+
+       end if
+
     do i=1, nfact
 
        row = factors(i)
@@ -1041,8 +1083,10 @@ contains
           t1 = MPI_WTIME()
           call transpose_x_to_y(u1,u2,decomp)
           call transpose_y_to_z(u2,u3,decomp)
+!          call transpose_z_to_x(u3,u1,decomp)
           call transpose_z_to_y(u3,u2,decomp)
           call transpose_y_to_x(u2,u1,decomp)
+!          call transpose_x_to_z(u1,u3,decomp)
           t2 = MPI_WTIME() - t1
 
           deallocate(u1,u2,u3)

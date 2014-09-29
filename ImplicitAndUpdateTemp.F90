@@ -26,7 +26,7 @@
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
-!$OMP   SHARED(xstart,xend,n3m,dens) &
+!$OMP   SHARED(xstart,xend,nxm,dens) &
 !$OMP   SHARED(kmv,kpv,am3ck,ac3ck,ap3ck) &
 !$OMP   SHARED(ga,ro,alpec,dt) &
 !$OMP   SHARED(rhs,ruro,hro) &
@@ -35,7 +35,7 @@
 !$OMP   PRIVATE(dq33)
       do ic=xstart(3),xend(3)
       do jc=xstart(2),xend(2)
-      do kc=2,n3m
+      do kc=2,nxm
 
 !   Calculate second derivative of temperature in the z-direction.
 !   This is the only term calculated implicitly for temperature.
@@ -71,7 +71,7 @@
        dens(1,xstart(2):xend(2),xstart(3):xend(3)) &
           = denbs(xstart(2):xend(2),xstart(3):xend(3))
 
-       dens(n3,xstart(2):xend(2),xstart(3):xend(3)) &
+       dens(nx,xstart(2):xend(2),xstart(3):xend(3)) &
           = denbn(xstart(2):xend(2),xstart(3):xend(3))
 
 

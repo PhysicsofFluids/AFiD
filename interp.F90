@@ -8,7 +8,7 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine interp(arrold,arrnew,n1o,n2o,n3o, &
+      subroutine interp(arrold,arrnew,nzo,nyo,nxo, &
      & istro3,stro3,intvar,xs2o,xe2o,xs3o,xe3o)
       use param
       use mpih
@@ -16,25 +16,25 @@
       implicit none
       integer :: istro3
       real :: stro3
-      integer,intent(in) :: intvar,n2o,n3o,n1o
+      integer,intent(in) :: intvar,nyo,nxo,nzo
       integer,intent(in) :: xs2o,xe2o,xs3o,xe3o
  
-      real,intent(out),dimension(1:n3,xstart(2):xend(2), &
+      real,intent(out),dimension(1:nx,xstart(2):xend(2), &
      & xstart(3):xend(3)) :: arrnew
-      real,dimension(0:n3o+1,xs2o-1:xe2o+1,xs3o-1:xe3o+1) :: arrold
-      real,dimension(0:n1o+1) :: tcold,tmold
-      real,dimension(1:n1) :: tcnew,tmnew
-      real,dimension(0:n2o+1) :: rcold,rmold
-      real,dimension(1:n2) :: rcnew,rmnew
-      real,dimension(0:n3o+1) :: zzold,zmold
-      real,dimension(1:n3) :: zznew,zmnew
+      real,dimension(0:nxo+1,xs2o-1:xe2o+1,xs3o-1:xe3o+1) :: arrold
+      real,dimension(0:nzo+1) :: tcold,tmold
+      real,dimension(1:nz) :: tcnew,tmnew
+      real,dimension(0:nyo+1) :: rcold,rmold
+      real,dimension(1:ny) :: rcnew,rmnew
+      real,dimension(0:nxo+1) :: zzold,zmold
+      real,dimension(1:nx) :: zznew,zmnew
 
-      real, dimension(0:n1o+1) :: xold
-      real, dimension(0:n2o+1) :: yold
-      real, dimension(0:n3o+1) :: zold
-      real, dimension(1:n1) :: xnew
-      real, dimension(1:n2) :: ynew
-      real, dimension(1:n3) :: znew
+      real, dimension(0:nzo+1) :: xold
+      real, dimension(0:nyo+1) :: yold
+      real, dimension(0:nxo+1) :: zold
+      real, dimension(1:nz) :: xnew
+      real, dimension(1:ny) :: ynew
+      real, dimension(1:nx) :: znew
 
       real :: bn(6),an(8)
 
@@ -44,30 +44,30 @@
       integer :: bici,bifi,bicj,bifj,bick,bifk
 
 !EP   Create old grid
-      call gridnew(n1o,rext,0,1.0,tcold(1:n1o),tmold(1:n1o))
-      call gridnew(n2o,rext2,0,1.0,rcold(1:n2o),rmold(1:n2o))
-      call gridnew(n3o,1.0d0,istro3,stro3,zzold(1:n3o),zmold(1:n3o))
+      call gridnew(nzo,rext,0,1.0,tcold(1:nzo),tmold(1:nzo))
+      call gridnew(nyo,rext2,0,1.0,rcold(1:nyo),rmold(1:nyo))
+      call gridnew(nxo,1.0d0,istro3,stro3,zzold(1:nxo),zmold(1:nxo))
 
 !EP   2nd order extrapolation of grid
       tcold(0) = 2*tcold(1)-tcold(2)
-      tcold(n1o+1) = 2*tcold(n1o)-tcold(n1o-1)
+      tcold(nzo+1) = 2*tcold(nzo)-tcold(nzo-1)
       tmold(0) = 2*tmold(1)-tmold(2)
-      tmold(n1o+1) = 2*tmold(n1o)-tmold(n1o-1)
+      tmold(nzo+1) = 2*tmold(nzo)-tmold(nzo-1)
 
       rcold(0) = 2*rcold(1)-rcold(2)
-      rcold(n2o+1) = 2*rcold(n2o)-rcold(n2o-1)
+      rcold(nyo+1) = 2*rcold(nyo)-rcold(nyo-1)
       rmold(0) = 2*rmold(1)-rmold(2)
-      rmold(n2o+1) = 2*rmold(n2o)-rmold(n2o-1)
+      rmold(nyo+1) = 2*rmold(nyo)-rmold(nyo-1)
 
       zzold(0) = 2*zzold(1)-zzold(2)
-      zzold(n3o+1) = 2*zzold(n3o)-zzold(n3o-1)
+      zzold(nxo+1) = 2*zzold(nxo)-zzold(nxo-1)
       zmold(0) = 2*zmold(1)-zmold(2)
-      zmold(n3o+1) = 2*zmold(n3o)-zmold(n3o-1)
+      zmold(nxo+1) = 2*zmold(nxo)-zmold(nxo-1)
 
 !EP   Create new grid
-      call gridnew(n1,rext,0,1.0,tcnew,tmnew)
-      call gridnew(n2,rext2,0,1.0,rcnew,rmnew)
-      call gridnew(n3,1.0d0,istr3,str3,zznew,zmnew)
+      call gridnew(nz,rext,0,1.0,tcnew,tmnew)
+      call gridnew(ny,rext2,0,1.0,rcnew,rmnew)
+      call gridnew(nx,1.0d0,istr3,str3,zznew,zmnew)
       
       select case (intvar)
           case (1)
@@ -105,19 +105,19 @@
       do i=xs3o,xe3o
         do j=xs2o,xe2o
           arrold(0    ,j,i)=2.0*arrold(1  ,j,i)-arrold(2,j,i)
-          arrold(n3o+1,j,i)=2.0*arrold(n3o,j,i)-arrold(n3o-1,j,i)
+          arrold(nxo+1,j,i)=2.0*arrold(nxo,j,i)-arrold(nxo-1,j,i)
         enddo
       enddo
 
       do j=xs2o,xe2o
-        do k=1,n3o
+        do k=1,nxo
           arrold(k,j,xs3o-1)=2.0*arrold(k,j,xs3o)-arrold(k,j,xs3o+1)
           arrold(k,j,xe3o+1)=2.0*arrold(k,j,xe3o)-arrold(k,j,xe3o-1)
         enddo
       enddo
 
       do i=xs3o,xe3o
-        do k=1,n3o
+        do k=1,nxo
           arrold(k,xs2o-1,i)=2.0*arrold(k,xs2o,i)-arrold(k,xs2o+1,i)
           arrold(k,xe2o+1,i)=2.0*arrold(k,xe2o,i)-arrold(k,xe2o-1,i)
         enddo
@@ -127,15 +127,15 @@
 !EP   INTERP
       do i=xstart(3),xend(3)
        do j=xstart(2),xend(2)
-        do k=1,n3
+        do k=1,nx
 !c   Find nearest grid value
       bix=xnew(i)
       biy=ynew(j)
       biz=znew(k)
 
-      bifi=n1o-1
-      bici=n1o
-      do l=1,n1o
+      bifi=nzo-1
+      bici=nzo
+      do l=1,nzo
       if(xold(l).ge.bix) then
       bifi=l-1
       bici=l
@@ -144,9 +144,9 @@
       enddo
 10    continue
 
-      bifj=n2o-1
-      bicj=n2o
-      do l=1,n2o
+      bifj=nyo-1
+      bicj=nyo
+      do l=1,nyo
       if(yold(l).ge.biy) then
       bifj=l-1
       bicj=l
@@ -155,9 +155,9 @@
       enddo
 20    continue
 
-      bifk=n3o-1
-      bick=n3o
-      do l=1,n3o
+      bifk=nxo-1
+      bick=nxo
+      do l=1,nxo
       if(zold(l).ge.biz) then
       bifk=l-1
       bick=l
@@ -258,7 +258,7 @@
       double precision,dimension(1:n+400) :: etazm
       double precision :: x3,etain,delet,pi
       integer,intent(in) :: n,istr
-      integer :: i,n3mo,nclip
+      integer :: i,nxmo,nclip
 
       if (istr.eq.0) then
         do i=1,n
@@ -270,9 +270,9 @@
       if(istr.eq.6) then
       pi=2.0d0*asin(1.0d0)
       nclip = int(str)
-      n3mo = n+nclip+nclip
-      do i=1,n3mo
-        etazm(i)=+cos(pi*(float(i)-0.5)/float(n3mo))
+      nxmo = n+nclip+nclip
+      do i=1,nxmo
+        etazm(i)=+cos(pi*(float(i)-0.5)/float(nxmo))
       end do
       do i=1,n
         etaz(i)=etazm(i+nclip)

@@ -62,7 +62,7 @@
       
       kslab = 1
       
-        do k=2,n3m
+        do k=2,nxm
           zmloc=zm(k)
           do j=2,9
             if(zm(k).gt.zslab(j).and.zm(k-1).lt.zslab(j)) then

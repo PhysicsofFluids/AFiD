@@ -13,19 +13,19 @@
       use mpih
       implicit none
       character*30,intent(in) :: filename, dsetname
-      real :: var(1:n3m)
-      real :: var_old(1:n3m)
+      real :: var(1:nxm)
+      real :: var_old(1:nxm)
 
 
 
-      call MpiSumReal1D(var,n3m)
+      call MpiSumReal1D(var,nxm)
 
       if (ismaster) then
        if(readstats) then
-        call HdfSerialReadReal1D(dsetname,filename,var_old,n3m)
+        call HdfSerialReadReal1D(dsetname,filename,var_old,nxm)
         var = var + var_old
        endif
-       call HdfSerialWriteReal1D(dsetname,filename,var,n3m)
+       call HdfSerialWriteReal1D(dsetname,filename,var,nxm)
       end if
 
        return

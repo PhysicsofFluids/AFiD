@@ -26,20 +26,20 @@
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
-!$OMP   SHARED(xstart,xend,q1,q2,q3,n3m) &
+!$OMP   SHARED(xstart,xend,q1,q2,q3,nxm) &
 !$OMP   SHARED(kmv,kpv,am3sk,ac3sk,ap3sk,udx1) &
 !$OMP   SHARED(udx2,udx1q,udx2q,udx3c,dens,hro) &
 !$OMP   PRIVATE(ic,jc,kc,im,ip,km,kp,jm,jp) &
 !$OMP   PRIVATE(h31,h32,h33,dq31,dq32)
       do ic=xstart(3),xend(3)
-      im=ic-1
-      ip=ic+1
-      do jc=xstart(2),xend(2)
-      jm=jc-1
-      jp=jc+1
-      do kc=2,n3m
-      km=kc-1
-      kp=kc+1
+       im=ic-1
+       ip=ic+1
+       do jc=xstart(2),xend(2)
+        jm=jc-1
+        jp=jc+1
+        do kc=2,nxm
+         km=kc-1
+         kp=kc+1
 !
 !
 !    rho q1 term

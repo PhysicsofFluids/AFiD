@@ -18,6 +18,7 @@
       implicit none
       integer :: ns
       integer :: j,k,i
+      real :: cksum
 
       beta=dt/ren*0.5d0
 
@@ -30,6 +31,13 @@
         call ExplicitTermsVY
         call ExplicitTermsVZ
         call ExplicitTermsTemp     
+
+!        call Checksum3DArray(q2,cksum)
+!        if(ismaster) write(6,*) 'cksum',cksum
+!        call Checksum3DArray(q3,cksum)
+!        if(ismaster) write(6,*) 'cksum',cksum
+!        call Checksum3DArray(dens,cksum)
+!        if(ismaster) write(6,*) 'cksum',cksum
 
         call ImplicitAndUpdateVX
         call ImplicitAndUpdateVY
@@ -49,7 +57,7 @@
 !this copy is 0.1% for 65^3 grid.
         do i=xstart(3),xend(3)
           do j=xstart(2),xend(2)
-            do k=1,n3m
+            do k=1,nxm
               dphhalo(k,j,i) = dph(k,j,i)
             enddo
           enddo

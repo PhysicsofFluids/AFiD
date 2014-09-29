@@ -21,12 +21,12 @@
 
       timeint_cdsp = timeint_cdsp + 1
 
-      usn1m = 1.0/n1m
-      usn2m = 1.0/n2m
+      usn1m = 1.0/nzm
+      usn2m = 1.0/nym
 
       do i=xstart(3),xend(3)
         do j=xstart(2),xend(2)
-          do k=1,n3m
+          do k=1,nxm
                q1_me(k) = q1_me(k) + q1(k,j,i)*usn1m*usn2m
                q2_me(k) = q2_me(k) + q2(k,j,i)*usn1m*usn2m
                q3_me(k) = q3_me(k) + q3(k,j,i)*usn1m*usn2m
@@ -51,7 +51,6 @@
       use param
       use stat_arrays
       use hdf5
-      use decomp_2d, only: nrank
 
       implicit none
 
@@ -89,13 +88,13 @@
 
       inquire(file=filnam,exist=fexist)
       if (.not.fexist) then 
-        write(6,*) 'Unable to read statistical files'
-        write(6,*) 'Restarting statistics from zero' 
+        if(ismaster) write(6,*) 'Unable to read statistical files'
+        if(ismaster) write(6,*) 'Restarting statistics from zero' 
         readstats=.false.
       end if
        
 
-      if (nrank.eq.0) then
+      if (ismaster) then
        if(readstats) then
         call HdfSerialReadIntScalar(dsetname,filnam,timeint_cdsp_old)
         timeint_cdsp = timeint_cdsp + timeint_cdsp_old
@@ -121,7 +120,7 @@
        call StatReadReduceWrite(disste,filnam,dsetname_disste)
       end if
 
-      if (nrank.eq.0) then
+      if (ismaster) then
 
        call HdfSerialWriteIntScalar(dsetname,filnam,timeint_cdsp)
 
@@ -131,8 +130,8 @@
        dsetname = trim('Prandtl Number')
        call HdfSerialWriteRealScalar(dsetname,filnam,pra)
 
-       dsetname = trim('Z_cordin')
-       call HdfSerialWriteReal1D(dsetname,filnam,zm,1,n3m)
+       dsetname = trim('X_cordin')
+       call HdfSerialWriteReal1D(dsetname,filnam,zm,1,nxm)
 
       endif
 

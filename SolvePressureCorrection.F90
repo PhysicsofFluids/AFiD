@@ -19,11 +19,11 @@
       implicit none
       integer :: i,j,k,info
       complex :: acphT_b
-      complex :: appph(n3m-2)
-      complex :: amphT(n3m-1), apphT(n3m-1)
-      complex, dimension(n3m) :: acphT,drhs,apph,amph
-      integer :: phpiv(n3m)
-      integer :: n2mh
+      complex :: appph(nxm-2)
+      complex :: amphT(nxm-1), apphT(nxm-1)
+      complex, dimension(nxm) :: acphT,drhs,apph,amph
+      integer :: phpiv(nxm)
+      integer :: nymh
       real,allocatable,dimension(:,:,:) :: ry1,rz1
       complex,allocatable,dimension(:,:,:) :: cy1,cz1,dphc
 
@@ -49,12 +49,12 @@
      &             sp%xst(2):sp%xen(2),                                 &
      &             sp%xst(3):sp%xen(3)))
 
-      n2mh=n2m/2+1
+      nymh=nym/2+1
 
       call transpose_x_to_y(dph,ry1,ph)
 
       if (.not.planned) then
-        iodim(1)%n=n1m
+        iodim(1)%n=nzm
         iodim(1)%is=(sp%zen(1)-sp%zst(1)+1)*(sp%zen(2)-sp%zst(2)+1)
         iodim(1)%os=(sp%zen(1)-sp%zst(1)+1)*(sp%zen(2)-sp%zst(2)+1)
         iodim_howmany(1)%n=(sp%zen(1)-sp%zst(1)+1)
@@ -65,16 +65,32 @@
         iodim_howmany(2)%os=(sp%zen(1)-sp%zst(1)+1)
         fwd_guruplan_z=fftw_plan_guru_dft(1,iodim,                      &
      &    2,iodim_howmany,cz1,cz1,                                      &
+<<<<<<< .mine
+     &    FFTW_FORWARD,FFTW_ESTIMATE)
+        iodim(1)%n=nzm
+=======
      &    FFTW_FORWARD,FFTW_ESTIMATE)
         iodim(1)%n=n1m
+>>>>>>> .r51
         bwd_guruplan_z=fftw_plan_guru_dft(1,iodim,                      &
      &    2,iodim_howmany,cz1,cz1,                                      &
+<<<<<<< .mine
+     &    FFTW_BACKWARD,FFTW_ESTIMATE)
+
+=======
      &    FFTW_BACKWARD,FFTW_ESTIMATE)
         if (.not.c_associated(bwd_guruplan_z)) then
           if (ismaster) print*,'Failed to create guru plan. You should link with FFTW3 before MKL, please check.'
           call MPI_Abort(MPI_COMM_WORLD,1,info)
         endif
-        iodim(1)%n=n2m
+>>>>>>> .r51
+         if (.not.c_associated(bwd_guruplan_z)) then 
+          if (ismaster) print*,'Failed to create guru plan.' 
+          if (ismaster) print*,'You should link with FFTW3 before MKL, please check.' 
+          call MPI_Abort(MPI_COMM_WORLD,1,info) 
+        endif 
+
+        iodim(1)%n=nym
         iodim(1)%is=ph%yen(1)-ph%yst(1)+1
         iodim(1)%os=sp%yen(1)-sp%yst(1)+1
         iodim_howmany(1)%n=(ph%yen(1)-ph%yst(1)+1)
@@ -89,7 +105,7 @@
      &    2,iodim_howmany,ry1,cy1,                                      &
      &    FFTW_ESTIMATE)
 
-        iodim(1)%n=n2m
+        iodim(1)%n=nym
         iodim(1)%is=sp%yen(1)-sp%yst(1)+1
         iodim(1)%os=ph%yen(1)-ph%yst(1)+1
         iodim_howmany(1)%n=(sp%yen(1)-sp%yst(1)+1)
@@ -114,7 +130,7 @@
 
 
 !EP   Normalize. FFT does not do this
-      cz1 = cz1 / (n1m*n2m)
+      cz1 = cz1 / (nzm*nym)
 
       call transpose_z_to_x(cz1,dphc,sp)
 
@@ -122,13 +138,13 @@
 
 !$OMP  PARALLEL DO                                                      &
 !$OMP   DEFAULT(none)                                                   &
-!$OMP   SHARED(sp,n3m)                                                  &
+!$OMP   SHARED(sp,nxm)                                                  &
 !$OMP   SHARED(acphk,ak2,ak1,dphc,apphk,amphk)                          &
 !$OMP   PRIVATE(drhs,apph,amph,acphT,acphT_b)                           &
 !$OMP   PRIVATE(amphT,apphT,phpiv,info,appph)
       do i=sp%xst(3),sp%xen(3)
         do j=sp%xst(2),sp%xen(2)
-         do k = 1,n3m
+         do k = 1,nxm
           acphT_b=1.0/(acphk(k)-ak2(j)-ak1(i))
           drhs(k)=dphc(k,j,i)*acphT_b
           apph(k)=apphk(k)*acphT_b
@@ -136,15 +152,15 @@
           acphT(k)=1.0d0
          enddo
   
-         amphT=amph(2:n3m)
-         apphT=apph(1:(n3m-1))
+         amphT=amph(2:nxm)
+         apphT=apph(1:(nxm-1))
 
-         call zgttrf(n3m, amphT, acphT, apphT, appph, phpiv, info)
+         call zgttrf(nxm, amphT, acphT, apphT, appph, phpiv, info)
 
-         call zgttrs('N',n3m,1,amphT,acphT,apphT,appph,phpiv,drhs,      &
-     &                 n3m, info)
+         call zgttrs('N',nxm,1,amphT,acphT,apphT,appph,phpiv,drhs,      &
+     &                 nxm, info)
 
-          do k=1,n3m
+          do k=1,nxm
             dphc(k,j,i) = drhs(k)
           enddo
         enddo
