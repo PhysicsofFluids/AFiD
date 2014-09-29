@@ -65,30 +65,16 @@
         iodim_howmany(2)%os=(sp%zen(1)-sp%zst(1)+1)
         fwd_guruplan_z=fftw_plan_guru_dft(1,iodim,                      &
      &    2,iodim_howmany,cz1,cz1,                                      &
-<<<<<<< .mine
      &    FFTW_FORWARD,FFTW_ESTIMATE)
         iodim(1)%n=nzm
-=======
-     &    FFTW_FORWARD,FFTW_ESTIMATE)
-        iodim(1)%n=n1m
->>>>>>> .r51
         bwd_guruplan_z=fftw_plan_guru_dft(1,iodim,                      &
      &    2,iodim_howmany,cz1,cz1,                                      &
-<<<<<<< .mine
      &    FFTW_BACKWARD,FFTW_ESTIMATE)
 
-=======
-     &    FFTW_BACKWARD,FFTW_ESTIMATE)
         if (.not.c_associated(bwd_guruplan_z)) then
           if (ismaster) print*,'Failed to create guru plan. You should link with FFTW3 before MKL, please check.'
           call MPI_Abort(MPI_COMM_WORLD,1,info)
         endif
->>>>>>> .r51
-         if (.not.c_associated(bwd_guruplan_z)) then 
-          if (ismaster) print*,'Failed to create guru plan.' 
-          if (ismaster) print*,'You should link with FFTW3 before MKL, please check.' 
-          call MPI_Abort(MPI_COMM_WORLD,1,info) 
-        endif 
 
         iodim(1)%n=nym
         iodim(1)%is=ph%yen(1)-ph%yst(1)+1
