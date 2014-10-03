@@ -1,7 +1,7 @@
       program AFiD
       use mpih
       use param
-      use local_arrays, only: q2,q3,dens,pr,q1
+      use local_arrays, only: q2,q3,temp,pr,q1
       use hdf5
       use decomp_2d
       use decomp_2d_fft
@@ -117,7 +117,7 @@
       call update_halo(q1,1)
       call update_halo(q2,1)
       call update_halo(q3,1)
-      call update_halo(dens,1)
+      call update_halo(temp,1)
       call update_halo(pr,1)
 
 !EP   Check divergence. Should be reduced to machine precision after the first
@@ -135,9 +135,9 @@
 
 !EP   Write some values
       if(variabletstep) then
-       if(ismaster) write(6,*)ntime,time,dt,dmax,densm,denmax,denmin
+       if(ismaster) write(6,*)ntime,time,dt,dmax,tempm,tempmax,tempmin
       else
-       if(ismaster) write(6,*)ntime,time,cflm,dmax, densm,denmax,denmin
+       if(ismaster) write(6,*)ntime,time,cflm,dmax, tempm,tempmax,tempmin
        cflm=cflm*dt
       endif
 
@@ -205,7 +205,7 @@
         if(mod(time,tpin).lt.dt) then
           if(ismaster) then
           write(6,*) 'Maximum divergence = ', dmax
-          write(6,*)ntime,time,vmax(1),vmax(2),vmax(3),dmax,densm,denmax,denmin
+          write(6,*)ntime,time,vmax(1),vmax(2),vmax(3),dmax,tempm,tempmax,tempmin
           write(6,*) 'Iteration Time = ', ti(2) -ti(1), ' sec.'
           endif
         endif

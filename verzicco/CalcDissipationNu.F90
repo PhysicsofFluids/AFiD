@@ -1,7 +1,7 @@
       subroutine CalcDissipationNu
       use mpih
       use param
-      use local_arrays,only: q1,q2,q3,dens
+      use local_arrays,only: q1,q2,q3,temp
       use decomp_2d, only: xstart,xend
       use stat_arrays
 
@@ -31,7 +31,7 @@
 
 !$OMP  PARALLEL DO &
 !$OMP  DEFAULT(none) &
-!$OMP  SHARED(xstart,xend,g3rm,pra,q1,q2,q3,dens) &
+!$OMP  SHARED(xstart,xend,g3rm,pra,q1,q2,q3,temp) &
 !$OMP  SHARED(udx1,udx2,udx3m,udx3c) &
 !$OMP  SHARED(nzm,nym,nxm,ren,pec) &
 !$OMP  SHARED(kpv,kmv,zz,zm) &
@@ -75,9 +75,9 @@
 
        nute = nute + dissipte*g3rm(k)*pra
 
-       h31=(dens(k,j,ipp)-dens(k,j,imm))*udx1*0.5
-       h32=(dens(k,jpp,i)-dens(k,jmm,i))*udx2*0.5
-       h33=(dens(kp,j,i)-dens(kmm,j,i))*udx3_c
+       h31=(temp(k,j,ipp)-temp(k,j,imm))*udx1*0.5
+       h32=(temp(k,jpp,i)-temp(k,jmm,i))*udx2*0.5
+       h33=(temp(kp,j,i)-temp(kmm,j,i))*udx3_c
 
        dissipth  = h31*h31 + h32*h32 + h33*h33 
 

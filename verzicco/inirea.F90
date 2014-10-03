@@ -23,7 +23,7 @@
       integer (kind=MPI_ADDRESS_KIND) :: extent,lb
       real :: stro3
       real :: intinfo(1:4)
-      real, allocatable, dimension(:,:,:) :: densold,q2old,q3old,q1old
+      real, allocatable, dimension(:,:,:) :: tempold,q2old,q3old,q1old
       logical :: fexist
       
 !EP   Reading old grid information by rank0
@@ -88,16 +88,16 @@
       
       lb=0
       call MPI_TYPE_GET_EXTENT(MPI_DOUBLE_PRECISION,lb,extent,ierr)
-!EP   dens
-      allocate(densold(0:nxo+1,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+!EP   temp
+      allocate(tempold(0:nxo+1,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
       
       call hdf_read(nzo,nyo,nxo,xs2og,xe2og, &
-       xs3og,xe3og,4,densold(1:nxo,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+       xs3og,xe3og,4,tempold(1:nxo,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
 
-      call interp(densold,dens(1:nx,xstart(2):xend(2),xstart(3):xend(3)) &
+      call interp(tempold,temp(1:nx,xstart(2):xend(2),xstart(3):xend(3)) &
        ,nzo,nyo,nxo,istro3,stro3,4,xs2og,xe2og,xs3og,xe3og)
 
-      deallocate(densold)
+      deallocate(tempold)
 
 !EP   qx
       allocate(q1old(0:nxo+1,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
@@ -136,7 +136,7 @@
 
 !EP   One to one HDF read
       call hdf_read(nz,ny,nx,xstart(2),xend(2) &
-     & ,xstart(3),xend(3),4,dens)
+     & ,xstart(3),xend(3),4,temp)
       call hdf_read(nz,ny,nx,xstart(2),xend(2) &
      & ,xstart(3),xend(3),1,q1)
       call hdf_read(nz,ny,nx,xstart(2),xend(2) &

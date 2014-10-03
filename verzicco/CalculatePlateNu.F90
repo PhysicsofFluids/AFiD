@@ -1,7 +1,7 @@
 
       subroutine CalculatePlateNu
       use param
-      use local_arrays, only: dens
+      use local_arrays, only: temp
       use mpih
       use decomp_2d, only: xstart,xend
       implicit none
@@ -17,15 +17,15 @@
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
-!$OMP   SHARED(xstart,xend,dens,del,deln) &
+!$OMP   SHARED(xstart,xend,temp,del,deln) &
 !$OMP   SHARED(nxm,nx) &
 !$OMP   PRIVATE(i,j) &
 !$OMP   REDUCTION(+:anusslow) &
 !$OMP   REDUCTION(+:anussupp)
       do i=xstart(3),xend(3)
          do j=xstart(2),xend(2)
-           anusslow = anusslow + (dens(1,j,i)-dens(2,j,i))*del
-           anussupp = anussupp + (dens(nxm,j,i)-dens(nx,j,i))*deln
+           anusslow = anusslow + (temp(1,j,i)-temp(2,j,i))*del
+           anussupp = anussupp + (temp(nxm,j,i)-temp(nx,j,i))*deln
         enddo
       end do
 !$OMP END PARALLEL DO

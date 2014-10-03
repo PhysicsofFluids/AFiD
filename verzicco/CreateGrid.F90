@@ -265,10 +265,6 @@
       ap3ssk(nx)=0.d0
       ac3ssk(nx)=1.d0
 
-      write(*,*) am3ssk
-      write(*,*) ap3ssk
-      write(*,*) ac3ssk
-
       return                                                            
       end                                                               
 

@@ -10,7 +10,7 @@
 
       subroutine CreateInitialConditions
       use param
-      use local_arrays, only: q2,q3,dens,q1
+      use local_arrays, only: q2,q3,temp,q1
       use decomp_2d, only: xstart,xend
       use mpih
       implicit none
@@ -39,15 +39,15 @@
       do i=xstart(3),xend(3)
       do j=xstart(2),xend(2)
       do k=2,nxm
-             dens(k,j,i)= denbs(j,i) - (denbs(j,i) - denbn(j,i)) &
+             temp(k,j,i)= tempbp(j,i) - (tempbp(j,i) - temptp(j,i)) &
                          *zz(k)
            enddo
           end do 
         end do
       
 
-        dens(1,:,:)=1.0d0
-        dens(nx,:,:)=0.0d0
+        temp(1,:,:)=1.0d0
+        temp(nx,:,:)=0.0d0
 
       return                                                            
       end                                                               

@@ -10,13 +10,13 @@
 
       subroutine ExplicitTermsVZ
       use param
-      use local_arrays, only: q1,q2,q3,dens,qcap
+      use local_arrays, only: q1,q2,q3,temp,qcap
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: jc,kc
       integer :: km,kp,jmm,jpp,ic,imm,ipp
       real    :: h32,h33,h31
-      real    :: udx1,udx2,densit
+      real    :: udx1,udx2,tempit
       real    :: udx1q,udx2q
       real    :: dq31,dq32
 
@@ -29,9 +29,9 @@
 !$OMP   DEFAULT(none) &
 !$OMP   SHARED(xstart,xend,nxm,q1,q2,q3,dx1,dx2) &
 !$OMP   SHARED(kmv,kpv,am3sk,ac3sk,ap3sk,udx1) &
-!$OMP   SHARED(udx2,udx1q,udx2q,udx3c,qcap,dens) &
+!$OMP   SHARED(udx2,udx1q,udx2q,udx3c,qcap,temp) &
 !$OMP   PRIVATE(ic,jc,kc,imm,ipp,km,kp) &
-!$OMP   PRIVATE(jmm,jpp,densit) &
+!$OMP   PRIVATE(jmm,jpp,tempit) &
 !$OMP   PRIVATE(h31,h32,h33,dq31,dq32)
       do ic=xstart(3),xend(3)
        imm=ic-1
@@ -81,7 +81,7 @@
 !
 !  add the buoyancy term
 !
-          densit=dens(kc,jc,ic)
+          tempit=temp(kc,jc,ic)
 
 !
 !   11 second derivatives of q3
@@ -97,7 +97,7 @@
                  +q3(kc,jpp,ic))*udx2q
 
 
-          qcap(kc,jc,ic) =-(h31+h32+h33)+dq31+dq32+densit
+          qcap(kc,jc,ic) =-(h31+h32+h33)+dq31+dq32+tempit
             
       enddo
       enddo
