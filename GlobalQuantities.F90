@@ -3,19 +3,19 @@
 !    FILE: GlobalQuantities.F90                           !
 !    CONTAINS: subroutine GlobalQuantities                !
 !                                                         ! 
-!    PURPOSE: Calculate maximum velocity and density,     !
+!    PURPOSE: Calculate maximum velocity and temperature. !
 !     volume averaged Nusselt number and Reynolds number  !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       subroutine GlobalQuantities
       use param
-      use local_arrays, only: q2,q3,q1,dens
+      use local_arrays, only: q2,q3,q1,temp
       use decomp_2d, only: xstart,xend
       use mpih
       implicit none
       integer :: jc,kc,kp,ic
-      real :: anusin,vol,q3cen,fac2,denscen
+      real :: anusin,vol,q3cen,fac2,tempcen
       real :: q2_rms_vol,q1_rms_vol
       real :: q3_rms_vol,q1q2q3_rms_vol,rradpr
 
@@ -23,9 +23,9 @@
       vmax(1)=-huge(0.0d0)
       vmax(2)=-huge(0.0d0)
       vmax(3)=-huge(0.0d0)
-      denmax=-huge(0.0d0)
-      denmin=huge(0.0d0)
-      densm=0.0d0
+      tempmax=-huge(0.0d0)
+      tempmin=huge(0.0d0)
+      tempm=0.0d0
       anusin=0.d0 
       q1_rms_vol = 0.0d0
       q2_rms_vol = 0.0d0
@@ -44,12 +44,12 @@
           vmax(1) = max(vmax(1),abs(q1(kc,jc,ic)))
           vmax(2) = max(vmax(2),abs(q2(kc,jc,ic)))
           vmax(3) = max(vmax(3),abs(q3(kc,jc,ic)))
-          denmax = max(denmax,dens(kc,jc,ic))
-          denmin = min(denmin,dens(kc,jc,ic))
+          tempmax = max(tempmax,temp(kc,jc,ic))
+          tempmin = min(tempmin,temp(kc,jc,ic))
           q3cen = (q3(kc,jc,ic)+q3(kp,jc,ic))*0.5d0
-          denscen = (dens(kc,jc,ic)+dens(kp,jc,ic))*0.5d0
-          anusin=anusin+denscen*q3cen*fac2
-          densm=densm+denscen*fac2
+          tempcen = (temp(kc,jc,ic)+temp(kp,jc,ic))*0.5d0
+          anusin=anusin+tempcen*q3cen*fac2
+          tempm=tempm+tempcen*fac2
           q1_rms_vol = q1_rms_vol + fac2*q1(kc,jc,ic)**2
           q2_rms_vol = q2_rms_vol + fac2*q2(kc,jc,ic)**2
           q3_rms_vol = q3_rms_vol + fac2*q3(kc,jc,ic)**2
@@ -61,14 +61,14 @@
 
 !EP   Reduce
 
-      call MpiSumRealScalar(densm)
+      call MpiSumRealScalar(tempm)
       call MpiSumRealScalar(anusin)
       call MpiSumRealScalar(q1_rms_vol)
       call MpiSumRealScalar(q2_rms_vol)
       call MpiSumRealScalar(q3_rms_vol)
       call MpiSumRealScalar(q1q2q3_rms_vol)
-      call MpiMinRealScalar(denmin)
-      call MpiMaxRealScalar(denmax)
+      call MpiMinRealScalar(tempmin)
+      call MpiMaxRealScalar(tempmax)
       call MpiMaxRealScalar(vmax(1))
       call MpiMaxRealScalar(vmax(2))
       call MpiMaxRealScalar(vmax(3))

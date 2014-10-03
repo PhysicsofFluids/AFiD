@@ -1,5 +1,5 @@
  N1  N2  N3   NSST(>1=RK,else AB) NWRIT NREAD 
- 33 33 65 3                0  0
+ 33 65 65 3                0  0
  NTST   WALLTIMEMAX    TPIN      TMAX     IRESET    WARNING: SET TO 0
  10     83000          1e-2      30.0      0
  ALX3D      ISTR3   STR3 

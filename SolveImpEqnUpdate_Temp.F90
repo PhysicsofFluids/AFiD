@@ -10,7 +10,7 @@
 
       subroutine SolveImpEqnUpdate_Temp
       use param
-      use local_arrays, only : dens,rhs
+      use local_arrays, only : temp,rhs
       use decomp_2d, only: xstart,xend
       implicit none
       real, dimension(nx) :: amkl,apkl,ackl, fkl
@@ -65,7 +65,7 @@
 !      Update temperature field
 
         do kc=2,nxm
-          dens(kc,jc,ic) = dens(kc,jc,ic) + fkl(kc)
+          temp(kc,jc,ic) = temp(kc,jc,ic) + fkl(kc)
         end do
 
        enddo

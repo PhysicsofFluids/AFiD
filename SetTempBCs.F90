@@ -1,7 +1,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: densbo.F90                                     !
-!    CONTAINS: subroutine densbo                          !
+!    FILE: SetTempBCs.F90                                 !
+!    CONTAINS: subroutine SetTempBCs                      !
 !                                                         ! 
 !    PURPOSE: Initialization routine. Calcuates the       !
 !     temperature boundary conditions at the plates       !
@@ -15,8 +15,8 @@
 
       do i=1,nzm
        do j=1,nym
-        denbn(j,i)=0.d0
-        denbs(j,i)=1.d0
+        temptp(j,i)=0.d0
+        tempbp(j,i)=1.d0
        enddo
       enddo
 

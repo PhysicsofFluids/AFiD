@@ -1,4 +1,4 @@
-!===========================================================
+
 ! Declaration of global variables
 !***********************************************************      
       module param
@@ -55,12 +55,12 @@
         real :: beta
         real :: qqmax,qqtot
         real :: re
-        real :: denmax,denmin,densm
+        real :: tempmax,tempmin,tempm
         integer :: ntime
         integer, parameter:: ndv=3
         real, dimension(1:ndv) :: vmax
         real, dimension(1:3) :: gam,rom,alm
-        real, allocatable, dimension(:,:) :: denbs,denbn
+        real, allocatable, dimension(:,:) :: tempbp,temptp
               
         logical :: dumpslabs=.false.
         logical :: statcal=.false.
@@ -79,7 +79,7 @@
       use param
         implicit none
         real,allocatable,dimension(:,:,:) :: q1,q2,q3
-        real,allocatable,dimension(:,:,:) :: pr,dens,rhs
+        real,allocatable,dimension(:,:,:) :: pr,temp,rhs
         real,allocatable,dimension(:,:,:) :: ru1,ru2,ru3,ruro
         real,allocatable,dimension(:,:,:) :: dph,qcap,dq,hro,dphhalo
       end module local_arrays
@@ -89,8 +89,8 @@
        implicit none
        real,allocatable, dimension(:) :: q1_me,q1_rms 
        real,allocatable, dimension(:) :: q2_me,q3_me,q2_rms,q3_rms 
-       real,allocatable, dimension(:) :: dens_me,dens_rms 
-       real, allocatable,dimension(:) :: disste,dissth,densq3_me
+       real,allocatable, dimension(:) :: temp_me,temp_rms 
+       real, allocatable,dimension(:) :: disste,dissth,tempq3_me
        integer :: timeint_cdsp
       end module stat_arrays
 !=====================================================       

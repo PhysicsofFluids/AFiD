@@ -54,8 +54,8 @@
       call DestroyInt1dArray(kmv)
       call DestroyInt1dArray(kpv)
 
-      call DestroyReal2DArray(denbs)
-      call DestroyReal2DArray(denbn)
+      call DestroyReal2DArray(tempbp)
+      call DestroyReal2DArray(temptp)
 
       call DestroyReal1DArray(q1_me)
       call DestroyReal1DArray(q2_me)
@@ -66,14 +66,14 @@
       call DestroyReal1DArray(q3_rms)
       call DestroyReal1DArray(q3_rms)
 
-      call DestroyReal1DArray(dens_me)
-      call DestroyReal1DArray(dens_rms)
-      call DestroyReal1DArray(densq3_me)
+      call DestroyReal1DArray(temp_me)
+      call DestroyReal1DArray(temp_rms)
+      call DestroyReal1DArray(tempq3_me)
 
       call DestroyReal3DArray(q1)
       call DestroyReal3DArray(q2)
       call DestroyReal3DArray(q3)
-      call DestroyReal3DArray(dens)
+      call DestroyReal3DArray(temp)
 
       call DestroyReal3DArray(pr)
       call DestroyReal3DArray(rhs)

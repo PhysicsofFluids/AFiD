@@ -1,12 +1,12 @@
       subroutine SlabDumper
       use param
-      use local_arrays, only: dens,q1,q2,q3
+      use local_arrays, only: temp,q1,q2,q3
       use stat3_param
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: i,j,m
       real,dimension(xstart(2):xend(2),xstart(3):xend(3)) :: &
-     &      q3cc,q1cc,q2cc,denscc
+     &      q3cc,q1cc,q2cc,tempcc
       character*70 :: filnam
       character*1 :: charm
 
@@ -21,7 +21,7 @@
            q1cc(j,i) = q1(kslab(m),j,i)
            q2cc(j,i) = q2(kslab(m),j,i)
            q3cc(j,i) = (q3(kslab(m),j,i)+q3(kslab(m)+1,j,i))*0.5
-           denscc(j,i) = dens(kslab(m),j,i)
+           tempcc(j,i) = temp(kslab(m),j,i)
           enddo
          enddo
 !$OMP  END PARALLEL DO
@@ -33,8 +33,8 @@
       call DumpSingleSlab(q2cc,filnam)
       filnam='slab'//charm//'q3_'
       call DumpSingleSlab(q3cc,filnam)
-      filnam='slab'//charm//'dens_'
-      call DumpSingleSlab(denscc,filnam)
+      filnam='slab'//charm//'temp_'
+      call DumpSingleSlab(tempcc,filnam)
       enddo
 
       return

@@ -12,7 +12,7 @@
 
       subroutine ImplicitAndUpdateTemp
       use param
-      use local_arrays, only: dens,hro,ruro,rhs
+      use local_arrays, only: temp,hro,ruro,rhs
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: jc,kc,ic
@@ -26,7 +26,7 @@
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
-!$OMP   SHARED(xstart,xend,nxm,dens) &
+!$OMP   SHARED(xstart,xend,nxm,temp) &
 !$OMP   SHARED(kmv,kpv,am3ck,ac3ck,ap3ck) &
 !$OMP   SHARED(ga,ro,alpec,dt) &
 !$OMP   SHARED(rhs,ruro,hro) &
@@ -40,9 +40,9 @@
 !   Calculate second derivative of temperature in the z-direction.
 !   This is the only term calculated implicitly for temperature.
 
-               dq33= dens(kc+1,jc,ic)*ap3ck(kc) &
-                    +dens(kc  ,jc,ic)*ac3ck(kc) &
-                    +dens(kc-1,jc,ic)*am3ck(kc)
+               dq33= temp(kc+1,jc,ic)*ap3ck(kc) &
+                    +temp(kc  ,jc,ic)*ac3ck(kc) &
+                    +temp(kc-1,jc,ic)*am3ck(kc)
 
 
 !    Calculate right hand side of Eq. 5 (VO96)
@@ -68,11 +68,11 @@
 !  Set boundary conditions on the temperature field at top
 !  and bottom plates. This seems necessary.
 
-       dens(1,xstart(2):xend(2),xstart(3):xend(3)) &
-          = denbs(xstart(2):xend(2),xstart(3):xend(3))
+       temp(1,xstart(2):xend(2),xstart(3):xend(3)) &
+          = tempbp(xstart(2):xend(2),xstart(3):xend(3))
 
-       dens(nx,xstart(2):xend(2),xstart(3):xend(3)) &
-          = denbn(xstart(2):xend(2),xstart(3):xend(3))
+       temp(nx,xstart(2):xend(2),xstart(3):xend(3)) &
+          = temptp(xstart(2):xend(2),xstart(3):xend(3))
 
 
       return

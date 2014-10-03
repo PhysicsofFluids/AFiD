@@ -48,7 +48,7 @@
         case (3)
           filnam1 = trim('continua_q3.h5')
         case (4)
-          filnam1 = trim('continua_dens.h5')
+          filnam1 = trim('continua_temp.h5')
       end select
 
 !RO   Set offsets and element counts

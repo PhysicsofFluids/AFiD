@@ -31,13 +31,6 @@
         call ExplicitTermsVZ
         call ExplicitTermsTemp     
 
-!        call Checksum3DArray(q2,cksum)
-!        if(ismaster) write(6,*) 'cksum',cksum
-!        call Checksum3DArray(q3,cksum)
-!        if(ismaster) write(6,*) 'cksum',cksum
-!        call Checksum3DArray(dens,cksum)
-!        if(ismaster) write(6,*) 'cksum',cksum
-
         call ImplicitAndUpdateVX
         call ImplicitAndUpdateVY
         call ImplicitAndUpdateVZ
@@ -71,7 +64,7 @@
         call update_halo(q2,1)
         call update_halo(q3,1)
         call update_halo(pr,1)
-        call update_halo(dens,1)
+        call update_halo(temp,1)
 
         enddo
 

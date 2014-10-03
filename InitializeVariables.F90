@@ -60,11 +60,11 @@
       call AllocateInt1dArray(kpv,1,nx)
 
 !-------------------------------------------------
-! Arrays for density boundary conditions    
+! Arrays for temperature boundary conditions    
 !-------------------------------------------------
 
-      call AllocateReal2DArray(denbs,1,ny,1,nz)
-      call AllocateReal2DArray(denbn,1,ny,1,nz)
+      call AllocateReal2DArray(tempbp,1,ny,1,nz)
+      call AllocateReal2DArray(temptp,1,ny,1,nz)
 
 !-------------------------------------------------
 ! Arrays for statistics    
@@ -79,9 +79,9 @@
        call AllocateReal1DArray(q2_rms,1,nxm)
        call AllocateReal1DArray(q3_rms,1,nxm)
  
-       call AllocateReal1DArray(dens_me,1,nxm)
-       call AllocateReal1DArray(dens_rms,1,nxm)
-       call AllocateReal1DArray(densq3_me,1,nxm)
+       call AllocateReal1DArray(temp_me,1,nxm)
+       call AllocateReal1DArray(temp_rms,1,nxm)
+       call AllocateReal1DArray(tempq3_me,1,nxm)
 
        if (disscal) then
         call AllocateReal1DArray(disste,1,nxm)
@@ -96,7 +96,7 @@
       call AllocateReal3DArray(q2,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
       call AllocateReal3DArray(q3,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
       call AllocateReal3DArray(pr,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
-      call AllocateReal3DArray(dens,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
+      call AllocateReal3DArray(temp,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
       call AllocateReal3DArray(dphhalo,1,nxm,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
 
       !-----------------------------------------------
