@@ -44,8 +44,8 @@
       integer :: bici,bifi,bicj,bifj,bick,bifk
 
 !EP   Create old grid
-      call gridnew(nzo,rext,0,1.0,tcold(1:nzo),tmold(1:nzo))
-      call gridnew(nyo,rext2,0,1.0,rcold(1:nyo),rmold(1:nyo))
+      call gridnew(nzo,zlen,0,1.0,tcold(1:nzo),tmold(1:nzo))
+      call gridnew(nyo,ylen,0,1.0,rcold(1:nyo),rmold(1:nyo))
       call gridnew(nxo,1.0d0,istro3,stro3,zzold(1:nxo),zmold(1:nxo))
 
 !EP   2nd order extrapolation of grid
@@ -65,8 +65,8 @@
       zmold(nxo+1) = 2*zmold(nxo)-zmold(nxo-1)
 
 !EP   Create new grid
-      call gridnew(nz,rext,0,1.0,tcnew,tmnew)
-      call gridnew(ny,rext2,0,1.0,rcnew,rmnew)
+      call gridnew(nz,zlen,0,1.0,tcnew,tmnew)
+      call gridnew(ny,ylen,0,1.0,rcnew,rmnew)
       call gridnew(nx,1.0d0,istr3,str3,zznew,zmnew)
       
       select case (intvar)

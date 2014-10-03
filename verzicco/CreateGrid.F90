@@ -42,7 +42,7 @@
 !
        do  i=1,nz
         x1=real(i-1)/real(nzm)
-        tc(i)= rext*x1
+        tc(i)= zlen*x1
        end do
 
        do i=1,nzm
@@ -51,7 +51,7 @@
 
        do j=1,ny
         x2=real(j-1)/real(nym)
-        rc(j)= rext2*x2
+        rc(j)= ylen*x2
        end do
 
        do j=1,nym
@@ -126,8 +126,8 @@
 !     METRIC FOR UNIFORM DIRECTIONS
 !
 
-      dx1=real(nzm)/rext
-      dx2=real(nym)/rext2
+      dx1=real(nzm)/zlen
+      dx2=real(nym)/ylen
       dx3=real(nxm)/alx3
 
       dx1q=dx1*dx1                                                      

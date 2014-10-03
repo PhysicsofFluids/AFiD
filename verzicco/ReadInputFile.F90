@@ -3,6 +3,7 @@
       implicit none
       character(len=4) :: dummy
       integer flagstat,flagbal,stst3flag
+      logical fexist
 
       open(unit=15,file='bou.in',status='old')
         read(15,301) dummy
@@ -12,7 +13,7 @@
         read(15,301) dummy
         read(15,*) alx3,istr3,str3
         read(15,301) dummy
-        read(15,*) rext,rext2
+        read(15,*) ylen,zlen
         read(15,301) dummy
         read(15,*) ray,pra,dt,resid,cflmax
         read(15,301) dummy
@@ -39,39 +40,22 @@
       pi=2.d0*dasin(1.d0)                          
 !                                                                       
 !
-      if(flagstat.eq.0) then
-        statcal = .false.
-      else
-        statcal = .true.
-      endif
+      if(flagstat.ne.0) statcal = .true.
+      if(idtv.eq.0) variabletstep = .false.
+      if(flagbal.ne.0) disscal = .true.
+      if(nread.ne.0) readflow = .true.
 
-      if(idtv.eq.0) then
-        variabletstep = .false.
-      else
-        variabletstep = .true.
-      endif
-
-      if(flagbal.eq.0) then
-        disscal = .false.
-      else
-        disscal = .true.
-      endif
-
-      if(stst3flag.eq.0) then
-        dumpslabs = .false.
-      else
+      if(stst3flag.ne.0) then
+       inquire(file='./stst3.in', exist=fexist) 
+       if(fexist) then
         dumpslabs = .true.
+       else
+        write(6,*) "stst3.in not found, turning off slab dump"
+       end if
       endif
 
-      if(nread.eq.0) then
-         readflow = .false.
-      else
-        readflow = .true.
-      endif
 
-      if(starea.eq.0) then
-        readstats = .false.
-      else
+      if(starea.ne.0) then 
         readstats = .true.
         if (.not. readflow) write(6,*) 'Warning: Restarting flowfield with statistics read'
       endif

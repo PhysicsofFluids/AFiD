@@ -6,12 +6,12 @@
 !==========================================================			
 !       read from input file bou.in
 !==========================================================
-        integer   :: nz, ny, nx
+        integer   :: nx, ny, nz
         integer   :: nsst, nwrit, nread, ntst, ireset
         real      :: walltimemax,tpin,tmax
         real      :: alx3,str3
         integer   :: istr3
-        real      :: rext,rext2
+        real      :: ylen,zlen
         real      :: ray,pra,dt,resid,cflmax
         integer   :: inslws,inslwn
         integer   :: starea,tsta
@@ -48,9 +48,7 @@
         
 !===========================================================
 !******* Other variables ***********************************
-        integer  :: nzm, nym, nxm
-        integer  :: iaxsy
-        real :: rint
+        integer  :: nxm, nym, nzm
         real :: ren, pec
         real :: pi
         real :: al,ga,ro
@@ -64,9 +62,13 @@
         real, dimension(1:3) :: gam,rom,alm
         real, allocatable, dimension(:,:) :: denbs,denbn
               
-        logical :: dumpslabs,statcal,disscal
-        logical :: readflow, readstats, ismaster=.false.
-        logical :: variabletstep
+        logical :: dumpslabs=.false.
+        logical :: statcal=.false.
+        logical :: disscal=.false.
+        logical :: readflow=.false.
+        logical :: readstats=.false.
+        logical :: ismaster=.false.
+        logical :: variabletstep=.true.
 
       end module param
       
