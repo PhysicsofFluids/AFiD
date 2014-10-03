@@ -36,12 +36,12 @@
       end if
 
       if (nrank .eq. 0) then
-       dsetname = trim('nz')
-       call HdfSerialReadIntScalar(dsetname,filnam1,nzo)
-       dsetname = trim('ny')
-       call HdfSerialReadIntScalar(dsetname,filnam1,nyo)
        dsetname = trim('nx')
        call HdfSerialReadIntScalar(dsetname,filnam1,nxo)
+       dsetname = trim('ny')
+       call HdfSerialReadIntScalar(dsetname,filnam1,nyo)
+       dsetname = trim('nz')
+       call HdfSerialReadIntScalar(dsetname,filnam1,nzo)
        dsetname = trim('time')
        call HdfSerialReadRealScalar(dsetname,filnam1,time)
        dsetname = trim('istr3')
@@ -51,9 +51,9 @@
       endif
       
       call MpiBarrier
-      call MpiBcastInt(nzo)
-      call MpiBcastInt(nyo)
       call MpiBcastInt(nxo)
+      call MpiBcastInt(nyo)
+      call MpiBcastInt(nzo)
       call MpiBcastReal(istro3)
       call MpiBcastReal(stro3)
       call MpiBcastReal(time)

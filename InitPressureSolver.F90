@@ -31,7 +31,7 @@
         ao(i)=-(nzm-i+1)*2.d0*pi
       enddo
       do i=1,nzm
-        ak1(i)=2.d0*(1.d0-dcos(ao(i)/nzm))*(float(nzm)/rext)**2
+        ak1(i)=2.d0*(1.d0-dcos(ao(i)/nzm))*(float(nzm)/zlen)**2
       enddo
 
       do j=1,nymh
@@ -41,7 +41,7 @@
         ap(j)=-(nym-j+1)*2.d0*pi
       enddo
       do j=1,nym
-        ak2(j)=2.d0*(1.d0-dcos(ap(j)/nym))*(float(nym)/rext2)**2
+        ak2(j)=2.d0*(1.d0-dcos(ap(j)/nym))*(float(nym)/ylen)**2
       enddo
 
 !RO   Initialize Tridiagonal matrices for Poisson solver
