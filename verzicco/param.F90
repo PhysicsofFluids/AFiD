@@ -66,7 +66,7 @@
               
         logical :: dumpslabs,statcal,disscal
         logical :: readflow, readstats, ismaster=.false.
-        logical :: resetlogs,variabletstep
+        logical :: variabletstep
 
       end module param
       

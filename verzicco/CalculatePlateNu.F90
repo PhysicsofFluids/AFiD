@@ -38,8 +38,11 @@
 
 
       if(ismaster) then
+       open(97,file="nu_plate.out",status='unknown',access='sequential', &
+        position='append')
        write(97,546) time, anusslow, anussupp
  546   format(4(1x,e14.6))
+       close(97)
       endif
 
       return         
