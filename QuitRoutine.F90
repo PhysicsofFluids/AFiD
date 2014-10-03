@@ -20,9 +20,6 @@
         call WriteFlowField
       endif
 
-      if(ismaster) then
-      call closefi
-      endif
       call DeallocateVariables
       call HdfClose
       call decomp_2d_fft_finalize

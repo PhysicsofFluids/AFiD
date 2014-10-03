@@ -73,20 +73,28 @@
       call MpiMaxRealScalar(vmax(2))
       call MpiMaxRealScalar(vmax(3))
        
-!EP   Write
+!EP   Write logs
       if(ismaster) then
-!EP   nusse.out
-      anusin=1.d0 + dsqrt(pra*ray)*anusin*vol
-      write(95,*) time, anusin
 
-!EP   rms_vel.out
+      anusin=1.d0 + dsqrt(pra*ray)*anusin*vol
+
+      open(95,file='nu_vol.out',status='unknown',access='sequential', &
+        position='append')
+      write(95,*) time, anusin
+      close(95)
+
       rradpr=dsqrt(ray/pra)
       q1_rms_vol=dsqrt(q1_rms_vol*vol)*rradpr
       q2_rms_vol=dsqrt(q2_rms_vol*vol)*rradpr
       q3_rms_vol=dsqrt(q3_rms_vol*vol)*rradpr
       q1q2q3_rms_vol=dsqrt(q1q2q3_rms_vol*vol)*rradpr
+
+       open(94,file='rms_vel.out',status='unknown',position='append', &
+        access='sequential')
        write(94,*) time,q1_rms_vol,q2_rms_vol,q3_rms_vol, &
      & q1q2q3_rms_vol
+       close(94)
+
       endif
 
       return   

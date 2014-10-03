@@ -18,7 +18,6 @@
       implicit none
       integer :: ns
       integer :: j,k,i
-      real :: cksum
 
       beta=dt/ren*0.5d0
 

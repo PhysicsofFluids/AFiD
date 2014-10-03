@@ -71,7 +71,7 @@ OBJECTS = AuxiliaryRoutines.o CalcMaxCFL.o SetTempBCs.o CalculatePlateNu.o \
           CalculateLocalDivergence.o CheckDivergence.o main.o ExplicitTermsVX.o \
           ExplicitTermsVY.o ExplicitTermsVZ.o hdf_read.o \
           ExplicitTermsTemp.o inirea.o InitializeVariables.o CreateInitialConditions.o \
-          ImplicitAndUpdateVX.o ImplicitAndUpdateVY.o ImplicitAndUpdateVZ.o openfi.o \
+          ImplicitAndUpdateVX.o ImplicitAndUpdateVY.o ImplicitAndUpdateVZ.o ResetLogs.o \
           CreateGrid.o DeallocateVariables.o \
           param.o CorrectPressure.o \
           SolveImpEqnUpdate_XY.o StatRoutines.o \

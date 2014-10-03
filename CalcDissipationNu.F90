@@ -100,10 +100,14 @@
        call MpiSumRealScalar(nute)
       
        volt = 1.d0/(real(nxm)*real(nzm)*real(nym))
+
       if(ismaster) then
       nute = nute*volt + 1
       nuth = nuth*volt 
+      open(92,file='nu_diss.out',status='unknown',access='sequential', &
+       position='append')
       write(92,*) time,nute,nuth
+      close(92)
       endif
 
       return   
