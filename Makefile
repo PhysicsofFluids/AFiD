@@ -7,12 +7,12 @@
 # IFORT
 #FC = mpfort -O3 -qautodbl=dbl4 -compiler xlf90_r -WF,-qfpp -qfixed=72
 #FC += -WF,-DMPI -WF,-DFREESLIP
-#FC = h5pfc -r8 -ip -ipo -O3 -fpp
+FC = h5pfc -r8 -ip -ipo -O3 -fpp -g -traceback
 #FC = h5pfc -r8 -ip -ipo -O0 -fpp
 #FC = h5pfc -r8 -ip -ipo -O3 -fpp -g -traceback -fpe0
-FC = mpif90 -O0 -cpp -Wextra -fdefault-real-8 -fdefault-double-8 -I/usr/include -Wall -fbounds-check
+#FC = mpif90 -O0 -cpp -Wextra -fdefault-real-8 -fdefault-double-8 -I/usr/include -Wall -fbounds-check
 #FC = h5pfc -r8 -O0 -fpp -g -traceback -fpe0 -warn all -debug all -check all
-FC += -fopenmp
+#FC += -fopenmp
 
 #FC += -openmp
 #FC += -debug all -warn all -check all -g -traceback
@@ -57,7 +57,7 @@ FC += -fopenmp
 #LINKS = -lfftw3 -llapack -lessl 
 
 #LINKS = -lfftw3 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core 
-LINKS = -lfftw3 -llapack -lblas -lz -lhdf5_fortran -lhdf5
+LINKS = -lfftw3 -mkl=sequential
 
 #LINKS = -lfftw3 -llapack -lblas -lz -lhdf5_fortran -lhdf5
 #LINKS = -L${FFTW_LIB} -lfftw3 -L${LAPACK_LIB} -llapack -L${ESSL_LIB} -lesslbg -L${BLAS_LIB} -lblas
