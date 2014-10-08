@@ -17,13 +17,13 @@
 !******* Read input file bou.in by all processes********
 !*******************************************************
 !
-      ts=MPI_WTIME()
-      tin(1) = MPI_WTIME()
-
       call ReadInputFile
 
       call decomp_2d_init(nxm,nym,nzm,0,0, &
      & (/ .false.,.true.,.true. /))
+
+      ts=MPI_WTIME()
+      tin(1) = MPI_WTIME()
 
       call MpiBarrier
 
