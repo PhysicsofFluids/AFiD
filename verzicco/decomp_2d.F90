@@ -426,13 +426,16 @@ contains
   ! Routine to be called by applications to clean things up
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   subroutine decomp_2d_finalize
-
-    implicit none
     
+    implicit none
+    integer ierr
+
     call decomp_info_finalize(decomp_main)
 
     decomp_buf_size = 0
     deallocate(work1_r, work2_r, work1_c, work2_c)
+
+    call MPI_Finalize(ierr)
     
     return
   end subroutine decomp_2d_finalize
