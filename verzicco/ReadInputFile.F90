@@ -7,7 +7,7 @@
 
       open(unit=15,file='bou.in',status='old')
         read(15,301) dummy
-        read(15,*) nz,ny,nx,nsst,nwrit,nread
+        read(15,*) nz,ny,nx,nsst,nread
         read(15,301) dummy
         read(15,*) ntst,walltimemax,tpin,tmax,ireset
         read(15,301) dummy
