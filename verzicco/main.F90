@@ -155,9 +155,15 @@
         call CalcMaxCFL(cflm)
 
         if(variabletstep) then
-          if(ntime.ne.1) then
-            dt=cflmax/cflm
+          if(ntime.gt.1) then
+            if(cflm.eq.0.0) then !EP prevent fp-overflow
+              dt=dtmax
+            else
+              dt=cflmax/cflm
+            endif
             if(dt.gt.dtmax) dt=dtmax
+          else
+            dt=dtmin
           endif
             if(dt.lt.dtmin) errorcode = 166
         else
