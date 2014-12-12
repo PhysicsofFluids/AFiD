@@ -2,7 +2,7 @@
       use hdf5
       use mpih
       use param
-      use decomp_2d, only: nrank
+      use decomp_2d, only: nrank, decomp_2d_finalize
       use decomp_2d_fft
       implicit none
       integer, intent(in) :: cond
@@ -23,8 +23,9 @@
       call DeallocateVariables
       call HdfClose
       call decomp_2d_fft_finalize
+      call decomp_2d_finalize
 
-      stop
+      if (cond.eq.0) stop
 
       end subroutine QuitRoutine
 
