@@ -246,6 +246,5 @@
 
       call QuitRoutine(tin,1,errorcode)
       
-      stop                                                              
       end                                                               
 
