@@ -48,7 +48,7 @@
 !m====================================================
       write(6,112)ylen/alx3,zlen/alx3
   112 format(//,20x,'R A Y B E N ',//,10x, &
-       '2D Cell with aspect-ratio:  D1/H = ',f5.2,' D2/H = ',f5.2)
+       '3D Cell with aspect-ratio:  D1/H = ',f5.2,' D2/H = ',f5.2)
       write(6,142) 
   142 format(//,8x,'Periodic lateral wall boundary condition')
       write(6,202) ray,pra
