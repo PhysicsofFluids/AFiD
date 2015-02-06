@@ -10,7 +10,7 @@
       implicit none
       integer :: ntstf, errorcode, nthreads
       real    :: cflm,dmax
-      real    :: ti(2), tin(3)
+      real    :: ti(2), tin(3), mindtwt
       real :: ts
 
 !*******************************************************
@@ -147,7 +147,8 @@
       endif
                                                                         
 !  ********* starts the time dependent calculation ***
-      errorcode = 0
+      errorcode = 0 !EP set errocode to 0 (OK)
+      minwtdt = huge(0.0d0) !EP initialize minimum time step walltime
       do ntime=0,ntstf                                           
         ti(1) = MPI_WTIME()
 
@@ -208,12 +209,14 @@
         if(time.gt.tmax) errorcode = 333
 
         ti(2) = MPI_WTIME()
+        minwtdt = min(minwtdt,ti(2) - ti(1))
         if(mod(time,tpin).lt.dt) then
           if(ismaster) then
           write(6,*) 'Maximum divergence = ', dmax
           write(6,*)ntime,time,vmax(1),vmax(2),vmax(3),dmax,tempm,tempmax,tempmin
-          write(6,*) 'Iteration Time = ', ti(2) -ti(1), ' sec.'
+          write(6,*) 'Minimum Iteration Time = ', minwtdt, ' sec.'
           endif
+          minwtdt = huge(0.0d0)
         endif
 
        if( (ti(2) - tin(1)) .gt. walltimemax) errorcode = 334
