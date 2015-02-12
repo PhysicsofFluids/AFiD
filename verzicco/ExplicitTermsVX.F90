@@ -1,105 +1,105 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: hdnl1.F90                                      !
-!    CONTAINS: subroutine hdnl1                           !
+!    FILE: hdnl3.F90                                      !
+!    CONTAINS: subroutine hdnl3                           !
 !                                                         ! 
 !    PURPOSE: Compute the non-linear terms associated to  !
-!     the velocity in the first horizontal dimension.     !
+!     the velocity in the vertical dimension (x3)         !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       subroutine ExplicitTermsVX
       use param
-      use local_arrays, only: q2,q3,q1,dq
+      use local_arrays, only: vz,vy,vx,temp,qcap
       use decomp_2d, only: xstart,xend
       implicit none
-      integer :: kc,kp,jpp,jmm,jc,ic,imm,ipp
-      integer :: kmm,kpp
-      real    :: h11,h12,h13,udx1,udx2
-      real    :: udx1q,udx2q
-      real    :: d11q1,d22q1
+      integer :: jc,kc
+      integer :: km,kp,jmm,jpp,ic,imm,ipp
+      real    :: h32,h33,h31
+      real    :: udz,udy,tempit
+      real    :: udzq,udyq
+      real    :: dq31,dq32
 
-!
-      udx1q=dx1q/ren
-      udx2q=dx2q/ren
+      udy=dy*0.25
+      udz=dz*0.25
 
-      udx1=dx1*0.25
-      udx2=dx2*0.25
+      udyq=dyq/ren
+      udzq=dzq/ren
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
-!$OMP   SHARED(xstart,xend,q1,q2,q3,dx1,dx2,udx3m) &
-!$OMP   SHARED(kmv,kpv,am3sk,ac3sk,ap3sk,udx1) &
-!$OMP   SHARED(udx2,udx1q,udx2q,dq,nxm) &
-!$OMP   PRIVATE(ic,jc,kc,imm,ipp,kmm,kp,kpp) &
-!$OMP   PRIVATE(jmm,jpp) &
-!$OMP   PRIVATE(h11,h12,h13,d11q1,d22q1)
-
+!$OMP   SHARED(xstart,xend,nxm,vz,vy,vx,dz,dy) &
+!$OMP   SHARED(kmv,kpv,am3sk,ac3sk,ap3sk,udz) &
+!$OMP   SHARED(udy,udzq,udyq,udx3c,qcap,temp) &
+!$OMP   PRIVATE(ic,jc,kc,imm,ipp,km,kp) &
+!$OMP   PRIVATE(jmm,jpp,tempit) &
+!$OMP   PRIVATE(h31,h32,h33,dq31,dq32)
       do ic=xstart(3),xend(3)
        imm=ic-1
        ipp=ic+1
        do jc=xstart(2),xend(2)
         jmm=jc-1
         jpp=jc+1
-        do kc=1,nxm
-         kmm=kmv(kc)
-         kpp=kpv(kc)
+        do kc=2,nxm
+         km=kc-1
          kp=kc+1
-      
-!     q1 q1 term
+!
+!    vx vz term
 !
 !
-!                 d  q_t q_t 
-!                ------------
-!                 d   t      
-!
-      h11=( (q1(kc,jc,ipp)+q1(kc,jc,ic)) &
-           *(q1(kc,jc,ipp)+q1(kc,jc,ic)) &
-           -(q1(kc,jc,imm)+q1(kc,jc,ic)) &
-           *(q1(kc,jc,imm)+q1(kc,jc,ic)) &
-          )*udx1
-
-!     q1 q2 term
+!                d  q_x q_t 
+!             -----------
+!                d   t      
 !
 !
-!                 d  q_t q_r 
-!                ------------
-!                 d   r      
+      h31=(((vz(kc,jc,ipp)+vz(km,jc,ipp)) &
+           *(vx(kc,jc,ipp)+vx(kc,jc,ic))) &
+          -((vz(kc,jc,ic)+vz(km,jc,ic)) &
+           *(vx(kc,jc,ic)+vx(kc,jc,imm))))*udz
 !
-      h12=( (q2(kc,jpp,ic)+q2(kc,jpp,imm)) &
-           *(q1(kc,jpp,ic)+q1(kc,jc,ic)) &
-           -(q2(kc,jc,ic)+q2(kc,jc,imm)) &
-           *(q1(kc,jc,ic)+q1(kc,jmm,ic)) &
-          )*udx2
-!
-!     q1 q3 term
+!    vx vy term
 !
 !
-!                 d  q_t q_x 
+!                d  q_x q_r 
+!             -----------
+!                d   r      
+!
+      h32=(((vy(kc,jpp,ic)+vy(km,jpp,ic)) &
+           *(vx(kc,jpp,ic)+vx(kc,jc,ic))) &
+          -((vy(kc,jc,ic)+vy(km,jc,ic)) &
+           *(vx(kc,jc,ic)+vx(kc,jmm,ic))))*udy
+!
+!    vx vx term
+!
+!
+!                 d  q_x q_x 
 !                -----------
 !                 d   x      
 !
-      h13=((q3(kp,jc,ic)+q3(kp,jc,imm))*(q1(kpp,jc,ic)+q1(kc,jc,ic)) &
-          -(q3(kc,jc,ic)+q3(kc,jc,imm))*(q1(kc,jc,ic)+q1(kmm,jc,ic)) &
-          )*udx3m(kc)*0.25d0
+      h33=((vx(kp,jc,ic)+vx(kc,jc,ic))*(vx(kp,jc,ic)+vx(kc,jc,ic)) &
+          -(vx(kc,jc,ic)+vx(km,jc,ic))*(vx(kc,jc,ic)+vx(km,jc,ic)) &
+          )*udx3c(kc)*0.25d0
 !
+!  add the buoyancy term
 !
-!
-!   11 second derivative of q1
-!
-            d11q1=(q1(kc,jc,ipp) &
-                  -2.0*q1(kc,jc,ic) &
-                  +q1(kc,jc,imm))*udx1q
-!
-!   22 second derivative of q1
-!
-            d22q1=(q1(kc,jpp,ic) &
-                  -2.0*q1(kc,jc,ic) &
-                  +q1(kc,jmm,ic))*udx2q
+          tempit=temp(kc,jc,ic)
 
 !
-        dq(kc,jc,ic)=-(h11+h12+h13)+d22q1+d11q1
+!   11 second derivatives of vx
 !
+            dq31=(vx(kc,jc,imm) &
+                 -2.0*vx(kc,jc,ic) &
+                 +vx(kc,jc,ipp))*udzq
+!
+!   22 second derivatives of vx
+!
+            dq32=(vx(kc,jmm,ic) &
+                 -2.0*vx(kc,jc,ic) &
+                 +vx(kc,jpp,ic))*udyq
+
+
+          qcap(kc,jc,ic) =-(h31+h32+h33)+dq31+dq32+tempit
+            
       enddo
       enddo
       enddo

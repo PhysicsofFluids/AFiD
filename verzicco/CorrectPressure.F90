@@ -20,7 +20,7 @@
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
 !$OMP   SHARED(pr,dphhalo,be,amphk,acphk,apphk) &
-!$OMP   SHARED(xstart,xend,nxm,kmv,kpv,dx1q,dx2q) &
+!$OMP   SHARED(xstart,xend,nxm,kmv,kpv,dzq,dyq) &
 !$OMP   PRIVATE(ic,jc,kc) &
 !$OMP   PRIVATE(im,jm,km,ip,jp,kp) &
 !$OMP   PRIVATE(amm,acc,app)
@@ -39,10 +39,10 @@
               pr(kc,jc,ic)=pr(kc,jc,ic)+dphhalo(kc,jc,ic)-be*( &
               (dphhalo(kc,jc,ip) &
               -2.0*dphhalo(kc,jc,ic) &
-              +dphhalo(kc,jc,im))*dx1q+ &
+              +dphhalo(kc,jc,im))*dzq+ &
               (dphhalo(kc,jp,ic) &
               -2.0*dphhalo(kc,jc,ic) &
-              +dphhalo(kc,jm,ic))*dx2q+ &
+              +dphhalo(kc,jm,ic))*dyq+ &
               (dphhalo(kp,jc,ic)*app &
               +dphhalo(kc,jc,ic)*acc &
               +dphhalo(km,jc,ic)*amm))

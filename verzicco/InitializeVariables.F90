@@ -71,17 +71,17 @@
 !-------------------------------------------------
 
       if (statcal) then
-       call AllocateReal1DArray(q1_me,1,nxm)
-       call AllocateReal1DArray(q2_me,1,nxm)
-       call AllocateReal1DArray(q3_me,1,nxm)
+       call AllocateReal1DArray(vx_me,1,nxm)
+       call AllocateReal1DArray(vy_me,1,nxm)
+       call AllocateReal1DArray(vz_me,1,nxm)
  
-       call AllocateReal1DArray(q1_rms,1,nxm)
-       call AllocateReal1DArray(q2_rms,1,nxm)
-       call AllocateReal1DArray(q3_rms,1,nxm)
+       call AllocateReal1DArray(vx_rms,1,nxm)
+       call AllocateReal1DArray(vy_rms,1,nxm)
+       call AllocateReal1DArray(vz_rms,1,nxm)
  
        call AllocateReal1DArray(temp_me,1,nxm)
        call AllocateReal1DArray(temp_rms,1,nxm)
-       call AllocateReal1DArray(tempq3_me,1,nxm)
+       call AllocateReal1DArray(tempvx_me,1,nxm)
 
        if (disscal) then
         call AllocateReal1DArray(disste,1,nxm)
@@ -92,9 +92,9 @@
       !-------------------------------------------------
       ! Arrays with ghost cells
       !-------------------------------------------------
-      call AllocateReal3DArray(q1,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
-      call AllocateReal3DArray(q2,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
-      call AllocateReal3DArray(q3,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
+      call AllocateReal3DArray(vy,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
+      call AllocateReal3DArray(vz,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
+      call AllocateReal3DArray(vx,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
       call AllocateReal3DArray(pr,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
       call AllocateReal3DArray(temp,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
       call AllocateReal3DArray(dphhalo,1,nxm,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
@@ -106,11 +106,11 @@
       call AllocateReal3DArray(dph,1,nxm,xstart(2),xend(2),xstart(3),xend(3))
       call AllocateReal3DArray(dq,1,nx,xstart(2),xend(2),xstart(3),xend(3))
       call AllocateReal3DArray(qcap,1,nx,xstart(2),xend(2),xstart(3),xend(3))
-      call AllocateReal3DArray(ru1,1,nx,xstart(2),xend(2),xstart(3),xend(3))
-      call AllocateReal3DArray(ru2,1,nx,xstart(2),xend(2),xstart(3),xend(3))
-      call AllocateReal3DArray(ru3,1,nx,xstart(2),xend(2),xstart(3),xend(3))
+      call AllocateReal3DArray(rux,1,nx,xstart(2),xend(2),xstart(3),xend(3))
+      call AllocateReal3DArray(ruy,1,nx,xstart(2),xend(2),xstart(3),xend(3))
+      call AllocateReal3DArray(ruz,1,nx,xstart(2),xend(2),xstart(3),xend(3))
       call AllocateReal3DArray(hro,1,nx,xstart(2),xend(2),xstart(3),xend(3))
-      call AllocateReal3DArray(ruro,1,nx,xstart(2),xend(2),xstart(3),xend(3))
+      call AllocateReal3DArray(rutemp,1,nx,xstart(2),xend(2),xstart(3),xend(3))
 
       return 
       end   

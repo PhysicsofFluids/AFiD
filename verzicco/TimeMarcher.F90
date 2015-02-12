@@ -22,6 +22,9 @@
       beta=dt/ren*0.5d0
 
       do ns=1,nsst                                                 
+
+!RO     Coefficients for time marching integration (alpha, gamma, rho)
+
         al=alm(ns)
         ga=gam(ns)
         ro=rom(ns)
@@ -36,8 +39,8 @@
         call ImplicitAndUpdateVZ
         call ImplicitAndUpdateTemp
 
-        call update_halo(q1,1)
-        call update_halo(q2,1)
+        call update_halo(vy,1)
+        call update_halo(vz,1)
 
         call CalculateLocalDivergence
         call SolvePressureCorrection
@@ -60,9 +63,9 @@
         call CorrectVelocity
         call CorrectPressure
 
-        call update_halo(q1,1)
-        call update_halo(q2,1)
-        call update_halo(q3,1)
+        call update_halo(vx,1)
+        call update_halo(vy,1)
+        call update_halo(vz,1)
         call update_halo(pr,1)
         call update_halo(temp,1)
 

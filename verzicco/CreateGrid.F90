@@ -126,13 +126,13 @@
 !     METRIC FOR UNIFORM DIRECTIONS
 !
 
-      dx1=real(nzm)/zlen
-      dx2=real(nym)/ylen
-      dx3=real(nxm)/alx3
+      dx=real(nxm)/alx3
+      dy=real(nym)/ylen
+      dz=real(nzm)/zlen
 
-      dx1q=dx1*dx1                                                      
-      dx2q=dx2*dx2                                                      
-      dx3q=dx3*dx3                                                      
+      dxq=dx*dx                                                      
+      dyq=dy*dy                                                      
+      dzq=dz*dz                                                      
 
 !
 !     STAGGERED COORDINATES AND
@@ -142,21 +142,21 @@
 
       do kc=1,nxm
         zm(kc)=(zz(kc)+zz(kc+1))*0.5d0
-        g3rm(kc)=(zz(kc+1)-zz(kc))*dx3
+        g3rm(kc)=(zz(kc+1)-zz(kc))*dx
       enddo
       do kc=2,nxm
-        g3rc(kc)=(zz(kc+1)-zz(kc-1))*dx3*0.5d0
+        g3rc(kc)=(zz(kc+1)-zz(kc-1))*dx*0.5d0
       enddo
-      g3rc(1)=(zz(2)-zz(1))*dx3
-      g3rc(nx)= (zz(nx)-zz(nxm))*dx3
+      g3rc(1)=(zz(2)-zz(1))*dx
+      g3rc(nx)= (zz(nx)-zz(nxm))*dx
 !
 !     WRITE GRID INFORMATION
 !
       do kc=1,nxm
-        udx3m(kc) = dx3/g3rm(kc)
-        udx3c(kc) = dx3/g3rc(kc)
+        udx3m(kc) = dx/g3rm(kc)
+        udx3c(kc) = dx/g3rc(kc)
       end do
-      udx3c(nx) = dx3/g3rc(nx)
+      udx3c(nx) = dx/g3rc(nx)
 !m====================================================
       if(ismaster) then
       open(unit=78,file='axicor.out',status='unknown')
@@ -193,7 +193,7 @@
       do kc=2,nxm
        km=kc-1
        kp=kc+1
-       a33=dx3q/g3rc(kc)
+       a33=dxq/g3rc(kc)
        a33p=1.d0/g3rm(kc)
        a33m=1.d0/g3rm(km)
        ap3ck(kc)=a33*a33p
@@ -209,7 +209,7 @@
       do kc=2,nxm-1
       kp=kc+1
       km=kc-1
-      a33=dx3q/g3rm(kc)
+      a33=dxq/g3rm(kc)
       a33p= +a33/g3rc(kp)
       a33m= +a33/g3rc(kc)
       ap3sk(kc)=a33p
@@ -221,7 +221,7 @@
 !    
       kc=1
       kp=kc+1
-      a33=dx3q/g3rm(kc)
+      a33=dxq/g3rm(kc)
       a33p= +a33/g3rc(kp)
       a33m= +a33/g3rc(kc)
       ap3sk(kc)=a33p
@@ -234,7 +234,7 @@
 
       kc=nxm
       kp=kc+1
-      a33=dx3q/g3rm(kc)
+      a33=dxq/g3rm(kc)
       a33p= +a33/g3rc(kp)
       a33m= +a33/g3rc(kc)
       am3sk(kc)=a33m
@@ -253,7 +253,7 @@
       do kc=2,nxm
        kp=kc+1
        km=kc-1
-       a33=dx3q/g3rc(kc)
+       a33=dxq/g3rc(kc)
        a33p=1.d0/g3rm(kc)
        a33m=1.d0/g3rm(km)
        ap3ssk(kc)=a33*a33p

@@ -8,14 +8,14 @@
 !==========================================================
         integer   :: nx, ny, nz
         integer   :: nsst, nread, ntst, ireset
-        real      :: walltimemax,tpin,tmax
+        real      :: walltimemax,tout,tmax
         real      :: alx3,str3
         integer   :: istr3
         real      :: ylen,zlen
-        real      :: ray,pra,dt,resid,cflmax
+        real      :: ray,pra,dt,resid
         integer   :: inslws,inslwn
         integer   :: starea,tsta
-        real      :: dtmin,dtmax,cfllim,vlim
+        real      :: dtmin,dtmax,limitCFL,limitVel
         integer   :: nson,idtv
         real   :: tframe
 !=================================================
@@ -23,8 +23,7 @@
 !=================================================
         real :: time
 !******* Grid parameters**************************
-        real :: dx2,dx3,dx1
-        real :: dx2q,dx3q,dx1q
+        real :: dx,dy,dz,dxq,dyq,dzq
 !        
         real, allocatable, dimension(:) :: tc,tm
         real, allocatable, dimension(:) :: rc,rm
@@ -78,20 +77,20 @@
       module local_arrays
       use param
         implicit none
-        real,allocatable,dimension(:,:,:) :: q1,q2,q3
+        real,allocatable,dimension(:,:,:) :: vx,vy,vz
         real,allocatable,dimension(:,:,:) :: pr,temp,rhs
-        real,allocatable,dimension(:,:,:) :: ru1,ru2,ru3,ruro
+        real,allocatable,dimension(:,:,:) :: rux,ruy,ruz,rutemp
         real,allocatable,dimension(:,:,:) :: dph,qcap,dq,hro,dphhalo
       end module local_arrays
 
 !===============================================================
       module stat_arrays
        implicit none
-       real,allocatable, dimension(:) :: q1_me,q1_rms 
-       real,allocatable, dimension(:) :: q2_me,q3_me,q2_rms,q3_rms 
+       real,allocatable, dimension(:) :: vz_me,vz_rms 
+       real,allocatable, dimension(:) :: vy_me,vx_me,vy_rms,vx_rms 
        real,allocatable, dimension(:) :: temp_me,temp_rms 
-       real, allocatable,dimension(:) :: disste,dissth,tempq3_me
-       integer :: timeint_cdsp
+       real, allocatable,dimension(:) :: disste,dissth,tempvx_me
+       integer :: nstatsamples
       end module stat_arrays
 !=====================================================       
       module stat3_param

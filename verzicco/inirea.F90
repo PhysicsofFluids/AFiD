@@ -23,7 +23,7 @@
       integer (kind=MPI_ADDRESS_KIND) :: extent,lb
       real :: stro3
       real :: intinfo(1:4)
-      real, allocatable, dimension(:,:,:) :: tempold,q2old,q3old,q1old
+      real, allocatable, dimension(:,:,:) :: tempold,vyold,vxold,vzold
       logical :: fexist
       
 !EP   Reading old grid information by rank0
@@ -60,7 +60,7 @@
       
 !EP   Check whether grid specifications have been updated
       if(nyo.ne.ny.or.nxo.ne.nx.or.nzo.ne.nz &
-       .or.istro3.ne.istr3.or.stro3.ne.str3) then
+       .or.istro3.ne.istr3.or.(abs(stro3-str3).gt.1e-8)) then
       if(nrank.eq.0) write(*,*) "Interpolating new grid"
       if(nz.gt.nzo*2.or.ny.gt.nyo*2.or.nx.gt.nxo*2) then
       if(nrank.eq.0) write(*,*) "New grid resolution cannot be more ", &
@@ -99,38 +99,38 @@
 
       deallocate(tempold)
 
-!EP   qx
-      allocate(q1old(0:nxo+1,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+!EP   vz
+      allocate(vzold(0:nxo+1,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
       
       call hdf_read(nzo,nyo,nxo,xs2og,xe2og, &
-       xs3og,xe3og,1,q1old(1:nxo,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+       xs3og,xe3og,1,vzold(1:nxo,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
 
-      call interp(q1old,q1(1:nx,xstart(2):xend(2),xstart(3):xend(3)) &
+      call interp(vzold,vz(1:nx,xstart(2):xend(2),xstart(3):xend(3)) &
        ,nzo,nyo,nxo,istro3,stro3,1,xs2og,xe2og,xs3og,xe3og)
 
-      deallocate(q1old)
+      deallocate(vzold)
 
-!EP   q2
-      allocate(q2old(0:nxo+1,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+!EP   vy
+      allocate(vyold(0:nxo+1,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
       
       call hdf_read(nzo,nyo,nxo,xs2og,xe2og, &
-     & xs3og,xe3og,2,q2old(1:nxo,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+     & xs3og,xe3og,2,vyold(1:nxo,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
 
-      call interp(q2old,q2(1:nx,xstart(2):xend(2),xstart(3):xend(3)) &
+      call interp(vyold,vy(1:nx,xstart(2):xend(2),xstart(3):xend(3)) &
      & ,nzo,nyo,nxo,istro3,stro3,2,xs2og,xe2og,xs3og,xe3og)
 
-      deallocate(q2old)
+      deallocate(vyold)
 
-!EP   q3
-      allocate(q3old(0:nxo+1,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+!EP   vx
+      allocate(vxold(0:nxo+1,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
       
       call hdf_read(nzo,nyo,nxo,xs2og,xe2og, &
-     & xs3og,xe3og,3,q3old(1:nxo,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+     & xs3og,xe3og,3,vxold(1:nxo,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
 
-      call interp(q3old,q3(1:nx,xstart(2):xend(2),xstart(3):xend(3)) &
+      call interp(vxold,vx(1:nx,xstart(2):xend(2),xstart(3):xend(3)) &
      & ,nzo,nyo,nxo,istro3,stro3,3,xs2og,xe2og,xs3og,xe3og)
 
-      deallocate(q3old)
+      deallocate(vxold)
 
       else
 
@@ -138,11 +138,11 @@
       call hdf_read(nz,ny,nx,xstart(2),xend(2) &
      & ,xstart(3),xend(3),4,temp)
       call hdf_read(nz,ny,nx,xstart(2),xend(2) &
-     & ,xstart(3),xend(3),1,q1)
+     & ,xstart(3),xend(3),3,vx)
       call hdf_read(nz,ny,nx,xstart(2),xend(2) &
-     & ,xstart(3),xend(3),2,q2)
+     & ,xstart(3),xend(3),2,vy)
       call hdf_read(nz,ny,nx,xstart(2),xend(2) &
-     & ,xstart(3),xend(3),3,q3)
+     & ,xstart(3),xend(3),1,vz)
 
       endif
 

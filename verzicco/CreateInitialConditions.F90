@@ -10,7 +10,7 @@
 
       subroutine CreateInitialConditions
       use param
-      use local_arrays, only: q2,q3,temp,q1
+      use local_arrays, only: vy,vx,temp,vz
       use decomp_2d, only: xstart,xend
       use mpih
       implicit none
@@ -22,15 +22,15 @@
       do j=xstart(2),xend(2)
       do k=1,nxm
            yyy=zm(k) 
-           q1(k,j,i)=0.0d0
+           vz(k,j,i)=0.0d0
            yyy=zm(k) 
            xxx=rc(j)            
-           q2(k,j,i)=(2.0d0*yyy-6.0d0*yyy**2+4.0d0*yyy**3) &
+           vy(k,j,i)=(2.0d0*yyy-6.0d0*yyy**2+4.0d0*yyy**3) &
      &                  *sin(3*xxx)*eps
 
            yyy=zz(k)          
            xxx=rm(j)
-           q3(k,j,i)=-yyy**2*(1.0d0-yyy)**2*cos(3.1*xxx)*eps
+           vx(k,j,i)=-yyy**2*(1.0d0-yyy)**2*cos(3.1*xxx)*eps
 
          enddo
         enddo

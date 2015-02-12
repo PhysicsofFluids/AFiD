@@ -10,7 +10,7 @@
 
       subroutine LocateLargeDivergence
       use param
-      use local_arrays, only: q2,q3,q1
+      use local_arrays, only: vy,vx,vz
       use mpih
       use decomp_2d, only: xstart,xend,nrank
       implicit none
@@ -24,16 +24,16 @@
           jp=jc+1
             do kc=1,nxm
             kp=kc+1
-              dqcap= (q1(kc,jc,ip)-q1(kc,jc,ic))*dx1 &
-     &              +(q2(kc,jp,ic)-q2(kc,jc,ic))*dx2 &
-     &              +(q3(kp,jc,ic)-q3(kc,jc,ic))*udx3m(kc)
+              dqcap= (vz(kc,jc,ip)-vz(kc,jc,ic))*dz &
+     &              +(vy(kc,jp,ic)-vy(kc,jc,ic))*dy &
+     &              +(vx(kp,jc,ic)-vx(kc,jc,ic))*udx3m(kc)
               if (abs(dqcap).gt.resid) then
                 write(*,*) ic,jc,kc,nrank
-            write(*,*) "q1",(q1(kc,jc,ip)-q1(kc,jc,ic))*dx1
-       write(*,*) "q2",(q2(kc,jp,ic)-q2(kc,jc,ic))*dx2
-       write(*,*) "q3",(q3(kp,jc,ic)-q3(kc,jc,ic))*udx3m(kc)
-                write(*,*) "q2m",ic,jc,kc,q2(kc,jc,ic)
-                write(*,*) "q2p",ic,jp,kc,q2(kc,jp,ic)
+            write(*,*) "vz",(vz(kc,jc,ip)-vz(kc,jc,ic))*dz
+       write(*,*) "vy",(vy(kc,jp,ic)-vy(kc,jc,ic))*dy
+       write(*,*) "vx",(vx(kp,jc,ic)-vx(kc,jc,ic))*udx3m(kc)
+                write(*,*) "vym",ic,jc,kc,vy(kc,jc,ic)
+                write(*,*) "vyp",ic,jp,kc,vy(kc,jp,ic)
              endif
       enddo
       enddo

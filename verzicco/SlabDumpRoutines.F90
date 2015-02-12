@@ -1,38 +1,38 @@
       subroutine SlabDumper
       use param
-      use local_arrays, only: temp,q1,q2,q3
+      use local_arrays, only: temp,vz,vy,vx
       use stat3_param
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: i,j,m
       real,dimension(xstart(2):xend(2),xstart(3):xend(3)) :: &
-     &      q3cc,q1cc,q2cc,tempcc
+     &      vxcc,vzcc,vycc,tempcc
       character*70 :: filnam
       character*1 :: charm
 
 !EP   Slabs
-!EP   cell center only q3
+!EP   cell center only vx
 
       do m=1,9
 !$OMP  PARALLEL DO DEFAULT(SHARED) &
 !$OMP   PRIVATE(i,j)
         do i=xstart(3),xend(3)
          do j=xstart(2),xend(2)
-           q1cc(j,i) = q1(kslab(m),j,i)
-           q2cc(j,i) = q2(kslab(m),j,i)
-           q3cc(j,i) = (q3(kslab(m),j,i)+q3(kslab(m)+1,j,i))*0.5
+           vxcc(j,i) = (vx(kslab(m),j,i)+vx(kslab(m)+1,j,i))*0.5
+           vycc(j,i) = vy(kslab(m),j,i)
+           vzcc(j,i) = vz(kslab(m),j,i)
            tempcc(j,i) = temp(kslab(m),j,i)
           enddo
          enddo
 !$OMP  END PARALLEL DO
       write(charm,28) m
    28 format(i1.1)
-      filnam='slab'//charm//'q1_'
-      call DumpSingleSlab(q1cc,filnam)
-      filnam='slab'//charm//'q2_'
-      call DumpSingleSlab(q2cc,filnam)
-      filnam='slab'//charm//'q3_'
-      call DumpSingleSlab(q3cc,filnam)
+      filnam='slab'//charm//'vx_'
+      call DumpSingleSlab(vxcc,filnam)
+      filnam='slab'//charm//'vy_'
+      call DumpSingleSlab(vycc,filnam)
+      filnam='slab'//charm//'vz_'
+      call DumpSingleSlab(vzcc,filnam)
       filnam='slab'//charm//'temp_'
       call DumpSingleSlab(tempcc,filnam)
       enddo
@@ -103,7 +103,7 @@
       character*70 :: namfile,dsetname
       character*8 :: ipfi
 
-      tprfi = 1/tpin
+      tprfi = 1/tout
       itime=nint(time*tprfi)
       write(ipfi,82)itime
    82 format(i8.8)
