@@ -1,7 +1,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: hdnlro.F90                                     !
-!    CONTAINS: subroutine hdnlro                          !
+!    FILE: ExplicitTermsTemp.F90                          !
+!    CONTAINS: subroutine ExplicitTermsTemp               !
 !                                                         ! 
 !    PURPOSE: Compute the non-linear terms associated to  !
 !     the temperature.                                    !
@@ -45,9 +45,9 @@
 !    rho vz term
 !
 !
-!                d  rho q_t 
+!                d  rho q_z
 !             -----------
-!                d   t      
+!                d   z      
 !
       htz=((vz(km,jc,ip)+vz(kc,jc,ip))*(temp(kc,jc,ip)+temp(kc,jc,ic))- &
            (vz(km,jc,ic)+vz(kc,jc,ic))*(temp(kc,jc,ic)+temp(kc,jc,im)) &
@@ -57,9 +57,9 @@
 !    rho vy term
 !
 !
-!                d  rho q_r 
+!                d  rho q_y 
 !             -----------
-!                d   r      
+!                d   y      
 !
       hty=((vy(kc,jp,ic)+vy(km,jp,ic))*(temp(kc,jp,ic)+temp(kc,jc,ic))- &
            (vy(kc,jc,ic)+vy(km,jc,ic))*(temp(kc,jc,ic)+temp(kc,jm,ic)) &

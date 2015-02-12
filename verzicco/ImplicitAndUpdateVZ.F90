@@ -18,8 +18,8 @@
       implicit none
       integer :: kc,jc,ic,imm
       integer :: kmm,kpp
-      real    :: alre,amm,acc,app
-      real    :: d33vz,dpx11,udz
+      real    :: alre,amm,acc,app,udz
+      real    :: dxxvz,dzp
 
       alre=al/ren
       udz=dz*al
@@ -32,7 +32,7 @@
 !$OMP   SHARED(udx3m,rhs,ruz) &
 !$OMP   PRIVATE(ic,jc,kc,imm,kmm,kpp) &
 !$OMP   PRIVATE(amm,acc,app) &
-!$OMP   PRIVATE(d33vz,dpx11)
+!$OMP   PRIVATE(dxxvz,dzp)
       do ic=xstart(3),xend(3)
       imm=ic-1
       do jc=xstart(2),xend(2)
@@ -43,27 +43,24 @@
       acc=ac3sk(kc)
       app=ap3sk(kc)
 
+!   Second derivative in x-direction of vz
 !
-!   33 second derivative of vz
-!
-            d33vz=vz(kpp,jc,ic)*app &
+            dxxvz=vz(kpp,jc,ic)*app &
                  +vz(kc,jc,ic)*acc &
                  +vz(kmm,jc,ic)*amm
       
+!   component of grad(pr) along z direction
 !
-!   component of grad(pr) along 2 direction
-!
-            dpx11=(pr(kc,jc,ic)-pr(kc,jc,imm))*dz*al
-!
-!
+            dzp=(pr(kc,jc,ic)-pr(kc,jc,imm))*dz*al
+
+!    Calculate right hand side of Eq. 5 (VO96)
 !
             rhs(kc,jc,ic)=(ga*dq(kc,jc,ic)+ro*ruz(kc,jc,ic) &
-                          +alre*d33vz-dpx11)*dt
+                          +alre*dxxvz-dzp)*dt
 
-       
+!    Store the non-linear terms for the calculation of 
+!    the next timestep
 
-!m===========================================================
-!
             ruz(kc,jc,ic)=dq(kc,jc,ic)
       enddo
       enddo
@@ -76,4 +73,3 @@
 
       return
       end
-!

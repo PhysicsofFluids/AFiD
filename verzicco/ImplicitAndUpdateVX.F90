@@ -4,7 +4,7 @@
 !    CONTAINS: subroutine ImplicitAndUpdateVX             !
 !                                                         ! 
 !    PURPOSE: Compute the linear terms associated to      !
-!     the velocity in the vertical direction and call     !
+!     the velocity in the X (vertical) direction and call !
 !     the implicit solver. After this routine, the        !
 !     vertical velocity has been updated to the new       !
 !     timestep                                            !
@@ -19,7 +19,7 @@
       integer :: jc,kc
       integer :: km,kp,ic
       real    :: alre,udx3
-      real    :: amm,acc,app,dpx33,dq33
+      real    :: amm,acc,app,dxp,dxxvx
 
       alre=al/ren
 
@@ -31,7 +31,7 @@
 !$OMP   SHARED(udx3c,rhs,rux) &
 !$OMP   PRIVATE(ic,jc,kc,km,kp) &
 !$OMP   PRIVATE(amm,acc,app,udx3) &
-!$OMP   PRIVATE(dq33,dpx33)
+!$OMP   PRIVATE(dxxvx,dxp)
       do ic=xstart(3),xend(3)
       do jc=xstart(2),xend(2)
       do kc=2,nxm
@@ -42,30 +42,36 @@
       acc=ac3ck(kc)
       app=ap3ck(kc)
 
-!   33 second derivatives of vx
+!   Second derivative in x-direction of vx
 !
-            dq33=vx(kp,jc,ic)*app &
+            dxxvx=vx(kp,jc,ic)*app &
                 +vx(kc,jc,ic)*acc &
                 +vx(km,jc,ic)*amm
 
-!  component of grad(pr) along x3 direction
+!  component of grad(pr) along x direction
 !
-            dpx33=(pr(kc,jc,ic)-pr(km,jc,ic))*udx3
-!m=======================================================     
+            dxp=(pr(kc,jc,ic)-pr(km,jc,ic))*udx3
+
+!    Calculate right hand side of Eq. 5 (VO96)
+!
             rhs(kc,jc,ic)=(ga*qcap(kc,jc,ic)+ro*rux(kc,jc,ic) &
-                          +alre*dq33-dpx33)*dt 
-!m=======================================================
-!
-!  updating of the non-linear terms
-!
+                          +alre*dxxvx-dxp)*dt 
+
+!    Store the non-linear terms for the calculation of 
+!    the next timestep
+
             rux(kc,jc,ic)=qcap(kc,jc,ic)
       enddo
       enddo
       enddo
 !$OMP END PARALLEL DO
 
+!  Solve equation and update velocity
 
       call SolveImpEqnUpdate_X
+
+!  Set boundary conditions on the vertical velocity at top
+!  and bottom plates. This seems necessary.
 
       vx(1,:,:)=0.0d0
       vx(nx,:,:)=0.0d0

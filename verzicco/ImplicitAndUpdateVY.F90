@@ -20,7 +20,7 @@
       integer :: kpp,kmm
       real    :: alre,udy
       real    :: amm,acc,app
-      real    :: d33vy,dpx22
+      real    :: dyp,dxxvy
 
 
       alre=al/ren
@@ -34,7 +34,7 @@
 !$OMP   SHARED(udy,udx3m,rhs,ruy) &
 !$OMP   PRIVATE(ic,jc,kc,kmm,kpp,jmm) &
 !$OMP   PRIVATE(amm,acc,app) &
-!$OMP   PRIVATE(d33vy,dpx22)
+!$OMP   PRIVATE(dyp,dxxvy)
       do ic=xstart(3),xend(3)
       do jc=xstart(2),xend(2)
       jmm=jc-1
@@ -45,31 +45,34 @@
       acc=ac3sk(kc)
       app=ap3sk(kc)
 
+
+!   Second derivative in x-direction of vy
 !
-!   33 second derivative of vy
 !
-            d33vy=vy(kpp,jc,ic)*app &
+            dxxvy=vy(kpp,jc,ic)*app &
                  +vy(kc,jc,ic)*acc &
                  +vy(kmm,jc,ic)*amm
 
+!   component of grad(pr) along y direction
 !
-!   component of grad(pr) along 2 direction
-!
-            dpx22=(pr(kc,jc,ic)-pr(kc,jmm,ic))*udy
+            dyp=(pr(kc,jc,ic)-pr(kc,jmm,ic))*udy
 
+!    Calculate right hand side of Eq. 5 (VO96)
 !
             rhs(kc,jc,ic)=(ga*dph(kc,jc,ic)+ro*ruy(kc,jc,ic) &
-                          +alre*d33vy-dpx22)*dt
+                          +alre*dxxvy-dyp)*dt
 
-!m===========================================================
-!
+!    Store the non-linear terms for the calculation of 
+!    the next timestep
+
             ruy(kc,jc,ic)=dph(kc,jc,ic)
       enddo
       enddo
       enddo
 
+!  Solve equation and update velocity
+
       call SolveImpEqnUpdate_YZ(vy,rhs)
       
       return
       end
-!

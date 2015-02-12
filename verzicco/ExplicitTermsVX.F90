@@ -1,10 +1,10 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: hdnl3.F90                                      !
-!    CONTAINS: subroutine hdnl3                           !
+!    FILE: ExplicitTermsVX.F90                            !
+!    CONTAINS: subroutine ExplicitTermsVX                 !
 !                                                         ! 
 !    PURPOSE: Compute the non-linear terms associated to  !
-!     the velocity in the vertical dimension (x3)         !
+!     the velocity in the x (vertical) dimension          !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -15,10 +15,10 @@
       implicit none
       integer :: jc,kc
       integer :: km,kp,jmm,jpp,ic,imm,ipp
-      real    :: h32,h33,h31
+      real    :: hxx,hxy,hxz
       real    :: udz,udy,tempit
       real    :: udzq,udyq
-      real    :: dq31,dq32
+      real    :: dzzvx,dyyvx
 
       udy=dy*0.25
       udz=dz*0.25
@@ -33,7 +33,7 @@
 !$OMP   SHARED(udy,udzq,udyq,udx3c,qcap,temp) &
 !$OMP   PRIVATE(ic,jc,kc,imm,ipp,km,kp) &
 !$OMP   PRIVATE(jmm,jpp,tempit) &
-!$OMP   PRIVATE(h31,h32,h33,dq31,dq32)
+!$OMP   PRIVATE(hxx,hxy,hxz,dzzvx,dyyvx)
       do ic=xstart(3),xend(3)
        imm=ic-1
        ipp=ic+1
@@ -52,7 +52,7 @@
 !                d   t      
 !
 !
-      h31=(((vz(kc,jc,ipp)+vz(km,jc,ipp)) &
+      hxz=(((vz(kc,jc,ipp)+vz(km,jc,ipp)) &
            *(vx(kc,jc,ipp)+vx(kc,jc,ic))) &
           -((vz(kc,jc,ic)+vz(km,jc,ic)) &
            *(vx(kc,jc,ic)+vx(kc,jc,imm))))*udz
@@ -64,7 +64,7 @@
 !             -----------
 !                d   r      
 !
-      h32=(((vy(kc,jpp,ic)+vy(km,jpp,ic)) &
+      hxy=(((vy(kc,jpp,ic)+vy(km,jpp,ic)) &
            *(vx(kc,jpp,ic)+vx(kc,jc,ic))) &
           -((vy(kc,jc,ic)+vy(km,jc,ic)) &
            *(vx(kc,jc,ic)+vx(kc,jmm,ic))))*udy
@@ -76,7 +76,7 @@
 !                -----------
 !                 d   x      
 !
-      h33=((vx(kp,jc,ic)+vx(kc,jc,ic))*(vx(kp,jc,ic)+vx(kc,jc,ic)) &
+      hxx=((vx(kp,jc,ic)+vx(kc,jc,ic))*(vx(kp,jc,ic)+vx(kc,jc,ic)) &
           -(vx(kc,jc,ic)+vx(km,jc,ic))*(vx(kc,jc,ic)+vx(km,jc,ic)) &
           )*udx3c(kc)*0.25d0
 !
@@ -85,20 +85,20 @@
           tempit=temp(kc,jc,ic)
 
 !
-!   11 second derivatives of vx
+!   z second derivatives of vx
 !
-            dq31=(vx(kc,jc,imm) &
+            dzzvx=(vx(kc,jc,imm) &
                  -2.0*vx(kc,jc,ic) &
                  +vx(kc,jc,ipp))*udzq
 !
-!   22 second derivatives of vx
+!   y second derivatives of vx
 !
-            dq32=(vx(kc,jmm,ic) &
+            dyyvx=(vx(kc,jmm,ic) &
                  -2.0*vx(kc,jc,ic) &
                  +vx(kc,jpp,ic))*udyq
 
 
-          qcap(kc,jc,ic) =-(h31+h32+h33)+dq31+dq32+tempit
+          qcap(kc,jc,ic) =-(hxx+hxy+hxz)+dyyvx+dzzvx+tempit
             
       enddo
       enddo
