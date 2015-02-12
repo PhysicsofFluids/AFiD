@@ -10,7 +10,7 @@
       implicit none
       integer :: ntstf, errorcode, nthreads
       real    :: cflm,dmax
-      real    :: ti(2), tin(3), mindtwt
+      real    :: ti(2), tin(3), minwtdt
       real :: ts
 
 !*******************************************************
