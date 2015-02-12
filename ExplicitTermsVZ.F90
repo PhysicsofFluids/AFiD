@@ -1,16 +1,16 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: hdnl1.F90                                      !
-!    CONTAINS: subroutine hdnl1                           !
+!    FILE: ExplicitTermsVZ.F90                            !
+!    CONTAINS: subroutine ExplicitTermsVZ                 !
 !                                                         ! 
 !    PURPOSE: Compute the non-linear terms associated to  !
-!     the velocity in the first horizontal dimension.     !
+!     the velocity in the z (horizontal) dimension        !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       subroutine ExplicitTermsVZ
       use param
-      use local_arrays, only: vy,vx,vz,dq
+      use local_arrays, only: vx,vy,vz,dq
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: kc,kp,jpp,jmm,jc,ic,imm,ipp

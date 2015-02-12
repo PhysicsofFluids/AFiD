@@ -1,11 +1,11 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: invtrro.F90                                    !
-!    CONTAINS: subroutine invtrro                         !
+!    FILE: ImplicitAndUpdateTemp.F90                      !
+!    CONTAINS: subroutine ImplicitAndUpdateTemp           !
 !                                                         ! 
 !    PURPOSE: Compute the linear terms associated to      !
-!     the temperature and calls the implicit solver.      !                                 !
-!     After this routine, the temperature field has been  ! 
+!     the temperature and call the implicit solver.       !
+!     After this routine, the temperature has been        !
 !     updated to the new timestep                         !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -17,10 +17,8 @@
       implicit none
       integer :: jc,kc,ic
       integer :: km,kp
-      real    :: alpec,dq33
+      real    :: alpec,dxxt
       real    :: app,acc,amm
-
-
 
       alpec=al/pec
 
@@ -32,15 +30,15 @@
 !$OMP   SHARED(rhs,rutemp,hro) &
 !$OMP   PRIVATE(ic,jc,kc,km,kp) &
 !$OMP   PRIVATE(amm,acc,app) &
-!$OMP   PRIVATE(dq33)
+!$OMP   PRIVATE(dxxt)
       do ic=xstart(3),xend(3)
       do jc=xstart(2),xend(2)
       do kc=2,nxm
 
-!   Calculate second derivative of temperature in the z-direction.
+!   Calculate second derivative of temperature in the x-direction.
 !   This is the only term calculated implicitly for temperature.
 
-               dq33= temp(kc+1,jc,ic)*ap3ck(kc) &
+               dxxt= temp(kc+1,jc,ic)*ap3ck(kc) &
                     +temp(kc  ,jc,ic)*ac3ck(kc) &
                     +temp(kc-1,jc,ic)*am3ck(kc)
 
@@ -48,7 +46,7 @@
 !    Calculate right hand side of Eq. 5 (VO96)
 
             rhs(kc,jc,ic)=(ga*hro(kc,jc,ic)+ro*rutemp(kc,jc,ic) &
-                    +alpec*dq33)*dt
+                    +alpec*dxxt)*dt
 
 !    Store the non-linear terms for the calculation of 
 !    the next timestep
