@@ -68,8 +68,8 @@ LINKS = -lfftw3 -llapack -lblas -lz -lhdf5_fortran -lhdf5
 
 PROGRAM = boutnp
 
-OBJECTS = AuxiliaryRoutines.o CalcMaxCFL.o SetTempBCs.o CalculatePlateNu.o \
-          CalculateLocalDivergence.o CheckDivergence.o main.o ExplicitTermsVX.o \
+OBJECTS = AuxiliaryRoutines.o CalcMaxCFL.o SetTempBCs.o CalcPlateNu.o \
+          CalcLocalDivergence.o CheckDivergence.o main.o ExplicitTermsVX.o \
           ExplicitTermsVY.o ExplicitTermsVZ.o hdf_read.o \
           ExplicitTermsTemp.o inirea.o InitializeVariables.o CreateInitialConditions.o \
           ImplicitAndUpdateVX.o ImplicitAndUpdateVY.o ImplicitAndUpdateVZ.o ResetLogs.o \

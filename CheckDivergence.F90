@@ -1,7 +1,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: divgck.F90                                     !
-!    CONTAINS: subroutine divgck                          !
+!    FILE: CheckDivergence.F90                            !
+!    CONTAINS: subroutine CheckDivergence                 !
 !                                                         ! 
 !    PURPOSE: Check the maximum divergence of velocity    !
 !     in the domain                                       !

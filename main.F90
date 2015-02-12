@@ -178,7 +178,7 @@
 
             call CalcMaxCFL(instCFL)
             call CheckDivergence(dmax)
-            call CalculatePlateNu
+            call CalcPlateNu
 
             if(time.gt.tsta) then
 

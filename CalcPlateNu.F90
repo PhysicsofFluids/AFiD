@@ -1,14 +1,14 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: CalculatePlateNu.F90                           !
-!    CONTAINS: subroutine CalculatePlateNu                !
+!    FILE: CalcPlateNu.F90                                !
+!    CONTAINS: subroutine CalcPlateNu                     !
 !                                                         ! 
 !    PURPOSE: Calculate the Nusselt number at the top     !
 !     and bottom plates and output to a file.             !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine CalculatePlateNu
+      subroutine CalcPlateNu
       use param
       use local_arrays, only: temp
       use mpih

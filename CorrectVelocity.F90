@@ -1,7 +1,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: updvp.F90                                      !
-!    CONTAINS: subroutine updvp                           !
+!    FILE: CorrectVelocity.F90                            !
+!    CONTAINS: subroutine CorrectVelocity                 !
 !                                                         ! 
 !    PURPOSE: Update velocities with the pressure         !
 !     correction to enforce incompresibility              !
