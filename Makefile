@@ -10,7 +10,8 @@
 #FC = h5pfc -r8 -ip -ipo -O3 -fpp
 #FC = h5pfc -r8 -ip -ipo -O0 -fpp
 #FC = h5pfc -r8 -ip -ipo -O3 -fpp -g -traceback -fpe0
-FC = mpif90 -O0 -cpp -Wextra -fdefault-real-8 -fdefault-double-8 -I/usr/include -Wall -fbounds-check
+#FC = mpif90 -O0 -cpp -Wextra -fdefault-real-8 -fdefault-double-8 -I/usr/include -Wall 
+FC = mpif90 -O3 -cpp -Wextra -fdefault-real-8 -fdefault-double-8 -I/usr/include -Wall 
 #FC = h5pfc -r8 -O0 -fpp -g -traceback -fpe0 -warn all -debug all -check all
 FC += -fopenmp
 
