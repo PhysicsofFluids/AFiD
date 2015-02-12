@@ -1,79 +1,74 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: invtr1.F90                                     !
-!    CONTAINS: subroutine invtr1                          !
+!    FILE: ImplicitAndUpdateVX.F90                        !
+!    CONTAINS: subroutine ImplicitAndUpdateVX             !
 !                                                         ! 
 !    PURPOSE: Compute the linear terms associated to      !
-!     the velocity in the first horizontal dimension      !
-!     and call the implicit solver.                       !
-!     After this routine, the velocity field in x1 has    !
-!     been updated to the new timestep                    !
+!     the velocity in the vertical direction and call     !
+!     the implicit solver. After this routine, the        !
+!     vertical velocity has been updated to the new       !
+!     timestep                                            !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       subroutine ImplicitAndUpdateVX
       use param
-      use local_arrays, only: q1,dq,ru1,rhs,pr
+      use local_arrays, only: vx,rhs,rux,qcap,pr
       use decomp_2d, only: xstart,xend
       implicit none
-      integer :: kc,jc,ic,imm
-      integer :: kmm,kpp
-      real    :: alre,amm,acc,app
-      real    :: d33q1,dpx11
+      integer :: jc,kc
+      integer :: km,kp,ic
+      real    :: alre,udx3
+      real    :: amm,acc,app,dpx33,dq33
 
-!
       alre=al/ren
-
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
-!$OMP   SHARED(xstart,xend,nxm,q1,pr) &
-!$OMP   SHARED(kmv,kpv,am3sk,ac3sk,ap3sk) &
-!$OMP   SHARED(dx1,al,ga,ro,alre,dt,dq) &
-!$OMP   SHARED(udx3m,rhs,ru1) &
-!$OMP   PRIVATE(ic,jc,kc,imm,kmm,kpp) &
-!$OMP   PRIVATE(amm,acc,app) &
-!$OMP   PRIVATE(d33q1,dpx11)
+!$OMP   SHARED(xstart,xend,nxm,vx,pr) &
+!$OMP   SHARED(kmv,kpv,am3ck,ac3ck,ap3ck) &
+!$OMP   SHARED(al,ga,ro,alre,dt,qcap) &
+!$OMP   SHARED(udx3c,rhs,rux) &
+!$OMP   PRIVATE(ic,jc,kc,km,kp) &
+!$OMP   PRIVATE(amm,acc,app,udx3) &
+!$OMP   PRIVATE(dq33,dpx33)
       do ic=xstart(3),xend(3)
-      imm=ic-1
       do jc=xstart(2),xend(2)
-      do kc=1,nxm
-      kmm=kmv(kc)
-      kpp=kpv(kc)
-      amm=am3sk(kc)
-      acc=ac3sk(kc)
-      app=ap3sk(kc)
+      do kc=2,nxm
+      km=kc-1
+      kp=kc+1
+      udx3 = al*udx3c(kc)
+      amm=am3ck(kc)
+      acc=ac3ck(kc)
+      app=ap3ck(kc)
 
+!   33 second derivatives of vx
 !
-!   33 second derivative of q1
-!
-            d33q1=q1(kpp,jc,ic)*app &
-                 +q1(kc,jc,ic)*acc &
-                 +q1(kmm,jc,ic)*amm
-      
-!
-!   component of grad(pr) along 2 direction
-!
-            dpx11=(pr(kc,jc,ic)-pr(kc,jc,imm))*dx1*al
-!
-!
-!
-            rhs(kc,jc,ic)=(ga*dq(kc,jc,ic)+ro*ru1(kc,jc,ic) &
-                          +alre*d33q1-dpx11)*dt
+            dq33=vx(kp,jc,ic)*app &
+                +vx(kc,jc,ic)*acc &
+                +vx(km,jc,ic)*amm
 
-       
-
-!m===========================================================
+!  component of grad(pr) along x3 direction
 !
-            ru1(kc,jc,ic)=dq(kc,jc,ic)
+            dpx33=(pr(kc,jc,ic)-pr(km,jc,ic))*udx3
+!m=======================================================     
+            rhs(kc,jc,ic)=(ga*qcap(kc,jc,ic)+ro*rux(kc,jc,ic) &
+                          +alre*dq33-dpx33)*dt 
+!m=======================================================
+!
+!  updating of the non-linear terms
+!
+            rux(kc,jc,ic)=qcap(kc,jc,ic)
       enddo
       enddo
       enddo
 !$OMP END PARALLEL DO
 
 
-      call SolveImpEqnUpdate_XY(q1,rhs)
+      call SolveImpEqnUpdate_X
 
+      vx(1,:,:)=0.0d0
+      vx(nx,:,:)=0.0d0
 
       return
       end

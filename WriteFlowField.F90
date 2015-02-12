@@ -10,18 +10,18 @@
 
       subroutine WriteFlowField
       use param
-      use local_arrays, only: q1,q2,q3,temp
+      use local_arrays, only: vz,vy,vx,temp
       implicit none
       character*30 :: filnam1,dsetname
 
       filnam1 = trim('continua_temp.h5')
       call HdfWriteRealHalo3D(filnam1,temp)
-      filnam1 = trim('continua_q1.h5')
-      call HdfWriteRealHalo3D(filnam1,q1)
-      filnam1 = trim('continua_q2.h5')
-      call HdfWriteRealHalo3D(filnam1,q2)
-      filnam1 = trim('continua_q3.h5')
-      call HdfWriteRealHalo3D(filnam1,q3)
+      filnam1 = trim('continua_vz.h5')
+      call HdfWriteRealHalo3D(filnam1,vz)
+      filnam1 = trim('continua_vy.h5')
+      call HdfWriteRealHalo3D(filnam1,vy)
+      filnam1 = trim('continua_vx.h5')
+      call HdfWriteRealHalo3D(filnam1,vx)
 
       if (ismaster) then !EP only write once
        filnam1 = trim('continua_master.h5')

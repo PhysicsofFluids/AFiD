@@ -19,10 +19,11 @@
     
 !    Initialize wave number definitions
 
-      nzmh=nzm/2+1
-      nzmp=nzmh+1
       nymh=nym/2+1
       nymp=nymh+1
+
+      nzmh=nzm/2+1
+      nzmp=nzmh+1
 
       do i=1,nzmh
         ao(i)=(i-1)*2.d0*pi
@@ -48,8 +49,8 @@
       do kc=1,nxm
         km=kmv(kc)
         kp=kpv(kc)
-        a33icc=kmc(kc)*dx3q/g3rc(kc)
-        a33icp=kpc(kc)*dx3q/g3rc(kp)
+        a33icc=kmc(kc)*dxq/g3rc(kc)
+        a33icp=kpc(kc)*dxq/g3rc(kp)
         ugmmm=1.0d0/g3rm(kc)
         amphk(kc)=a33icc*ugmmm
         apphk(kc)=a33icp*ugmmm

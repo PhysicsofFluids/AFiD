@@ -10,7 +10,7 @@
 
       subroutine CalculateLocalDivergence
       use param
-      use local_arrays, only: q1,q2,q3,dph
+      use local_arrays, only: vz,vy,vx,dph
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: jc,jp,kc,kp,ic,ip
@@ -20,7 +20,7 @@
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
-!$OMP   SHARED(xstart,q1,q2,q3,dx1,dx2,udx3m,usdtal) &
+!$OMP   SHARED(xstart,vz,vy,vx,dz,dy,udx3m,usdtal) &
 !$OMP   SHARED(dph,nxm,xend) &
 !$OMP   PRIVATE(ic,jc,kc,ip,jp,kp) &
 !$OMP   PRIVATE(dqcap)
@@ -30,9 +30,9 @@
           jp=jc+1
             do kc=1,nxm
               kp=kc+1
-              dqcap= (q1(kc,jc,ip)-q1(kc,jc,ic))*dx1 &
-                    +(q2(kc,jp,ic)-q2(kc,jc,ic))*dx2 &
-                    +(q3(kp,jc,ic)-q3(kc,jc,ic))*udx3m(kc)
+              dqcap= (vz(kc,jc,ip)-vz(kc,jc,ic))*dz &
+                    +(vy(kc,jp,ic)-vy(kc,jc,ic))*dy &
+                    +(vx(kp,jc,ic)-vx(kc,jc,ic))*udx3m(kc)
               dph(kc,jc,ic)=dqcap*usdtal
             enddo
          enddo

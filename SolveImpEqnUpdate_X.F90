@@ -9,9 +9,9 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine SolveImpEqnUpdate_Z
+      subroutine SolveImpEqnUpdate_X
       use param
-      use local_arrays, only : q3,rhs
+      use local_arrays, only : vx,rhs
       use decomp_2d, only: xstart,xend
       implicit none
       real, dimension(nx) :: amkl,apkl,ackl, fkl
@@ -55,7 +55,7 @@
           call dgttrs('N',nx,1,amkT,ackT,apkT,appk,ipkv,fkl,nx,info)
 
           do kc=2,nxm
-            q3(kc,jc,ic)=q3(kc,jc,ic) + fkl(kc)
+            vx(kc,jc,ic)=vx(kc,jc,ic) + fkl(kc)
           enddo
           enddo
       end do

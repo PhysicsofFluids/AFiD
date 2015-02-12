@@ -10,18 +10,18 @@
 
       subroutine CorrectVelocity
       use param
-      use local_arrays, only: q2,q3,dphhalo,q1
+      use local_arrays, only: vy,vx,dphhalo,vz
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: jc,jm,kc,km,ic,im
-      real    :: usukm,udx2,udx1,locdph
+      real    :: usukm,udy,udz,locdph
 
-      udx1 = al*dt*dx1
-      udx2 = al*dt*dx2
+      udz = al*dt*dz
+      udy = al*dt*dy
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
-!$OMP   SHARED(q1,q2,q3,dphhalo,udx1,udx2,udx3c) &
+!$OMP   SHARED(vz,vy,vx,dphhalo,udz,udy,udx3c) &
 !$OMP   SHARED(xstart,xend,nxm,kmv,dt,al) &
 !$OMP   PRIVATE(ic,jc,kc) &
 !$OMP   PRIVATE(im,jm,km,usukm,locdph)
@@ -33,11 +33,11 @@
           km=kmv(kc)
           usukm = al*dt*udx3c(kc)
           locdph=dphhalo(kc,jc,ic)
-          q1(kc,jc,ic)=q1(kc,jc,ic)- &
-            (locdph-dphhalo(kc,jc,im))*udx1
-          q2(kc,jc,ic)=q2(kc,jc,ic)- &
-            (locdph-dphhalo(kc,jm,ic))*udx2
-          q3(kc,jc,ic)=q3(kc,jc,ic)- &
+          vz(kc,jc,ic)=vz(kc,jc,ic)- &
+            (locdph-dphhalo(kc,jc,im))*udz
+          vy(kc,jc,ic)=vy(kc,jc,ic)- &
+            (locdph-dphhalo(kc,jm,ic))*udy
+          vx(kc,jc,ic)=vx(kc,jc,ic)- &
             (locdph-dphhalo(km,jc,ic))*usukm
         enddo 
        enddo

@@ -12,7 +12,7 @@
 
       subroutine ImplicitAndUpdateTemp
       use param
-      use local_arrays, only: temp,hro,ruro,rhs
+      use local_arrays, only: temp,hro,rutemp,rhs
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: jc,kc,ic
@@ -29,7 +29,7 @@
 !$OMP   SHARED(xstart,xend,nxm,temp) &
 !$OMP   SHARED(kmv,kpv,am3ck,ac3ck,ap3ck) &
 !$OMP   SHARED(ga,ro,alpec,dt) &
-!$OMP   SHARED(rhs,ruro,hro) &
+!$OMP   SHARED(rhs,rutemp,hro) &
 !$OMP   PRIVATE(ic,jc,kc,km,kp) &
 !$OMP   PRIVATE(amm,acc,app) &
 !$OMP   PRIVATE(dq33)
@@ -47,13 +47,13 @@
 
 !    Calculate right hand side of Eq. 5 (VO96)
 
-            rhs(kc,jc,ic)=(ga*hro(kc,jc,ic)+ro*ruro(kc,jc,ic) &
+            rhs(kc,jc,ic)=(ga*hro(kc,jc,ic)+ro*rutemp(kc,jc,ic) &
                     +alpec*dq33)*dt
 
 !    Store the non-linear terms for the calculation of 
 !    the next timestep
 
-            ruro(kc,jc,ic)=hro(kc,jc,ic)
+            rutemp(kc,jc,ic)=hro(kc,jc,ic)
 
         enddo
        enddo

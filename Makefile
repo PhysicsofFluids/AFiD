@@ -75,8 +75,8 @@ OBJECTS = AuxiliaryRoutines.o CalcMaxCFL.o SetTempBCs.o CalculatePlateNu.o \
           ImplicitAndUpdateVX.o ImplicitAndUpdateVY.o ImplicitAndUpdateVZ.o ResetLogs.o \
           CreateGrid.o DeallocateVariables.o \
           param.o CorrectPressure.o \
-          SolveImpEqnUpdate_XY.o StatRoutines.o \
-          SolveImpEqnUpdate_Z.o ImplicitAndUpdateTemp.o SolveImpEqnUpdate_Temp.o DebugRoutines.o \
+          SolveImpEqnUpdate_YZ.o StatRoutines.o \
+          SolveImpEqnUpdate_X.o ImplicitAndUpdateTemp.o SolveImpEqnUpdate_Temp.o DebugRoutines.o \
           TimeMarcher.o CorrectVelocity.o GlobalQuantities.o InitPressureSolver.o \
           SolvePressureCorrection.o CalcDissipationNu.o interp.o LocateLargeDivergence.o QuitRoutine.o \
  	    decomp_2d.o decomp_2d_fft.o WriteFlowField.o  \

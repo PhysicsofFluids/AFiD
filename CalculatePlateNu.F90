@@ -1,3 +1,12 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: CalculatePlateNu.F90                           !
+!    CONTAINS: subroutine CalculatePlateNu                !
+!                                                         ! 
+!    PURPOSE: Calculate the Nusselt number at the top     !
+!     and bottom plates and output to a file.             !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       subroutine CalculatePlateNu
       use param
@@ -6,12 +15,12 @@
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: j,i
-      real ::  anussupp,anusslow
+      real ::  nuslow, nusupp
       real :: del,deln
   
 
-      anusslow = 0.d0
-      anussupp = 0.d0
+      nuslow = 0.d0
+      nusupp = 0.d0
       del  = 1.0/(zz(2)-zz(1))
       deln = 1.0/(zz(nx)-zz(nxm))
 
@@ -20,27 +29,26 @@
 !$OMP   SHARED(xstart,xend,temp,del,deln) &
 !$OMP   SHARED(nxm,nx) &
 !$OMP   PRIVATE(i,j) &
-!$OMP   REDUCTION(+:anusslow) &
-!$OMP   REDUCTION(+:anussupp)
+!$OMP   REDUCTION(+:nuslow) &
+!$OMP   REDUCTION(+:nusupp)
       do i=xstart(3),xend(3)
          do j=xstart(2),xend(2)
-           anusslow = anusslow + (temp(1,j,i)-temp(2,j,i))*del
-           anussupp = anussupp + (temp(nxm,j,i)-temp(nx,j,i))*deln
+           nuslow = nuslow + (temp(1,j,i)-temp(2,j,i))*del
+           nusupp = nusupp + (temp(nxm,j,i)-temp(nx,j,i))*deln
         enddo
       end do
 !$OMP END PARALLEL DO
 
-      anusslow = anusslow / (nzm*nym)
-      anussupp = anussupp / (nzm*nym)
+      nuslow = nuslow / (nzm*nym)
+      nusupp = nusupp / (nzm*nym)
 
-      call MpiSumRealScalar(anusslow)
-      call MpiSumRealScalar(anussupp)
-
+      call MpiSumRealScalar(nuslow)
+      call MpiSumRealScalar(nusupp)
 
       if(ismaster) then
-       open(97,file="nu_plate.out",status='unknown',access='sequential', &
-        position='append')
-       write(97,546) time, anusslow, anussupp
+       open(97,file="nu_plate.out",status='unknown', &
+        access='sequential',position='append')
+       write(97,546) time, nuslow, nusupp
  546   format(4(1x,e14.6))
        close(97)
       endif
