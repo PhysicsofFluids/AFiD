@@ -42,7 +42,7 @@
         call update_halo(vy,1)
         call update_halo(vz,1)
 
-        call CalculateLocalDivergence
+        call CalcLocalDivergence
         call SolvePressureCorrection
 
 !EP this copy can be avoided by changing transpose_x_to_y_real and

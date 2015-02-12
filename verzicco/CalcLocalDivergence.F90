@@ -1,14 +1,15 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: divg.F90                                       !
-!    CONTAINS: subroutine divg                            !
+!    FILE: CalcLocalDivergence.F90                        !
+!    CONTAINS: subroutine CalcLocalDivergence             !
 !                                                         ! 
-!    PURPOSE: Compute the divergence of the velocity      !
-!     at every point for the pressure correction          !
+!    PURPOSE: Compute the divergence of the intermediate  !
+!     velocity at every point for the pressure            !
+!     correction step                                     !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine CalculateLocalDivergence
+      subroutine CalcLocalDivergence
       use param
       use local_arrays, only: vz,vy,vx,dph
       use decomp_2d, only: xstart,xend

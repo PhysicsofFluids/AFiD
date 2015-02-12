@@ -1,7 +1,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: prcalc.F90                                     !
-!    CONTAINS: subroutine prcalc                          !
+!    FILE: CorrectPressure.F90                            !
+!    CONTAINS: subroutine CorrectPressure                 !
 !                                                         ! 
 !    PURPOSE: Apply the pressure correction to the        !
 !     pressure                                            !
