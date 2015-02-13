@@ -64,9 +64,9 @@
       endif
       endif
 
-      call InitializeTimeMarchScheme
+      call InitTimeMarchScheme
 
-      call InitializeVariables
+      call InitVariables
 
       call CreateGrid
 

@@ -71,7 +71,7 @@ PROGRAM = boutnp
 OBJECTS = AuxiliaryRoutines.o CalcMaxCFL.o SetTempBCs.o CalcPlateNu.o \
           CalcLocalDivergence.o CheckDivergence.o main.o ExplicitTermsVX.o \
           ExplicitTermsVY.o ExplicitTermsVZ.o hdf_read.o \
-          ExplicitTermsTemp.o inirea.o InitializeVariables.o CreateInitialConditions.o \
+          ExplicitTermsTemp.o inirea.o InitVariables.o CreateInitialConditions.o \
           ImplicitAndUpdateVX.o ImplicitAndUpdateVY.o ImplicitAndUpdateVZ.o ResetLogs.o \
           CreateGrid.o DeallocateVariables.o \
           param.o CorrectPressure.o \
@@ -80,7 +80,7 @@ OBJECTS = AuxiliaryRoutines.o CalcMaxCFL.o SetTempBCs.o CalcPlateNu.o \
           TimeMarcher.o CorrectVelocity.o GlobalQuantities.o InitPressureSolver.o \
           SolvePressureCorrection.o CalcDissipationNu.o interp.o LocateLargeDivergence.o QuitRoutine.o \
  	    decomp_2d.o decomp_2d_fft.o WriteFlowField.o  \
-	    SlabDumpRoutines.o ReadInputFile.o InitializeTimeMarchScheme.o \
+	    SlabDumpRoutines.o ReadInputFile.o InitTimeMarchScheme.o \
           WriteGridInfo.o StatReadReduceWrite.o HdfRoutines.o \
           MpiAuxRoutines.o
 #          alloc.o decomp_2d.o fft_fftw3.o halo.o halo_common.o

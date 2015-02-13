@@ -1,14 +1,14 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: InitializeVariables.F90                        !
-!    CONTAINS: subroutine InitializeVariables             !
+!    FILE: InitVariables.F90                              !
+!    CONTAINS: subroutine InitVariables                   !
 !                                                         ! 
 !    PURPOSE: Initialization routine. Sets to zero all    !
 !     variables used in the code                          !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine InitializeVariables
+      subroutine InitVariables
       use param
       use local_arrays
       use stat_arrays
