@@ -1,14 +1,14 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: InitializeTimeMarchScheme.F90                  !
-!    CONTAINS: subroutine InitializeTimeMarchScheme       !
+!    FILE: InitTimeMarchScheme.F90                        !
+!    CONTAINS: subroutine InitTimeMarchScheme             !
 !                                                         ! 
 !    PURPOSE: Initialize the time-marching constants for  !
 !     the integrator                                      !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine InitializeTimeMarchScheme
+      subroutine InitTimeMarchScheme
       use param
       implicit none
       integer ns
