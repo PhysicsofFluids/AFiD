@@ -14,13 +14,13 @@
        call HdfCreateBlankFile(namfile)
 
        dsetname = trim('xm')
-       call HdfSerialWriteReal1D(dsetname,namfile,tm,nzm)
+       call HdfSerialWriteReal1D(dsetname,namfile,xm,nxm)
+       dsetname = trim('xc')
+       call HdfSerialWriteReal1D(dsetname,namfile,xc,nx)
        dsetname = trim('ym')
-       call HdfSerialWriteReal1D(dsetname,namfile,rm,nym)
+       call HdfSerialWriteReal1D(dsetname,namfile,ym,nym)
        dsetname = trim('zm')
-       call HdfSerialWriteReal1D(dsetname,namfile,zm,nxm)
-       dsetname = trim('zz')
-       call HdfSerialWriteReal1D(dsetname,namfile,zz,nx)
+       call HdfSerialWriteReal1D(dsetname,namfile,zm,nzm)
 
       endif
 

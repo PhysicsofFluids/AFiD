@@ -25,9 +25,10 @@
 !******* Grid parameters**************************
         real :: dx,dy,dz,dxq,dyq,dzq
 !        
-        real, allocatable, dimension(:) :: tc,tm
-        real, allocatable, dimension(:) :: rc,rm
-        real, allocatable, dimension(:) :: zz,zm,g3rc,g3rm
+        real, allocatable, dimension(:) :: xc,xm
+        real, allocatable, dimension(:) :: yc,ym
+        real, allocatable, dimension(:) :: zc,zm
+        real, allocatable, dimension(:) :: g3rc,g3rm
 !====================================================
 !******* QUANTITIES FOR DERIVATIVES******************
         real, allocatable, dimension(:) :: udx3c,udx3m

@@ -21,15 +21,14 @@
       do i=xstart(3),xend(3)
       do j=xstart(2),xend(2)
       do k=1,nxm
-           yyy=zm(k) 
            vz(k,j,i)=0.0d0
-           yyy=zm(k) 
-           xxx=rc(j)            
+           yyy=xm(k) 
+           xxx=yc(j)            
            vy(k,j,i)=(2.0d0*yyy-6.0d0*yyy**2+4.0d0*yyy**3) &
      &                  *sin(3*xxx)*eps
 
-           yyy=zz(k)          
-           xxx=rm(j)
+           yyy=xc(k)          
+           xxx=ym(j)
            vx(k,j,i)=-yyy**2*(1.0d0-yyy)**2*cos(3.1*xxx)*eps
 
          enddo
@@ -40,7 +39,7 @@
       do j=xstart(2),xend(2)
       do k=2,nxm
              temp(k,j,i)= tempbp(j,i) - (tempbp(j,i) - temptp(j,i)) &
-                         *zz(k)
+                         *xc(k)
            enddo
           end do 
         end do

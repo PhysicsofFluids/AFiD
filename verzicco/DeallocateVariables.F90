@@ -15,18 +15,18 @@
       use AuxiliaryRoutines
       implicit none
       
-      call DestroyReal1DArray(tc)
-      call DestroyReal1DArray(tm)
+      call DestroyReal1DArray(zc)
+      call DestroyReal1DArray(zm)
       call DestroyReal1DArray(ak1)
       call DestroyReal1DArray(ao)
 
-      call DestroyReal1DArray(rc)
-      call DestroyReal1DArray(rm)
+      call DestroyReal1DArray(yc)
+      call DestroyReal1DArray(ym)
       call DestroyReal1DArray(ak2)
       call DestroyReal1DArray(ap)
 
-      call DestroyReal1DArray(zz)
-      call DestroyReal1DArray(zm)
+      call DestroyReal1DArray(xc)
+      call DestroyReal1DArray(xm)
       call DestroyReal1DArray(g3rc)
       call DestroyReal1DArray(g3rm)
 

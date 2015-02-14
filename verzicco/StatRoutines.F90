@@ -131,7 +131,7 @@
        call HdfSerialWriteRealScalar(dsetname,filnam,pra)
 
        dsetname = trim('X_cordin')
-       call HdfSerialWriteReal1D(dsetname,filnam,zm,1,nxm)
+       call HdfSerialWriteReal1D(dsetname,filnam,xm,1,nxm)
 
       endif
 
