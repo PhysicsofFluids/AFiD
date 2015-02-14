@@ -1,7 +1,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: CreateGrid.F90                                   !
-!    CONTAINS: subroutine CreateGrid                        !
+!    FILE: CreateGrid.F90                                 !
+!    CONTAINS: subroutine CreateGrid                      !
 !                                                         ! 
 !    PURPOSE: Compute the indices, grid, grid metrics     !
 !     and coefficients for differentiation                !
@@ -42,20 +42,20 @@
 !
        do  i=1,nz
         x1=real(i-1)/real(nzm)
-        tc(i)= zlen*x1
+        zc(i)= zlen*x1
        end do
 
        do i=1,nzm
-         tm(i)=(tc(i)+tc(i+1))*0.5d0
+         zm(i)=(zc(i)+zc(i+1))*0.5d0
        end do
 
        do j=1,ny
         x2=real(j-1)/real(nym)
-        rc(j)= ylen*x2
+        yc(j)= ylen*x2
        end do
 
        do j=1,nym
-        rm(j)=(rc(j)+rc(j+1))*0.5d0
+        ym(j)=(yc(j)+yc(j+1))*0.5d0
        end do
 
 !
@@ -70,7 +70,7 @@
         do kc=1,nx
           x3=real(kc-1)/real(nxm)
           etaz(kc)=alx3*x3
-          zz(kc)=etaz(kc)
+          xc(kc)=etaz(kc)
         enddo
       endif
 
@@ -81,12 +81,12 @@
         tstr3=tanh(str3)
 
         if (istr3.eq.4) then
-         zz(1)=0.0d0
+         xc(1)=0.0d0
          do kc=2,nx
           z2dp=float(2*kc-nx-1)/float(nxm)
-          zz(kc)=(1+tanh(str3*z2dp)/tstr3)*0.5*alx3
-          if(zz(kc).lt.0.or.zz(kc).gt.alx3)then
-           write(*,*)'Forza la griglia: ','zc(',kc,')=',zz(kc)
+          xc(kc)=(1+tanh(str3*z2dp)/tstr3)*0.5*alx3
+          if(xc(kc).lt.0.or.xc(kc).gt.alx3)then
+           write(*,*)'Forza la griglia: ','zc(',kc,')=',xc(kc)
            stop
           endif
          end do
@@ -111,11 +111,11 @@
       do kc=1,nx
         etaz(kc)=etaz(kc)/(0.5*delet)
       end do
-      zz(1) = 0.
+      xc(1) = 0.
       do kc=2,nxm
-        zz(kc) = alx3*(1.-etaz(kc))*0.5
+        xc(kc) = alx3*(1.-etaz(kc))*0.5
       end do
-      zz(nx) = alx3
+      xc(nx) = alx3
       endif
 
       call DestroyReal1DArray(etaz)
@@ -141,14 +141,14 @@
 !
 
       do kc=1,nxm
-        zm(kc)=(zz(kc)+zz(kc+1))*0.5d0
-        g3rm(kc)=(zz(kc+1)-zz(kc))*dx
+        xm(kc)=(xc(kc)+xc(kc+1))*0.5d0
+        g3rm(kc)=(xc(kc+1)-xc(kc))*dx
       enddo
       do kc=2,nxm
-        g3rc(kc)=(zz(kc+1)-zz(kc-1))*dx*0.5d0
+        g3rc(kc)=(xc(kc+1)-xc(kc-1))*dx*0.5d0
       enddo
-      g3rc(1)=(zz(2)-zz(1))*dx
-      g3rc(nx)= (zz(nx)-zz(nxm))*dx
+      g3rc(1)=(xc(2)-xc(1))*dx
+      g3rc(nx)= (xc(nx)-xc(nxm))*dx
 !
 !     WRITE GRID INFORMATION
 !
@@ -161,7 +161,7 @@
       if(ismaster) then
       open(unit=78,file='axicor.out',status='unknown')
       do kc=1,nx
-        write(78,345) kc,zz(kc),zm(kc),g3rc(kc),g3rm(kc)
+        write(78,345) kc,xc(kc),xm(kc),g3rc(kc),g3rm(kc)
       end do
       close(78)
  345  format(i4,4(2x,e23.15))

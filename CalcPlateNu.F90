@@ -21,8 +21,8 @@
 
       nuslow = 0.d0
       nusupp = 0.d0
-      del  = 1.0/(zz(2)-zz(1))
-      deln = 1.0/(zz(nx)-zz(nxm))
+      del  = 1.0/(xc(2)-xc(1))
+      deln = 1.0/(xc(nx)-xc(nxm))
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &

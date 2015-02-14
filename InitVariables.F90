@@ -20,18 +20,18 @@
 ! Arrays for grid making
 !-------------------------------------------------
 
-      call AllocateReal1DArray(tc,1,nz)
-      call AllocateReal1DArray(tm,1,nz)
+      call AllocateReal1DArray(zc,1,nz)
+      call AllocateReal1DArray(zm,1,nz)
       call AllocateReal1DArray(ak1,1,nz)
       call AllocateReal1DArray(ao,1,nz)
 
-      call AllocateReal1DArray(rc,1,ny)
-      call AllocateReal1DArray(rm,1,ny)
+      call AllocateReal1DArray(yc,1,ny)
+      call AllocateReal1DArray(ym,1,ny)
       call AllocateReal1DArray(ak2,1,ny)
       call AllocateReal1DArray(ap,1,ny)
 
-      call AllocateReal1DArray(zz,1,nx)
-      call AllocateReal1DArray(zm,1,nx)
+      call AllocateReal1DArray(xc,1,nx)
+      call AllocateReal1DArray(xm,1,nx)
       call AllocateReal1DArray(g3rc,1,nx)
       call AllocateReal1DArray(g3rm,1,nx)
 

@@ -22,12 +22,12 @@
       real :: udx3_m,udx3_c
       real :: hxx,hxy,hxz,hyx,hyy,hyz,hzx,hzy,hzz
       real :: tx,ty,tz
-      real :: nuth,nute,volt
+      real :: nu_th,nu_mu,volt
       real :: udz,udy,dissipte,dissipth
 
       
-      nute = 0.0d0
-      nuth = 0.0d0
+      nu_mu = 0.0d0
+      nu_th = 0.0d0
 
       udy=dy
       udz=dz
@@ -37,14 +37,14 @@
 !$OMP  SHARED(xstart,xend,g3rm,pra,vz,vy,vx,temp) &
 !$OMP  SHARED(udz,udy,udx3m,udx3c) &
 !$OMP  SHARED(nzm,nym,nxm,ren,pec) &
-!$OMP  SHARED(kpv,kmv,zz,zm) &
+!$OMP  SHARED(kpv,kmv,xc,xm) &
 !$OMP  SHARED(disste,dissth) &
 !$OMP  PRIVATE(i,j,k,imm,ipp,jmm,jpp,kp,kpp,kmm) &
 !$OMP  PRIVATE(udx3_m,udx3_c,dissipte,dissipth) &
 !$OMP  PRIVATE(hxx,hxy,hxz,hyx,hyy,hyz,hzx,hzy,hzz) &
 !$OMP  PRIVATE(tx,ty,tz) &
-!$OMP  REDUCTION(+:nute) &
-!$OMP  REDUCTION(+:nuth)
+!$OMP  REDUCTION(+:nu_mu) &
+!$OMP  REDUCTION(+:nu_th)
       do i=xstart(3),xend(3)
        imm= i-1
        ipp= i+1
@@ -57,8 +57,8 @@
         kpp=kpv(k)
         kmm=kmv(k)
 
-       udx3_m=1.0/(zm(kpp)-zm(kmm))
-       udx3_c=1.0/(zz(kpp)-zz(kmm))
+       udx3_m=1.0/(xm(kpp)-xm(kmm))
+       udx3_c=1.0/(xc(kpp)-xc(kmm))
 
 !
 !      Viscous dissipation rate
@@ -84,7 +84,7 @@
                (hyz+hzy)**2+(hxz+hzx)**2+(hxy+hyx)**2
 
 
-       nute = nute + dissipte*g3rm(k)*pra
+       nu_mu = nu_mu + dissipte*g3rm(k)*pra
 
 !
 !      Thermal gradient dissipation rate
@@ -100,7 +100,7 @@
 
        dissipth  = tx*tx + ty*ty + tz*tz 
 
-       nuth = nuth+dissipth*g3rm(k)
+       nu_th = nu_th+dissipth*g3rm(k)
 
 
 !$OMP CRITICAL
@@ -114,17 +114,17 @@
 !$OMP  END PARALLEL DO
 
 
-       call MpiSumRealScalar(nuth)
-       call MpiSumRealScalar(nute)
+       call MpiSumRealScalar(nu_th)
+       call MpiSumRealScalar(nu_mu)
       
        volt = 1.d0/(real(nxm)*real(nzm)*real(nym))
 
       if(ismaster) then
-      nute = nute*volt + 1
-      nuth = nuth*volt 
+      nu_mu = nu_mu*volt + 1
+      nu_th = nu_th*volt 
       open(92,file='nu_diss.out',status='unknown',access='sequential', &
        position='append')
-      write(92,*) time,nute,nuth
+      write(92,*) time,nu_mu,nu_th
       close(92)
       endif
 
