@@ -46,6 +46,7 @@
       enddo
 
 !RO   Initialize Tridiagonal matrices for Poisson solver
+
       do kc=1,nxm
         km=kmv(kc)
         kp=kpv(kc)
@@ -57,7 +58,8 @@
         acphk(kc)=-(amphk(kc)+apphk(kc))
       enddo
 
-!EP   Initialize planning
+!EP   Initialize Pencil transposes for pressure solver
+
       call decomp_2d_fft_init
 
       return

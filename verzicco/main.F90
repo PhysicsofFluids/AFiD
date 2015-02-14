@@ -204,7 +204,7 @@
           write(6,*)ntime,time,vmax(1),vmax(2),vmax(3),dmax,tempm,tempmax,tempmin
           write(6,*) 'Minimum Iteration Time = ', minwtdt, ' sec.'
           endif
-!          minwtdt = huge(0.0d0)
+          minwtdt = huge(0.0d0)
         endif
 
        if( (ti(2) - tin(1)) .gt. walltimemax) errorcode = 334
@@ -214,22 +214,22 @@
       if(errorcode.ne.0) then
 
 !EP    dt too small
-        if(errorcode.eq.166) call QuitRoutine(tin,0,errorcode)
+        if(errorcode.eq.166) call QuitRoutine(tin,.false.,errorcode)
 
 !EP   cfl too high    
-        if(errorcode.eq.165) call QuitRoutine(tin,0,errorcode)
+        if(errorcode.eq.165) call QuitRoutine(tin,.false.,errorcode)
       
 !EP   velocities diverged
-        if(errorcode.eq.266) call QuitRoutine(tin,0,errorcode)
+        if(errorcode.eq.266) call QuitRoutine(tin,.false.,errorcode)
           
 !EP   mass not conserved
-        if(errorcode.eq.169) call QuitRoutine(tin,0,errorcode)
+        if(errorcode.eq.169) call QuitRoutine(tin,.false.,errorcode)
 
 !EP   Physical time exceeded tmax, no error; normal quit
-        if(errorcode.eq.333) call QuitRoutine(tin,1,errorcode)
+        if(errorcode.eq.333) call QuitRoutine(tin,.true.,errorcode)
 
 !EP   walltime exceeded walltimemax, no error; normal quit
-        if(errorcode.eq.334) call QuitRoutine(tin,1,errorcode)
+        if(errorcode.eq.334) call QuitRoutine(tin,.true.,errorcode)
 
        endif
 

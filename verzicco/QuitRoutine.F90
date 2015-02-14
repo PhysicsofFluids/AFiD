@@ -1,11 +1,20 @@
-      subroutine QuitRoutine(tin,cond,errorcode)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: QuitRoutine.F90                                !
+!    CONTAINS: subroutine QuitRoutine, NotifyError        !
+!                                                         ! 
+!    PURPOSE: Routines to exit the program and write the  !
+!     data if necessary                                   !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      subroutine QuitRoutine(tin,normalexit,errorcode)
       use hdf5
       use mpih
       use param
       use decomp_2d, only: nrank, decomp_2d_finalize
       use decomp_2d_fft
       implicit none
-      integer, intent(in) :: cond
+      logical, intent(in) :: normalexit
       integer :: errorcode
       real :: tin(3)
 
@@ -14,7 +23,7 @@
        call NotifyError(errorcode) 
       endif
 
-      if(cond.eq.1) then
+      if(normalexit) then
         if(nrank.eq.0) write(6,*) 'Total Iteration Time = ',tin(3) -tin(2),' sec.'
         if (statcal) call WriteStats
         call WriteFlowField
@@ -24,8 +33,6 @@
       call HdfClose
       call decomp_2d_fft_finalize
       call decomp_2d_finalize
-
-      if (cond.eq.0) stop
 
       end subroutine QuitRoutine
 
