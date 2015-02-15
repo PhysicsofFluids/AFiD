@@ -1,14 +1,14 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: hdf_read.F90                                   !
-!    CONTAINS: subroutine hdf_read                        !
+!    FILE: HdfReadContinua.F90                            !
+!    CONTAINS: subroutine HdfReadContinua                 !
 !                                                         ! 
 !    PURPOSE: I/O routine. Read in a 3D array in          !
 !     parallel of size n1o*n2o*n3o.                       !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine hdf_read(n1o,n2o,n3o,xs2,xe2,xs3,xe3,intvar,qua)
+      subroutine HdfReadContinua(n1o,n2o,n3o,xs2,xe2,xs3,xe3,intvar,qua)
       use mpih
       use param
       use hdf5
@@ -31,13 +31,10 @@
       integer, intent(in) :: intvar,n1o,n2o,n3o
       integer, intent(in) :: xs2,xe2,xs3,xe3
       integer :: ndims
-      integer :: comm, info
       real, dimension(1:n3o,xs2-1:xe2+1,xs3-1:xe3+1),intent(out)::qua
 
       character*70 :: filnam1
 
-      comm = mpi_comm_world
-      info = mpi_info_null
 !EP   Select file and dataset based on intvar
 
       select case (intvar)
@@ -70,8 +67,8 @@
       call h5pcreate_f(H5P_FILE_ACCESS_F, plist_id, &
           hdf_error)
 
-      call h5pset_fapl_mpio_f(plist_id, comm, info, &
-     &  hdf_error)
+      call h5pset_fapl_mpio_f(plist_id, mpi_comm_world, &
+     &  mpi_info_null, hdf_error)
 
       call h5fopen_f(filnam1, H5F_ACC_RDONLY_F, file_id, &
      & hdf_error, access_prp=plist_id)
@@ -98,5 +95,5 @@
       call h5sclose_f(memspace, hdf_error)
       call h5fclose_f(file_id, hdf_error)
 
-      end subroutine hdf_read
+      end subroutine HdfReadContinua
 

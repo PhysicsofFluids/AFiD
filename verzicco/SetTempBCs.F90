@@ -11,12 +11,12 @@
       subroutine SetTempBCs
       use param
       implicit none
-      integer :: j,i
+      integer :: ic,jc
 
-      do i=1,nzm
-       do j=1,nym
-        temptp(j,i)=0.d0
-        tempbp(j,i)=1.d0
+      do ic=1,nzm
+       do jc=1,nym
+        temptp(jc,ic)=0.d0
+        tempbp(jc,ic)=1.d0
        enddo
       enddo
 

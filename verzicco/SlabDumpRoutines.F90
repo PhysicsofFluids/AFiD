@@ -1,12 +1,23 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: SlabDumper.F90                                 !
+!    CONTAINS: subroutines SlabDumper, InitializeSlabDump !
+!     DumpSingleSlab                                      ! 
+!                                                         ! 
+!    PURPOSE: Auxiliary routines used for memory allocs   !
+!     and memory freeing                                  !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine SlabDumper
       use param
-      use local_arrays, only: temp,vz,vy,vx
+      use local_arrays, only: temp,vx,vy,vz
       use stat3_param
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: i,j,m
       real,dimension(xstart(2):xend(2),xstart(3):xend(3)) :: &
-     &      vxcc,vzcc,vycc,tempcc
+     &      vxcc,vycc,vzcc,tempcc
       character*70 :: filnam
       character*1 :: charm
 
@@ -54,18 +65,18 @@
       
       open(unit=19,file='stst3.in',status='old')
         read(19,301) dummy
-        read(19,*) (zslab(i),i=2,9)
+        read(19,*) (xslab(i),i=2,9)
 301     format(a4)                
       close(19)
 
-!EP   Compute which kslab corresponds to which zslab
+!EP   Compute which kslab corresponds to which xslab
       
       kslab = 2
       
         do k=2,nxm
           xmloc=xm(k)
           do j=2,9
-            if(xm(k).gt.zslab(j).and.xm(k-1).lt.zslab(j)) then
+            if(xm(k).gt.xslab(j).and.xm(k-1).lt.xslab(j)) then
              kslab(j) = k
             endif
           enddo

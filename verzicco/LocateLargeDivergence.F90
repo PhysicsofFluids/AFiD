@@ -1,7 +1,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: divgloc.F90                                    !
-!    CONTAINS: subroutine divgloc                         !
+!    FILE: LocateLargeDivergence.F90                      !
+!    CONTAINS: subroutine LocateLargeDivergence           !
 !                                                         ! 
 !    PURPOSE: Debugging routine. Output the location(s)   !
 !     of excessive divergence.                            !

@@ -1,3 +1,11 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: ReadInputFile.F90                              !
+!    CONTAINS: subroutine ReadInputFile                   !
+!                                                         ! 
+!    PURPOSE: Read parameters from bou.in file            !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       subroutine ReadInputFile
       use param
       implicit none
@@ -44,6 +52,7 @@
       if(idtv.eq.0) variabletstep = .false.
       if(flagbal.ne.0) disscal = .true.
       if(nread.ne.0) readflow = .true.
+      if(ireset.ne.0) resetlogstime = .true.
 
       if(stst3flag.ne.0) then
        inquire(file='./stst3.in', exist=fexist) 

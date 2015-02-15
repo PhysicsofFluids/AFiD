@@ -58,7 +58,7 @@
         acphk(kc)=-(amphk(kc)+apphk(kc))
       enddo
 
-!EP   Initialize Pencil transposes for pressure solver
+!RO   Initialize Pencil transposes for pressure solver
 
       call decomp_2d_fft_init
 

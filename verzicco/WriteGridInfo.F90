@@ -1,3 +1,13 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: WriteGridInfo.F90                              !
+!    CONTAINS: subroutine WriteGridInfo                   !
+!                                                         ! 
+!    PURPOSE: Write the grid information in               !
+!     cordin_info.h5                                      !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine WriteGridInfo
       use mpih
       use param
