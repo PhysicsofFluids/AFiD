@@ -16,8 +16,8 @@
       integer :: jc,jm,kc,km,ic,im
       real    :: usukm,udy,udz,locdph
 
-      udz = al*dt*dz
       udy = al*dt*dy
+      udz = al*dt*dz
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
@@ -33,12 +33,12 @@
           km=kmv(kc)
           usukm = al*dt*udx3c(kc)
           locdph=dphhalo(kc,jc,ic)
-          vz(kc,jc,ic)=vz(kc,jc,ic)- &
-            (locdph-dphhalo(kc,jc,im))*udz
-          vy(kc,jc,ic)=vy(kc,jc,ic)- &
-            (locdph-dphhalo(kc,jm,ic))*udy
           vx(kc,jc,ic)=vx(kc,jc,ic)- &
             (locdph-dphhalo(km,jc,ic))*usukm
+          vy(kc,jc,ic)=vy(kc,jc,ic)- &
+            (locdph-dphhalo(kc,jm,ic))*udy
+          vz(kc,jc,ic)=vz(kc,jc,ic)- &
+            (locdph-dphhalo(kc,jc,im))*udz
         enddo 
        enddo
       enddo

@@ -1,7 +1,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: solrok.F90                                     !
-!    CONTAINS: subroutine solrok                          !
+!    FILE: SolveImpEqnUpdate_Temp.F90                     !
+!    CONTAINS: subroutine SolveImpEqnUpdate_Temp          !
 !                                                         ! 
 !    PURPOSE: Inverts the implicit equation for           !
 !     temperature, and updates it to time t+dt            !

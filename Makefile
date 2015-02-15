@@ -70,8 +70,8 @@ PROGRAM = boutnp
 
 OBJECTS = AuxiliaryRoutines.o CalcMaxCFL.o SetTempBCs.o CalcPlateNu.o \
           CalcLocalDivergence.o CheckDivergence.o main.o ExplicitTermsVX.o \
-          ExplicitTermsVY.o ExplicitTermsVZ.o hdf_read.o \
-          ExplicitTermsTemp.o inirea.o InitVariables.o CreateInitialConditions.o \
+          ExplicitTermsVY.o ExplicitTermsVZ.o HdfReadContinua.o \
+          ExplicitTermsTemp.o ReadFlowField.o InitVariables.o CreateInitialConditions.o \
           ImplicitAndUpdateVX.o ImplicitAndUpdateVY.o ImplicitAndUpdateVZ.o ResetLogs.o \
           CreateGrid.o DeallocateVariables.o \
           param.o CorrectPressure.o \

@@ -1,3 +1,12 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                         ! 
+!    FILE: HdfRoutines.F90                                !
+!    CONTAINS: subroutines MPI*                           !
+!                                                         ! 
+!    PURPOSE: Wrappers for MPI Routines                   !
+!                                                         !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       subroutine MpiBcastInt(n)
       use mpih
       implicit none
@@ -91,3 +100,12 @@
 
       return
       end subroutine MpiSumReal1D
+!==============================================================================
+
+      subroutine MpiAbort
+      use mpih
+      implicit none
+      call MPI_ABORT(MPI_COMM_WORLD,1,ierr)
+
+      return
+      end subroutine MpiAbort

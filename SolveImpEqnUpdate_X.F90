@@ -1,7 +1,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: solq3k.F90                                    !
-!    CONTAINS: subroutine solq12k                         !
+!    FILE: SolveImpEqnUpdate_X.F90                        !
+!    CONTAINS: subroutine SolveImpEqnUpdate_X             !
 !                                                         ! 
 !    PURPOSE: Inverts the implicit equation for velocity  !
 !     in any the vertical direction, and updates it to    !

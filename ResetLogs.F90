@@ -12,7 +12,7 @@
       use param
       implicit none
 
-      if(ireset.eq.1) then    
+      if(resetlogstime) then    
 
 !EP    nusse.out  in GlobalQuantities.F
       open(95,file='nu_vol.out',status='unknown',access='sequential', &

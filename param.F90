@@ -68,6 +68,7 @@
         logical :: readflow=.false.
         logical :: readstats=.false.
         logical :: ismaster=.false.
+        logical :: resetlogstime=.false.
         logical :: variabletstep=.true.
 
       end module param
@@ -97,7 +98,7 @@
       module stat3_param
         implicit none
         integer :: kslab(1:9)
-        real    :: zslab(1:9)
+        real    :: xslab(1:9)
       end module stat3_param
 !=====================================================       
       module mpih
@@ -168,5 +169,8 @@
         type(C_PTR) :: fwd_guruplan_y,bwd_guruplan_y 
         type(C_PTR) :: fwd_guruplan_z,bwd_guruplan_z
         logical :: planned=.false.
+
+        real,allocatable,dimension(:,:,:) :: ry1,rz1
+        complex,allocatable,dimension(:,:,:) :: cy1,cz1,dphc
 
       end module fftw_params

@@ -1,6 +1,6 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: stst.F90                                       !
+!    FILE: StatRoutines.F90                               !
 !    CONTAINS: subroutine CalcStats,WriteStats            !
 !                                                         ! 
 !    PURPOSE: Calculates and writes out statistics for    !
@@ -56,14 +56,16 @@
 
       integer :: nstatsamples_old
 
-      character*30 dsetname_vzme
-      character*30 dsetname_vyme
       character*30 dsetname_vxme
+      character*30 dsetname_vyme
+      character*30 dsetname_vzme
       character*30 dsetname_tempme
-      character*30 dsetname_vzrms
-      character*30 dsetname_vyrms
+
       character*30 dsetname_vxrms
+      character*30 dsetname_vyrms
+      character*30 dsetname_vzrms
       character*30 dsetname_temprms
+
       character*30 dsetname_tempvxme
       character*30 dsetname_dissth
       character*30 dsetname_disste
@@ -72,14 +74,16 @@
 
       filnam = trim('stafield_master.h5')
 
-      dsetname_vzme = trim('vz_mean')
-      dsetname_vyme = trim('vy_mean')
       dsetname_vxme = trim('vx_mean')
+      dsetname_vyme = trim('vy_mean')
+      dsetname_vzme = trim('vz_mean')
       dsetname_tempme = trim('temp_mean.h5')
-      dsetname_vzrms = trim('vz_rms.h5')
-      dsetname_vyrms = trim('vy_rms.h5')
+
       dsetname_vxrms = trim('vx_rms.h5')
+      dsetname_vyrms = trim('vy_rms.h5')
+      dsetname_vzrms = trim('vz_rms.h5')
       dsetname_temprms = trim('temp_rms.h5')
+
       dsetname_tempvxme = trim('tempvx_mean.h5')
       dsetname_dissth = trim('dissth.h5')
       dsetname_disste = trim('disste.h5')
@@ -103,14 +107,14 @@
        endif
       end if
 
-      call StatReadReduceWrite(vz_me,filnam,dsetname_vzme)
-      call StatReadReduceWrite(vy_me,filnam,dsetname_vyme)
       call StatReadReduceWrite(vx_me,filnam,dsetname_vxme)
+      call StatReadReduceWrite(vy_me,filnam,dsetname_vyme)
+      call StatReadReduceWrite(vz_me,filnam,dsetname_vzme)
       call StatReadReduceWrite(temp_me,filnam,dsetname_tempme)
 
-      call StatReadReduceWrite(vz_rms,filnam,dsetname_vzrms)
-      call StatReadReduceWrite(vy_rms,filnam,dsetname_vyrms)
       call StatReadReduceWrite(vx_rms,filnam,dsetname_vxrms)
+      call StatReadReduceWrite(vy_rms,filnam,dsetname_vyrms)
+      call StatReadReduceWrite(vz_rms,filnam,dsetname_vzrms)
       call StatReadReduceWrite(temp_rms,filnam,dsetname_temprms)
  
       call StatReadReduceWrite(tempvx_me,filnam,dsetname_tempvxme)
@@ -124,14 +128,15 @@
 
        call HdfSerialWriteIntScalar(dsetname,filnam,nstatsamples)
 
+       dsetname = trim('X_cordin')
+       call HdfSerialWriteReal1D(dsetname,filnam,xm,1,nxm)
+
        dsetname = trim('Rayleigh Number')
        call HdfSerialWriteRealScalar(dsetname,filnam,ray)
 
        dsetname = trim('Prandtl Number')
        call HdfSerialWriteRealScalar(dsetname,filnam,pra)
 
-       dsetname = trim('X_cordin')
-       call HdfSerialWriteReal1D(dsetname,filnam,xm,1,nxm)
 
       endif
 

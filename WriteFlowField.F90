@@ -16,12 +16,12 @@
 
       filnam1 = trim('continua_temp.h5')
       call HdfWriteRealHalo3D(filnam1,temp)
-      filnam1 = trim('continua_vz.h5')
-      call HdfWriteRealHalo3D(filnam1,vz)
-      filnam1 = trim('continua_vy.h5')
-      call HdfWriteRealHalo3D(filnam1,vy)
       filnam1 = trim('continua_vx.h5')
       call HdfWriteRealHalo3D(filnam1,vx)
+      filnam1 = trim('continua_vy.h5')
+      call HdfWriteRealHalo3D(filnam1,vy)
+      filnam1 = trim('continua_vz.h5')
+      call HdfWriteRealHalo3D(filnam1,vz)
 
       if (ismaster) then !EP only write once
        filnam1 = trim('continua_master.h5')
