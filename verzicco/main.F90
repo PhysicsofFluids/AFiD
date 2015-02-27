@@ -12,6 +12,8 @@
       real    :: instCFL,dmax
       real    :: ti(2), tin(3), minwtdt
       real :: ts
+      integer :: prow=0,pcol=0
+      character(100) :: arg
 
 !*******************************************************
 !******* Read input file bou.in by all processes********
@@ -19,7 +21,14 @@
 !
       call ReadInputFile
 
-      call decomp_2d_init(nxm,nym,nzm,0,0, &
+      if (command_argument_count().eq.2) then
+        call get_command_argument(1,arg)
+        read(arg,'(i)')prow
+        call get_command_argument(2,arg)
+        read(arg,'(i)')pcol
+      endif
+
+      call decomp_2d_init(nxm,nym,nzm,prow,pcol, &
      & (/ .false.,.true.,.true. /))
 
       ts=MPI_WTIME()
