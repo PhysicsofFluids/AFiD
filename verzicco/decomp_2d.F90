@@ -300,6 +300,10 @@ contains
        else
           row = p_row
           col = p_col
+          if (nrank==0) then
+             write(*,*) 'the used processor grid is ', row,' by ', col
+          end if
+
        end if
     end if
     
@@ -523,7 +527,6 @@ contains
     allocate(decomp%xdispls_xz(nproc))
     allocate(decomp%zdispls_xz(nproc))
     call prepare_buffer(decomp)
-
 
     ! allocate memory for the MPI_ALLTOALL(V) buffers
     ! define the buffers globally for performance reason
@@ -1046,7 +1049,9 @@ contains
 
           deallocate(u1,u2)
           call decomp_info_finalize(decomp)
-
+          call MPI_Comm_free(DECOMP_2D_COMM_COL,ierror)
+          call MPI_Comm_free(DECOMP_2D_COMM_ROW,ierror)
+          call MPI_Comm_free(DECOMP_2D_COMM_CART_X, ierror)
 
        end if
 
@@ -1086,14 +1091,15 @@ contains
           t1 = MPI_WTIME()
           call transpose_x_to_y(u1,u2,decomp)
           call transpose_y_to_z(u2,u3,decomp)
-!          call transpose_z_to_x(u3,u1,decomp)
           call transpose_z_to_y(u3,u2,decomp)
           call transpose_y_to_x(u2,u1,decomp)
-!          call transpose_x_to_z(u1,u3,decomp)
           t2 = MPI_WTIME() - t1
 
           deallocate(u1,u2,u3)
           call decomp_info_finalize(decomp)
+          call MPI_Comm_free(DECOMP_2D_COMM_COL,ierror)
+          call MPI_Comm_free(DECOMP_2D_COMM_ROW,ierror)
+          call MPI_Comm_free(DECOMP_2D_COMM_CART_X, ierror)
 
           call MPI_ALLREDUCE(t2,t1,1,MPI_DOUBLE_PRECISION,MPI_SUM, &
                    MPI_COMM_WORLD,ierror)
