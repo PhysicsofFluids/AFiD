@@ -19,6 +19,8 @@ module decomp_2d_fft
 
   INTEGER FFTW_ESTIMATE
   PARAMETER (FFTW_ESTIMATE=64)
+  INTEGER FFTW_MEASURE
+  PARAMETER (FFTW_MEASURE=0)
   INTEGER FFTW_FORWARD
   PARAMETER (FFTW_FORWARD=-1)
   INTEGER FFTW_BACKWARD
@@ -29,6 +31,7 @@ module decomp_2d_fft
   ! engine-specific global variables
 ! integer, save :: plan_type = FFTW_EXHAUSTIVE
   integer, save :: plan_type = FFTW_ESTIMATE
+!  integer, save :: plan_type = FFTW_MEASURE
 
   ! FFTW plans
   ! j=1,2,3 corresponds to the 1D FFTs in X,Y,Z direction, respectively
@@ -240,14 +243,20 @@ module decomp_2d_fft
   !  This routine performs one-time initialisations for the FFT engine
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   subroutine init_fft_engine
-
+!$  use omp_lib
     implicit none
+
+!$  integer ierr
 
     if (nrank==0) then
        write(*,*) ' '
        write(*,*) '***** Using the FFTW (version 3.x) engine *****'
        write(*,*) ' '
     end if
+
+!$  call dfftw_init_threads(ierr)
+!$ 
+!$  call dfftw_plan_with_nthreads(omp_get_max_threads())
 
     if (format == PHYSICAL_IN_X) then
 
