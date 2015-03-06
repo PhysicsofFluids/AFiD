@@ -14,7 +14,7 @@ SetTempBCs.o: SetTempBCs.F90  param.o
 ResetLogs.o: ResetLogs.F90  param.o
 CorrectPressure.o: CorrectPressure.F90  param.o
 SolvePressureCorrection.o: SolvePressureCorrection.F90  decomp_2d.o decomp_2d_fft.o param.o
-param.o: param.F90 param.o
+param.o: param.F90
 InitVariables.o: InitVariables.F90  AuxiliaryRoutines.o decomp_2d.o param.o
 SolveImpEqnUpdate_YZ.o: SolveImpEqnUpdate_YZ.F90  param.o
 ExplicitTermsVX.o: ExplicitTermsVX.F90  param.o
