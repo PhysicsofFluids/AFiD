@@ -23,9 +23,9 @@
 
       if (command_argument_count().eq.2) then
         call get_command_argument(1,arg)
-        read(arg,'(i)')prow
+        read(arg,'(i10)') prow
         call get_command_argument(2,arg)
-        read(arg,'(i)')pcol
+        read(arg,'(i10)') pcol
       endif
 
       call decomp_2d_init(nxm,nym,nzm,prow,pcol, &
