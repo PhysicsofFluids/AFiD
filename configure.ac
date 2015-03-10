@@ -35,7 +35,7 @@ AC_ARG_WITH([fftw3], AS_HELP_STRING([--with-fftw3=<root>],
   [FFTW3_ROOT=$withval],[FFTW3_ROOT=/usr])
 AC_CHECK_LIB([fftw3], [fftw_plan_guru_dft],[FFTW3_LIBS="-L${FFTW3_ROOT}/lib -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 library])],[-L${FFTW3_ROOT}/lib])
 if test "x$OPENMP_FCFLAGS" != "x"; then
-  AC_CHECK_LIB([fftw3_omp], [fftw_init_threads],[FFTW3_LIBS="-lfftw3_omp -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 OpenMP-enabled library])],[-lfftw3])
+  AC_CHECK_LIB([fftw3_omp], [fftw_init_threads],[FFTW3_LIBS="-L${FFTW3_ROOT}/lib -lfftw3_omp -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 OpenMP-enabled library])],[${FFTW3_LIBS}])
 fi
 AC_SUBST(FFTW3_LIBS)
 
