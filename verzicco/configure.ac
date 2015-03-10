@@ -48,6 +48,7 @@ if test "x${HDF5_ROOT}" == "x"; then
   HDF5_ROOT=$(eval $H5FC -showconfig \
     | $GREP 'Installation point:' \
     | $AWK -F: '{print $[]2}' )
+  HDF5_LDFLAGS=-L${HDF5_ROOT}/lib
 fi
 
 FCFLAGS="${FCFLAGS} ${FC_MODINC}${HDF5_ROOT}/include"
