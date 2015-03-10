@@ -32,22 +32,26 @@ AC_LANG([C])
 
 AC_ARG_WITH([fftw3], AS_HELP_STRING([--with-fftw3=<root>],
   [root path to the fftw3 library]),
-  [FFTW3_ROOT=$withval],[FFTW3_ROOT=/usr])
-AC_CHECK_LIB([fftw3], [fftw_plan_guru_dft],[FFTW3_LIBS="-L${FFTW3_ROOT}/lib -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 library])],[-L${FFTW3_ROOT}/lib])
+  [FFTW3_ROOT=$withval FFTW3_LDFLAGS=-L$FFTW3_ROOT/lib])
+AC_CHECK_LIB([fftw3], [fftw_plan_guru_dft],[FFTW3_LIBS="${FFTW3_LDFLAGS} -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 library])],[${FFTW3_LDFLAGS}])
 if test "x$OPENMP_FCFLAGS" != "x"; then
-  AC_CHECK_LIB([fftw3_omp], [fftw_init_threads],[FFTW3_LIBS="-L${FFTW3_ROOT}/lib -lfftw3_omp -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 OpenMP-enabled library])],[${FFTW3_LIBS}])
+  AC_CHECK_LIB([fftw3_omp], [fftw_init_threads],[FFTW3_LIBS="${FFTW3_LDFLAGS} -lfftw3_omp -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 OpenMP-enabled library])],[${FFTW3_LIBS}])
 fi
 AC_SUBST(FFTW3_LIBS)
 
 AC_ARG_WITH([hdf5], AS_HELP_STRING([--with-hdf5=<root>],
   [root path to the parallel HDF5 library]),
-  [HDF5_ROOT=$withval],[HDF5_ROOT=/usr])
+  [HDF5_ROOT=$withval HDF5_LDFLAGS=-L${HDF5_ROOT}/lib])
 AC_PATH_PROGS([H5FC],[h5pfc h5fc],[${HDF5_ROOT}/bin:$PATH])
-HDF5_tmp_inst=$(eval $H5FC -showconfig \
-   | $GREP 'Installation point:' \
-   | $AWK -F: '{print $[]2}' )
-FCFLAGS="${FCFLAGS} ${FC_MODINC}${HDF5_tmp_inst}/include"
-AC_CHECK_LIB([hdf5_fortran], [h5pset_fapl_mpio_c_],[HDF5_LIBS="-L${HDF5_ROOT}/lib -lhdf5_fortran -lhdf5"],[AC_MSG_ERROR([Unable to find hdf5 Fortran library with parallel I/O])],[-L${HDF5_ROOT}/lib -lhdf5])
+# if HDF5_ROOT not set, look for it in a standard directory.
+if test "x${HDF5_ROOT}" != "x"; then
+  HDF5_ROOT=$(eval $H5FC -showconfig \
+    | $GREP 'Installation point:' \
+    | $AWK -F: '{print $[]2}' )
+fi
+
+FCFLAGS="${FCFLAGS} ${FC_MODINC}${HDF5_ROOT}/include"
+AC_CHECK_LIB([hdf5_fortran], [h5pset_fapl_mpio_c_],[HDF5_LIBS="${HDF5_LDFLAGS} -lhdf5_fortran -lhdf5"],[AC_MSG_ERROR([Unable to find hdf5 Fortran library with parallel I/O])],[${HDF5_LDFLAGS} -lhdf5])
 AC_SUBST(HDF5_LIBS)
 
 # Checks for header files.
