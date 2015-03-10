@@ -24,9 +24,11 @@
       endif
 
       if(normalexit) then
-        if(nrank.eq.0) write(6,*) 'Total Iteration Time = ',tin(3) -tin(2),' sec.'
+        if(nrank.eq.0) write(6,'(a,f10.2,a)') 'Total Iteration Time = ',tin(3) -tin(2),' sec.'
         if (statcal) call WriteStats
         call WriteFlowField
+      else
+        call MPI_Abort(MPI_COMM_WORLD,1)
       endif
 
       call DeallocateVariables
