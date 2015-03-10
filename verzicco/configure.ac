@@ -7,18 +7,17 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
 
 # AC_PROG_FC
-#AX_PROG_FC_MPI([test x"$with_mpi" != xno],
-#  [ use_mpi=yes],
-#  [ use_mpi=no
-#    AC_MSG_FAILURE([MPI compiler needed, but couldn't find MPI.])
-#  ])
-AX_LIB_HDF5([parallel])
- if test "$with_hdf5" = "yes"; then
-          FC="$H5FC"
-          CC="$H5CC"
-  else
-          AC_MSG_ERROR([Unable to find HDF5 library, we need parallel HDF5.])
-  fi
+AX_PROG_FC_MPI([true],
+  [ use_mpi=yes],
+  [AC_MSG_FAILURE([MPI compiler needed, but could not find MPI.],1)
+  ])
+#AX_LIB_HDF5([parallel])
+# if test "$with_hdf5" = "yes"; then
+#          FC="$H5FC"
+#          CC="$H5CC"
+#  else
+#          AC_MSG_ERROR([Unable to find HDF5 library, we need parallel HDF5.])
+#  fi
 
 AC_OPENMP
 AC_LANG([Fortran])
@@ -36,6 +35,9 @@ if test "x$OPENMP_CFLAGS" != "x"; then
   AC_CHECK_LIB([fftw3_omp], [fftw_init_threads],[FFTW3_LIBS="-lfftw3_omp -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 OpenMP-enabled library])],[-lfftw3])
 fi
 AC_SUBST(FFTW3_LIBS)
+
+AC_CHECK_LIB([hdf5_fortran], [h5pset_fapl_mpio_c_],[HDF5_LIBS="-lhdf5_fortran -lhdf5"],[AC_MSG_ERROR([Unable to find hdf5 Fortran library with parallel I/O])],[-lhdf5])
+AC_SUBST(HDF5_LIBS)
 
 # Checks for header files.
 
