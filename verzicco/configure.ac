@@ -18,15 +18,10 @@ AC_FC_MODULE_FLAG
 AC_PROG_AWK
 AC_PROG_GREP
 
-AC_PATH_PROGS([H5FC],[h5pfc h5fc])
-HDF5_tmp_inst=$(eval $H5FC -showconfig \
-   | $GREP 'Installation point:' \
-   | $AWK -F: '{print $[]2}' )
-FCFLAGS="${FCFLAGS} ${FC_MODINC}${HDF5_tmp_inst}/include"
-
-AC_OPENMP
 AC_LANG([Fortran])
 AC_OPENMP
+FCFLAGS="${FCFLAGS} ${OPENMP_FCFLAGS}"
+
 
 # Checks for libraries.
 AX_BLAS([found_blas=yes],[AC_MSG_ERROR([Unable to find blas library.])])
@@ -35,13 +30,24 @@ AX_LAPACK([found_lapack=yes],[AC_MSG_ERROR([Unable to find lapack library.])])
 # check for fftw3 library with C-compiler. Fortran would look for symbols with underscores
 AC_LANG([C])
 
-AC_CHECK_LIB([fftw3], [fftw_plan_guru_dft],[FFTW3_LIBS="-lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 library])])
+AC_ARG_WITH([fftw3], AS_HELP_STRING([--with-fftw3=<root>],
+  [root path to the fftw3 library]),
+  [FFTW3_ROOT=$withval],[FFTW3_ROOT=/usr])
+AC_CHECK_LIB([fftw3], [fftw_plan_guru_dft],[FFTW3_LIBS="-L${FFTW3_ROOT}/lib -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 library])],[-L${FFTW3_ROOT}/lib])
 if test "x$OPENMP_CFLAGS" != "x"; then
   AC_CHECK_LIB([fftw3_omp], [fftw_init_threads],[FFTW3_LIBS="-lfftw3_omp -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 OpenMP-enabled library])],[-lfftw3])
 fi
 AC_SUBST(FFTW3_LIBS)
 
-AC_CHECK_LIB([hdf5_fortran], [h5pset_fapl_mpio_c_],[HDF5_LIBS="-lhdf5_fortran -lhdf5"],[AC_MSG_ERROR([Unable to find hdf5 Fortran library with parallel I/O])],[-lhdf5])
+AC_ARG_WITH([hdf5], AS_HELP_STRING([--with-hdf5=<root>],
+  [root path to the parallel HDF5 library]),
+  [HDF5_ROOT=$withval],[HDF5_ROOT=/usr])
+AC_PATH_PROGS([H5FC],[h5pfc h5fc],[${HDF5_ROOT}/bin:$PATH])
+HDF5_tmp_inst=$(eval $H5FC -showconfig \
+   | $GREP 'Installation point:' \
+   | $AWK -F: '{print $[]2}' )
+FCFLAGS="${FCFLAGS} ${FC_MODINC}${HDF5_tmp_inst}/include"
+AC_CHECK_LIB([hdf5_fortran], [h5pset_fapl_mpio_c_],[HDF5_LIBS="-L${HDF5_ROOT}/lib -lhdf5_fortran -lhdf5"],[AC_MSG_ERROR([Unable to find hdf5 Fortran library with parallel I/O])],[-L${HDF5_ROOT}/lib -lhdf5])
 AC_SUBST(HDF5_LIBS)
 
 # Checks for header files.
