@@ -12,7 +12,7 @@ CorrectVelocity.F90           ImplicitAndUpdateVZ.F90        param.F90          
 CreateGrid.F90                QuitRoutine.F90            TimeMarcher.F90 \
 CreateInitialConditions.F90   GlobalQuantities.F90     InitTimeMarchScheme.F90  ReadInputFile.F90         ReadFlowField.F90 HdfReadContinua.F90
 
-boutnp_LDADD = $(FFTW3_LIBS) $(LAPACK_LIBS) $(BLAS_LIBS) 
+boutnp_LDADD = $(FFTW3_LIBS) $(LAPACK_LIBS) $(BLAS_LIBS) $(HDF5_LIBS)
 
 SolveImpEqnUpdate_X.o: SolveImpEqnUpdate_X.F90  param.o
 CalcDissipationNu.o: CalcDissipationNu.F90  param.o
