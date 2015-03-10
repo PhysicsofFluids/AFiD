@@ -39,6 +39,8 @@ if test "x$OPENMP_FCFLAGS" != "x"; then
 fi
 AC_SUBST(FFTW3_LIBS)
 
+AC_LANG([Fortran])
+AC_FC_SRCEXT(f90)
 AC_ARG_WITH([hdf5], AS_HELP_STRING([--with-hdf5=<root>],
   [root path to the parallel HDF5 library]),
   [HDF5_ROOT=$withval HDF5_LDFLAGS=-L${HDF5_ROOT}/lib])
@@ -51,8 +53,27 @@ if test "x${HDF5_ROOT}" == "x"; then
   HDF5_LDFLAGS=-L${HDF5_ROOT}/lib
 fi
 
-FCFLAGS="${FCFLAGS} ${FC_MODINC}${HDF5_ROOT}/include"
-AC_CHECK_LIB([hdf5_fortran], [h5pset_fapl_mpio_c_],[HDF5_LIBS="${HDF5_LDFLAGS} -lhdf5_fortran -lhdf5"],[AC_MSG_ERROR([Unable to find hdf5 Fortran library with parallel I/O])],[${HDF5_LDFLAGS} -lhdf5])
+dummy=$FCFLAGS
+HDF5_FCFLAGS=${FC_MODINC}${HDF5_ROOT}/include
+HDF5_LIBS="${HDF5_LDFLAGS} -lhdf5_fortran -lhdf5"
+FCFLAGS="${HDF5_FCFLAGS} ${HDF5_LIBS}"
+AC_MSG_CHECKING([for parallel HDF5 Fortran library])
+AC_COMPILE_IFELSE(
+  [AC_LANG_SOURCE([[
+    program conftest
+    use hdf5
+    implicit none
+    integer         :: classtype
+    integer         :: comm
+    integer (hid_t) :: plist_id
+    integer         :: hdferr
+    call h5pset_fapl_mpio_f(classtype,comm,plist_id,hdferr)
+    end]])],[hdf5_works=yes],[hdf5_works=no AC_MSG_ERROR([Unable to find hdf5 Fortran library with parallel I/O])])
+AC_MSG_RESULT([$hdf5_works])
+FCFLAGS="${dummy} ${HDF5_FCFLAGS}"
+
+
+#AC_CHECK_LIB([hdf5_fortran], [h5pset_fapl_mpio_f],[HDF5_LIBS="${HDF5_LDFLAGS} -lhdf5_fortran -lhdf5"],[AC_MSG_ERROR([Unable to find hdf5 Fortran library with parallel I/O])],[${HDF5_LDFLAGS} -lhdf5])
 AC_SUBST(HDF5_LIBS)
 
 # Checks for header files.
