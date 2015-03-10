@@ -44,7 +44,7 @@ AC_ARG_WITH([hdf5], AS_HELP_STRING([--with-hdf5=<root>],
   [HDF5_ROOT=$withval HDF5_LDFLAGS=-L${HDF5_ROOT}/lib])
 AC_PATH_PROGS([H5FC],[h5pfc h5fc],[${HDF5_ROOT}/bin:$PATH])
 # if HDF5_ROOT not set, look for it in a standard directory.
-if test "x${HDF5_ROOT}" != "x"; then
+if test "x${HDF5_ROOT}" == "x"; then
   HDF5_ROOT=$(eval $H5FC -showconfig \
     | $GREP 'Installation point:' \
     | $AWK -F: '{print $[]2}' )
