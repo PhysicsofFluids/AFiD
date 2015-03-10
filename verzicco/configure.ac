@@ -12,13 +12,17 @@ AX_PROG_FC_MPI([true],
   [ use_mpi=yes],
   [AC_MSG_FAILURE([MPI compiler needed, but could not find MPI.],1)
   ])
-#AX_LIB_HDF5([parallel])
-# if test "$with_hdf5" = "yes"; then
-#          FC="$H5FC"
-#          CC="$H5CC"
-#  else
-#          AC_MSG_ERROR([Unable to find HDF5 library, we need parallel HDF5.])
-#  fi
+
+AC_FC_MODULE_FLAG
+
+AC_PROG_AWK
+AC_PROG_GREP
+
+AC_PATH_PROG([H5CC],[h5cc])
+HDF5_tmp_inst=$(eval $H5CC -showconfig \
+   | $GREP 'Installation point:' \
+   | $AWK -F: '{print $[]2}' )
+FCFLAGS="${FCFLAGS} ${FC_MODINC}${HDF5_tmp_inst}/include"
 
 AC_OPENMP
 AC_LANG([Fortran])
