@@ -155,7 +155,7 @@ AC_DEFUN([_AX_PROG_FC_MPI], [
     if test -z "$FC" && test -n "$MPIFC"; then
       FC="$MPIFC"
     else
-      AC_CHECK_TOOLS([FC], [mpif95 mpxlf95_r mpxlf95 ftn mpif90 mpfort mpiifort mpxlf90_r mpxlf90 mpf90 cmpif90c sxmpif90 mpif77 hf77 mpxlf_r mpxlf mpifrt mpf77 cmpifc xlf95 pgf95 pathf95 ifort g95 f95 fort ifc efc openf95 sunf95 crayftn gfortran lf95 ftn xlf90 f90 pgf90 pghpf pathf90 epcf90 sxf90 openf90 sunf90 xlf f77 frt pgf77 pathf77 g77 cf77 fort77 fl32 af77])
+      AC_CHECK_TOOLS([FC], [mpif95 mpxlf95_r mpxlf95 ftn mpfort mpiifort mpxlf90_r mpxlf90 mpf90 cmpif90c sxmpif90 mpif90 mpif77 hf77 mpxlf_r mpxlf mpifrt mpf77 cmpifc xlf95 pgf95 pathf95 ifort g95 f95 fort ifc efc openf95 sunf95 crayftn gfortran lf95 ftn xlf90 f90 pgf90 pghpf pathf90 epcf90 sxf90 openf90 sunf90 xlf f77 frt pgf77 pathf77 g77 cf77 fort77 fl32 af77])
     fi
   fi
   AC_PROG_FC
