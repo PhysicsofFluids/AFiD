@@ -142,6 +142,11 @@
       else
        if(ismaster) write(6,*)ntime,time,dt,dmax,tempm,tempmax,tempmin !RO Fix??
       end if
+
+      if(ismaster) then                  
+        tin(2) = MPI_WTIME()             
+        write(6,'(a,f6.2,a)') 'Initialization Time = ', tin(2) -tin(1), ' sec.'
+      endif 
                                                                         
 !  ********* starts the time dependent calculation ***
       errorcode = 0 !EP set errocode to 0 (OK)
@@ -211,7 +216,7 @@
           if(ismaster) then
           write(6,*) 'Maximum divergence = ', dmax
           write(6,*)ntime,time,vmax(1),vmax(2),vmax(3),dmax,tempm,tempmax,tempmin
-          write(6,*) 'Minimum Iteration Time = ', minwtdt, ' sec.'
+          write(6,'(a,f8.3,a)') 'Minimum Iteration Time = ', minwtdt, ' sec.'
           endif
           minwtdt = huge(0.0d0)
         endif
