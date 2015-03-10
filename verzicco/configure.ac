@@ -18,8 +18,8 @@ AC_FC_MODULE_FLAG
 AC_PROG_AWK
 AC_PROG_GREP
 
-AC_PATH_PROG([H5CC],[h5cc])
-HDF5_tmp_inst=$(eval $H5CC -showconfig \
+AC_PATH_PROGS([H5FC],[h5pfc h5fc])
+HDF5_tmp_inst=$(eval $H5FC -showconfig \
    | $GREP 'Installation point:' \
    | $AWK -F: '{print $[]2}' )
 FCFLAGS="${FCFLAGS} ${FC_MODINC}${HDF5_tmp_inst}/include"
