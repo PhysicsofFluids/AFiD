@@ -58,7 +58,7 @@ HDF5_FCFLAGS=${FC_MODINC}${HDF5_ROOT}/include
 HDF5_LIBS="${HDF5_LDFLAGS} -lhdf5_fortran -lhdf5"
 FCFLAGS="${HDF5_FCFLAGS} ${HDF5_LIBS}"
 AC_MSG_CHECKING([for parallel HDF5 Fortran library])
-AC_COMPILE_IFELSE(
+AC_LINK_IFELSE(
   [AC_LANG_SOURCE([[
     program conftest
     use hdf5
