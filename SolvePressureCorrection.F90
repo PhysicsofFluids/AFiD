@@ -112,8 +112,8 @@
 !$OMP   DEFAULT(none)                                                   &
 !$OMP   SHARED(sp,nxm)                                                  &
 !$OMP   SHARED(acphk,ak2,ak1,dphc,apphk,amphk)                          &
-!$OMP   PRIVATE(drhs,apph,amph,acphT,acphT_b)                           &
-!$OMP   PRIVATE(amphT,apphT,phpiv,info,appph)
+!$OMP   PRIVATE(apph,amph,acphT,acphT_b)                                &
+!$OMP   PRIVATE(phpiv,info,appph)
       do i=sp%xst(3),sp%xen(3)
         do j=sp%xst(2),sp%xen(2)
          do k = 1,nxm

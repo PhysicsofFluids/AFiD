@@ -57,13 +57,17 @@ if test "x${HDF5_ROOT}" == "x"; then
   HDF5_LDFLAGS=-L${HDF5_ROOT}/lib
 fi
 
-#save FCFLAGS
-dummy=$FCFLAGS
+dummy_FCFLAGS=$FCFLAGS
+dummy_LDFLAGS=$LDFLAGS
+dummy_LIBS=$LIBS
 
+HDF5_LIBS="-lhdf5_fortran -lhdf5"
 HDF5_FCFLAGS=${FC_MODINC}${HDF5_ROOT}/include
-HDF5_LIBS="${HDF5_LDFLAGS} -lhdf5_fortran -lhdf5"
-#set FCFLAGS to check for HDF5-library
-FCFLAGS="${HDF5_FCFLAGS} ${HDF5_LIBS}"
+
+FCFLAGS="${HDF5_FCFLAGS}"
+LDFLAGS="${HDF5_LDFLAGS}"
+LIBS="${HDF5_LIBS}"
+
 AC_MSG_CHECKING([for parallel HDF5 Fortran library])
 AC_LINK_IFELSE(
   [AC_LANG_SOURCE([[
@@ -79,9 +83,11 @@ AC_LINK_IFELSE(
   [hdf5_works=yes],
   [hdf5_works=no AC_MSG_ERROR([Unable to find hdf5 Fortran library with parallel I/O])])
 AC_MSG_RESULT([$hdf5_works])
-#restore FCFLAGS and add HDF5 include directory
-FCFLAGS="${dummy} ${HDF5_FCFLAGS}"
 
+FCFLAGS="${dummy_FCFLAGS} ${HDF5_FCFLAGS}"
+LDFLAGS="${dummy_LDFLAGS} ${HDF5_LDFLAGS}"
+LIBS="${dummy_LIBS}"
+#restore FCFLAGS and add HDF5 include directory
 AC_SUBST(HDF5_LIBS)
 
 # Checks for header files.
