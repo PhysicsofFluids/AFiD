@@ -40,10 +40,14 @@ fi
 AC_SUBST(FFTW3_LIBS)
 
 AC_LANG([Fortran])
-AC_FC_SRCEXT(f90)
+#set the extension to f90, to compile the HDF5 test below
+ AC_FC_SRCEXT(f90)
+
+#add configure command-line argument for HDF5
 AC_ARG_WITH([hdf5], AS_HELP_STRING([--with-hdf5=<root>],
   [root path to the parallel HDF5 library]),
   [HDF5_ROOT=$withval HDF5_LDFLAGS=-L${HDF5_ROOT}/lib])
+#look for HDF5 Fortran compiler wrapper. This is used to find installation point if HDF5_ROOT is not explicitly set.
 AC_PATH_PROGS([H5FC],[h5pfc h5fc],[${HDF5_ROOT}/bin:$PATH])
 # if HDF5_ROOT not set, look for it in a standard directory.
 if test "x${HDF5_ROOT}" == "x"; then
@@ -53,9 +57,12 @@ if test "x${HDF5_ROOT}" == "x"; then
   HDF5_LDFLAGS=-L${HDF5_ROOT}/lib
 fi
 
+#save FCFLAGS
 dummy=$FCFLAGS
+
 HDF5_FCFLAGS=${FC_MODINC}${HDF5_ROOT}/include
 HDF5_LIBS="${HDF5_LDFLAGS} -lhdf5_fortran -lhdf5"
+#set FCFLAGS to check for HDF5-library
 FCFLAGS="${HDF5_FCFLAGS} ${HDF5_LIBS}"
 AC_MSG_CHECKING([for parallel HDF5 Fortran library])
 AC_LINK_IFELSE(
@@ -68,12 +75,13 @@ AC_LINK_IFELSE(
     integer (hid_t) :: plist_id
     integer         :: hdferr
     call h5pset_fapl_mpio_f(classtype,comm,plist_id,hdferr)
-    end]])],[hdf5_works=yes],[hdf5_works=no AC_MSG_ERROR([Unable to find hdf5 Fortran library with parallel I/O])])
+    end]])],
+  [hdf5_works=yes],
+  [hdf5_works=no AC_MSG_ERROR([Unable to find hdf5 Fortran library with parallel I/O])])
 AC_MSG_RESULT([$hdf5_works])
+#restore FCFLAGS and add HDF5 include directory
 FCFLAGS="${dummy} ${HDF5_FCFLAGS}"
 
-
-#AC_CHECK_LIB([hdf5_fortran], [h5pset_fapl_mpio_f],[HDF5_LIBS="${HDF5_LDFLAGS} -lhdf5_fortran -lhdf5"],[AC_MSG_ERROR([Unable to find hdf5 Fortran library with parallel I/O])],[${HDF5_LDFLAGS} -lhdf5])
 AC_SUBST(HDF5_LIBS)
 
 # Checks for header files.
