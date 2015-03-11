@@ -19,6 +19,8 @@ AC_PROG_AWK
 AC_PROG_GREP
 
 AC_LANG([Fortran])
+#set the extension to f90, to compile the HDF5 test
+AC_FC_SRCEXT(f90)
 AC_OPENMP
 FCFLAGS="${FCFLAGS} ${OPENMP_FCFLAGS}"
 
@@ -27,21 +29,14 @@ FCFLAGS="${FCFLAGS} ${OPENMP_FCFLAGS}"
 AX_BLAS([found_blas=yes],[AC_MSG_ERROR([Unable to find blas library.])])
 AX_LAPACK([found_lapack=yes],[AC_MSG_ERROR([Unable to find lapack library.])])
 
-# check for fftw3 library with C-compiler. Fortran would look for symbols with underscores
-AC_LANG([C])
-
 AC_ARG_WITH([fftw3], AS_HELP_STRING([--with-fftw3=<root>],
   [root path to the fftw3 library]),
   [FFTW3_ROOT=$withval FFTW3_LDFLAGS=-L$FFTW3_ROOT/lib])
-AC_CHECK_LIB([fftw3], [fftw_plan_guru_dft],[FFTW3_LIBS="${FFTW3_LDFLAGS} -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 library])],[${FFTW3_LDFLAGS}])
+AC_CHECK_LIB([fftw3], [dfftw_plan_many_dft],[FFTW3_LIBS="${FFTW3_LDFLAGS} -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 library])],[${FFTW3_LDFLAGS}])
 if test "x$OPENMP_FCFLAGS" != "x"; then
-  AC_CHECK_LIB([fftw3_omp], [fftw_init_threads],[FFTW3_LIBS="${FFTW3_LDFLAGS} -lfftw3_omp -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 OpenMP-enabled library])],[${FFTW3_LIBS}])
+  AC_CHECK_LIB([fftw3_omp], [dfftw_init_threads],[FFTW3_LIBS="${FFTW3_LDFLAGS} -lfftw3_omp -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 OpenMP-enabled library])],[${FFTW3_LIBS}])
 fi
 AC_SUBST(FFTW3_LIBS)
-
-AC_LANG([Fortran])
-#set the extension to f90, to compile the HDF5 test below
- AC_FC_SRCEXT(f90)
 
 #add configure command-line argument for HDF5
 AC_ARG_WITH([hdf5], AS_HELP_STRING([--with-hdf5=<root>],
