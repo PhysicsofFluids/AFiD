@@ -21,8 +21,7 @@
       integer :: i,j,k,info
       complex :: acphT_b
       complex :: appph(nxm-2)
-      complex :: amphT(nxm-1), apphT(nxm-1)
-      complex, dimension(nxm) :: acphT,drhs,apph,amph
+      complex, dimension(nxm) :: acphT,apph,amph
       integer :: phpiv(nxm)
       integer :: nymh
 
@@ -102,7 +101,6 @@
 
       call dfftw_execute_dft(fwd_guruplan_z,cz1,cz1)
 
-
 !EP   Normalize. FFT does not do this
       cz1 = cz1 / (nzm*nym)
 
@@ -110,7 +108,7 @@
 
 !RO   Solve the tridiagonal matrix with complex coefficients
 
-!$OMP  PARALLEL DO                                                      &
+!$OMP  PARALLEL DO COLLAPSE(2)                                          &
 !$OMP   DEFAULT(none)                                                   &
 !$OMP   SHARED(sp,nxm)                                                  &
 !$OMP   SHARED(acphk,ak2,ak1,dphc,apphk,amphk)                          &
@@ -120,23 +118,18 @@
         do j=sp%xst(2),sp%xen(2)
          do k = 1,nxm
           acphT_b=1.0/(acphk(k)-ak2(j)-ak1(i))
-          drhs(k)=dphc(k,j,i)*acphT_b
+          dphc(k,j,i)=dphc(k,j,i)*acphT_b
           apph(k)=apphk(k)*acphT_b
           amph(k)=amphk(k)*acphT_b
           acphT(k)=1.0d0
          enddo
   
-         amphT=amph(2:nxm)
-         apphT=apph(1:(nxm-1))
 
-         call zgttrf(nxm, amphT, acphT, apphT, appph, phpiv, info)
+         call zgttrf(nxm, amph(2), acphT, apph(1), appph, phpiv, info)
 
-         call zgttrs('N',nxm,1,amphT,acphT,apphT,appph,phpiv,drhs,      &
-     &                 nxm, info)
+         call zgttrs('N',nxm,1,amph(2),acphT,apph(1),appph,phpiv,      &
+                       dphc(1,j,i), nxm, info)
 
-          do k=1,nxm
-            dphc(k,j,i) = drhs(k)
-          enddo
         enddo
       enddo
 !$OMP END PARALLEL DO
