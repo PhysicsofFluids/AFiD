@@ -46,7 +46,7 @@ AC_LANG([Fortran])
 #add configure command-line argument for HDF5
 AC_ARG_WITH([hdf5], AS_HELP_STRING([--with-hdf5=<root>],
   [root path to the parallel HDF5 library]),
-  [HDF5_ROOT=$withval HDF5_LDFLAGS=-L${HDF5_ROOT}/lib])
+  [HDF5_ROOT=$withval])
 #look for HDF5 Fortran compiler wrapper. This is used to find installation point if HDF5_ROOT is not explicitly set.
 AC_PATH_PROGS([H5FC],[h5pfc h5fc],[${HDF5_ROOT}/bin:$PATH])
 # if HDF5_ROOT not set, look for it in a standard directory.
@@ -54,14 +54,17 @@ if test "x${HDF5_ROOT}" == "x"; then
   HDF5_ROOT=$(eval $H5FC -showconfig \
     | $GREP 'Installation point:' \
     | $AWK -F: '{print $[]2}' )
-  HDF5_LDFLAGS=-L${HDF5_ROOT}/lib
 fi
+HDF5_LDFLAGS=-L${HDF5_ROOT}/lib
+HDF5_EXTRALIBS=$(eval $H5FC -showconfig \
+    | $GREP 'Extra libraries:' \
+    | $AWK -F: '{print $[]2}' )
 
 dummy_FCFLAGS=$FCFLAGS
 dummy_LDFLAGS=$LDFLAGS
 dummy_LIBS=$LIBS
 
-HDF5_LIBS="-lhdf5_fortran -lhdf5"
+HDF5_LIBS="-lhdf5_fortran -lhdf5 ${HDF5_EXTRALIBS}"
 HDF5_FCFLAGS=${FC_MODINC}${HDF5_ROOT}/include
 
 FCFLAGS="${HDF5_FCFLAGS}"
