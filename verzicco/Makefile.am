@@ -62,6 +62,6 @@ StatReadReduceWrite.o: StatReadReduceWrite.F90  param.o
 HdfReadContinua.o: HdfReadContinua.F90  param.o
 transpose_y_to_x.o: transpose_y_to_x.F90  
 ImplicitAndUpdateTemp.o: ImplicitAndUpdateTemp.F90  param.o
-decomp_2d.o: decomp_2d.F90 
+decomp_2d.o: decomp_2d.F90 transpose_z_to_x.F90 transpose_x_to_z.F90 transpose_x_to_y.F90 transpose_y_to_x.F90 transpose_y_to_z.F90 transpose_z_to_y.F90
 interp.o: interp.F90  param.o
 
