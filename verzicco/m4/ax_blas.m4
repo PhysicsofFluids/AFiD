@@ -223,6 +223,14 @@ if test $ax_blas_ok = no; then
 			[], [-lblas $FLIBS])])
 fi
 
+# BLAS in IBM ESSL BG library? (requires generic BLAS lib, too)
+if test $ax_blas_ok = no; then
+        AC_CHECK_LIB(blas, $sgemm,
+                [AC_CHECK_LIB(esslbg, $sgemm,
+                        [ax_blas_ok=yes; BLAS_LIBS="-lesslbg -lblas"],
+                        [], [-lblas $FLIBS])])
+fi
+
 # Generic BLAS library?
 if test $ax_blas_ok = no; then
 	AC_CHECK_LIB(blas, $sgemm, [ax_blas_ok=yes; BLAS_LIBS="-lblas"])
