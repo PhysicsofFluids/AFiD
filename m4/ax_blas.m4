@@ -218,20 +218,16 @@ if test $ax_blas_ok = no; then
 		     [ax_blas_ok=yes; BLAS_LIBS="-lcomplib.sgimath"])
 fi
 
-# BLAS in IBM ESSL library? (requires generic BLAS lib, too)
+# BLAS in IBM ESSL library? (doesn't require generic BLAS lib)
 if test $ax_blas_ok = no; then
-	AC_CHECK_LIB(blas, $blas_func,
-		[AC_CHECK_LIB(essl, $blas_func,
-			[ax_blas_ok=yes; BLAS_LIBS="-lessl -lblas"],
-			[], [-lblas $FLIBS])])
+		AC_CHECK_LIB(essl, $blas_func,
+			[ax_blas_ok=yes; BLAS_LIBS="-lessl"])
 fi
 
-# BLAS in IBM ESSL BG library? (requires generic BLAS lib, too)
+# BLAS in IBM ESSL BG library? (doesn't require generic BLAS lib)
 if test $ax_blas_ok = no; then
-        AC_CHECK_LIB(blas, $blas_func,
-                [AC_CHECK_LIB(esslbg, $blas_func,
-                        [ax_blas_ok=yes; BLAS_LIBS="-lesslbg -lblas"],
-                        [], [-lblas $FLIBS])])
+                AC_CHECK_LIB(esslbg, $blas_func,
+                        [ax_blas_ok=yes; BLAS_LIBS="-lesslbg"])
 fi
 
 # Generic BLAS library?
