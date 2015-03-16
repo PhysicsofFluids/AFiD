@@ -50,10 +50,13 @@ if test "x${HDF5_ROOT}" == "x"; then
     | $GREP 'Installation point:' \
     | $AWK -F: '{print $[]2}' )
 fi
-HDF5_LDFLAGS=-L${HDF5_ROOT}/lib
+HDF5_AM_LDFLAGS=$(eval $H5FC -showconfig \
+    | $GREP 'AM_LDFLAGS:' \
+    | $AWK -F: '{print $[]2}' )
 HDF5_EXTRALIBS=$(eval $H5FC -showconfig \
     | $GREP 'Extra libraries:' \
     | $AWK -F: '{print $[]2}' )
+HDF5_LDFLAGS="-L${HDF5_ROOT}/lib ${HDF5_AM_LDFLAGS}"
 
 dummy_FCFLAGS=$FCFLAGS
 dummy_LDFLAGS=$LDFLAGS

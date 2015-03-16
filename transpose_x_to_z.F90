@@ -18,12 +18,10 @@
     complex(mytype), dimension(:,:,:), intent(IN) :: src
     complex(mytype), dimension(:,:,:), intent(OUT) :: dst
     TYPE(DECOMP_INFO), intent(IN), optional :: opt_decomp
-    integer,dimension(:),allocatable :: a,b,c
-    integer,dimension(:),allocatable :: d,e,f
 
     TYPE(DECOMP_INFO) :: decomp
 
-    integer :: ierror,i,n,m
+    integer :: ierror
 
     if (present(opt_decomp)) then
        decomp = opt_decomp
@@ -40,7 +38,7 @@
     call MPI_Neighbor_alltoallw( &
       src,decomp%xcnts_xz(decomp%xranks),decomp%xdispls_xz(decomp%xranks),decomp%xtypes_xz(decomp%xranks), &
       dst,decomp%zcnts_xz(decomp%zranks),decomp%zdispls_xz(decomp%zranks),decomp%ztypes_xz(decomp%zranks), &
-      decomp%xtozNeighborcomm,ierror)
+      decomp%xtozNeighborComm,ierror)
 #endif
 
     return

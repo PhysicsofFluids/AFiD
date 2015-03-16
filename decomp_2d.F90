@@ -874,11 +874,11 @@ contains
     call MPI_Dist_graph_create_adjacent(DECOMP_2D_COMM_CART_X, &
       index_src,zranks(1:index_src),zweights(1:index_src), &
       index_dest,xranks(1:index_dest),xweights(1:index_dest), &
-      MPI_INFO_NULL,.false.,decomp%xtozNeighborComm,ierror)
+      MPI_INFO_NULL,.true.,decomp%xtozNeighborComm,ierror)
     call MPI_Dist_graph_create_adjacent(DECOMP_2D_COMM_CART_X, &
       index_dest,xranks(1:index_dest),xweights(1:index_dest), &
       index_src,zranks(1:index_src),zweights(1:index_src), &
-      MPI_INFO_NULL,.false.,decomp%ztoxNeighborComm,ierror)
+      MPI_INFO_NULL,.true.,decomp%ztoxNeighborComm,ierror)
 #endif
 
     return

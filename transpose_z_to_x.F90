@@ -18,8 +18,6 @@
     complex(mytype), dimension(:,:,:), intent(IN) :: src
     complex(mytype), dimension(:,:,:), intent(OUT) :: dst
     TYPE(DECOMP_INFO), intent(IN), optional :: opt_decomp
-    integer,dimension(:),allocatable :: a,b,c
-    integer,dimension(:),allocatable :: d,e,f
 
     TYPE(DECOMP_INFO) :: decomp
 
