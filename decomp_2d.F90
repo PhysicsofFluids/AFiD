@@ -799,8 +799,8 @@ contains
     decomp%zdispls_xz(:)=0
     decomp%xcnts_xz(:)=0
     decomp%zcnts_xz(:)=0
-    decomp%xtypes_xz(:)=MPI_DATATYPE_NULL
-    decomp%ztypes_xz(:)=MPI_DATATYPE_NULL
+    decomp%xtypes_xz(:)=MPI_INTEGER
+    decomp%ztypes_xz(:)=MPI_INTEGER
 !#ifdef MPI3
     index_src=0
     index_dest=0
