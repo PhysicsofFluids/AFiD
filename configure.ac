@@ -20,8 +20,16 @@ AC_FC_PP_DEFINE
 AC_FC_MODULE_FLAG
 AC_OPENMP
 
+AC_ARG_ENABLE([mpi3], AS_HELP_STRING([--disable-mpi3],
+  [disable MPI-3 functions]),
+  [mpi3_wanted=no],[mpi3_wanted=yes])
+
+if test "x$mpi3_wanted" == "xyes"; then
 if test "x$_ax_prog_fc_mpi_mpi3_found" == "xyes"; then
   FCFLAGS="${FCFLAGS} ${FC_DEFINE}MPI3"
+elif test "x$_ax_prog_fc_mpi_mpix3_found" == "xyes"; then
+  FCFLAGS="${FCFLAGS} ${FC_DEFINE}MPIX3"
+fi
 fi
 FCFLAGS="${FCFLAGS} ${OPENMP_FCFLAGS}"
 

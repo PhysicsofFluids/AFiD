@@ -119,6 +119,13 @@ AS_IF([test x"$_ax_prog_fc_mpi_mpi_wanted" = xno],
       [ _ax_prog_fc_mpi_mpi3_found=no ])
     AC_MSG_RESULT($_ax_prog_fc_mpi_mpi3_found)
 
+    AS_IF([test x"$_ax_prog_fc_mpi_mpi3_found" = xno], [
+      AC_MSG_CHECKING([for MPIX-3])
+      AC_LINK_IFELSE([AC_LANG_CALL([],[MPIX_NEIGHBOR_ALLTOALLW])],
+        [ _ax_prog_fc_mpi_mpix3_found=yes ],
+        [ _ax_prog_fc_mpi_mpix3_found=no ])
+    AC_MSG_RESULT($_ax_prog_fc_mpi_mpix3_found)])
+
     # Check for header
     AS_IF([test x"$_ax_prog_fc_mpi_mpi_found" = xyes], [
       AC_MSG_CHECKING([for mpif.h])

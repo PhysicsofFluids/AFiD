@@ -29,13 +29,20 @@
        decomp = decomp_main
     end if
 
-#ifndef MPI3
+#if !defined(MPI3) && !defined(MPIX3)
     call MPI_Alltoallw(src,decomp%xcnts_xz,decomp%xdispls_xz,decomp%xtypes_xz, &
       dst,decomp%zcnts_xz,decomp%zdispls_xz,decomp%ztypes_xz,MPI_COMM_WORLD,ierror)
 #endif
 
 #ifdef MPI3
     call MPI_Neighbor_alltoallw( &
+      src,decomp%xcnts_xz(decomp%xranks),decomp%xdispls_xz(decomp%xranks),decomp%xtypes_xz(decomp%xranks), &
+      dst,decomp%zcnts_xz(decomp%zranks),decomp%zdispls_xz(decomp%zranks),decomp%ztypes_xz(decomp%zranks), &
+      decomp%xtozNeighborComm,ierror)
+#endif
+
+#ifdef MPIX3
+    call MPIX_Neighbor_alltoallw( &
       src,decomp%xcnts_xz(decomp%xranks),decomp%xdispls_xz(decomp%xranks),decomp%xtypes_xz(decomp%xranks), &
       dst,decomp%zcnts_xz(decomp%zranks),decomp%zdispls_xz(decomp%zranks),decomp%ztypes_xz(decomp%zranks), &
       decomp%xtozNeighborComm,ierror)
