@@ -1,5 +1,5 @@
  NZ  NY  NX   NSST(>1=RK,else AB) NREAD 
- 257 257 257 3                 0
+ 33 65 65 3                 0
  NTST   WALLTIMEMAX    TPIN      TMAX     IRESET
  4000     83000          1e-2      50.0      0
  ALX3D      ISTR3   STR3 
