@@ -7,23 +7,26 @@ AC_CONFIG_HEADERS
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
 
-# AC_PROG_FC
+AC_PROG_AWK
+AC_PROG_GREP
+
+AC_LANG([Fortran])
 AX_PROG_FC_MPI([true],
   [ use_mpi=yes],
   [AC_MSG_FAILURE([MPI compiler needed, but could not find MPI.],1)
   ])
 
+AC_FC_PP_DEFINE
 AC_FC_MODULE_FLAG
-
-AC_PROG_AWK
-AC_PROG_GREP
-
-AC_LANG([Fortran])
-#set the extension to f90, to compile the HDF5 test
-AC_FC_SRCEXT(f90)
 AC_OPENMP
+
+if test "x$_ax_prog_fc_mpi_mpi3_found" == "xyes"; then
+  FCFLAGS="${FCFLAGS} ${FC_DEFINE}MPI3"
+fi
 FCFLAGS="${FCFLAGS} ${OPENMP_FCFLAGS}"
 
+#set the extension to f90, to compile the HDF5 test
+AC_FC_SRCEXT(f90)
 
 # Checks for libraries.
 AX_BLAS([found_blas=yes],[AC_MSG_ERROR([Unable to find blas library.])])

@@ -109,6 +109,16 @@ AS_IF([test x"$_ax_prog_fc_mpi_mpi_wanted" = xno],
       LIBS=$save_LIBS
     done
 
+    # test if MPI-3 is available
+    # We do not use AC_SEARCH_LIBS here, as it caches its outcome and
+    # thus disallows corresponding calls in the other AX_PROG_*_MPI
+    # macros.
+    AC_MSG_CHECKING([for MPI-3])
+    AC_LINK_IFELSE([AC_LANG_CALL([],[MPI_NEIGHBOR_ALLTOALLW])],
+      [ _ax_prog_fc_mpi_mpi3_found=yes ],
+      [ _ax_prog_fc_mpi_mpi3_found=no ])
+    AC_MSG_RESULT($_ax_prog_fc_mpi_mpi3_found)
+
     # Check for header
     AS_IF([test x"$_ax_prog_fc_mpi_mpi_found" = xyes], [
       AC_MSG_CHECKING([for mpif.h])
