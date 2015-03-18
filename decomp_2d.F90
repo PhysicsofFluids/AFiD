@@ -585,10 +585,10 @@ contains
     deallocate(decomp%x1disp,decomp%y1disp,decomp%y2disp,decomp%z2disp)
     deallocate(decomp%z1disp,decomp%x2disp)
     do i=1,nproc
-      if (decomp%ztypes_xz(i).ne.MPI_DATATYPE_NULL) then
+      if (decomp%ztypes_xz(i).ne.MPI_INTEGER) then
         call MPI_Type_free(decomp%ztypes_xz(i),ierror)
       endif
-      if (decomp%xtypes_xz(i).ne.MPI_DATATYPE_NULL) then
+      if (decomp%xtypes_xz(i).ne.MPI_INTEGER) then
         call MPI_Type_free(decomp%xtypes_xz(i),ierror)
       endif
     enddo    
