@@ -14,6 +14,8 @@ CreateInitialConditions.F90   GlobalQuantities.F90     InitTimeMarchScheme.F90  
 
 boutnp_LDADD = $(FFTW3_LIBS) $(LAPACK_LIBS) $(BLAS_LIBS) $(HDF5_LIBS)
 
+EXTRA_DIST = bou.in
+
 SolveImpEqnUpdate_X.o: SolveImpEqnUpdate_X.F90  param.o
 CalcDissipationNu.o: CalcDissipationNu.F90  param.o
 ExplicitTermsVZ.o: ExplicitTermsVZ.F90  param.o
