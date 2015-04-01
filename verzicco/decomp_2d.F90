@@ -110,7 +110,7 @@ module decomp_2d
      ! This is only for the complex datatype
      integer,dimension(:),allocatable::zcnts_xz,ztypes_xz
      integer,dimension(:),allocatable::xcnts_xz,xtypes_xz
-     integer(kind=MPI_ADDRESS_KIND),dimension(:),allocatable::zdispls_xz,xdispls_xz
+     integer,dimension(:),allocatable::zdispls_xz,xdispls_xz
 
      ! evenly distributed data
      logical :: even
