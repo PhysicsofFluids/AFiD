@@ -39,11 +39,11 @@
 
       select case (intvar)
         case (1)
-          filnam1 = trim('continua_q1.h5')
+          filnam1 = trim('continua_vx.h5')
         case (2)
-          filnam1 = trim('continua_q2.h5')
+          filnam1 = trim('continua_vy.h5')
         case (3)
-          filnam1 = trim('continua_q3.h5')
+          filnam1 = trim('continua_vz.h5')
         case (4)
           filnam1 = trim('continua_temp.h5')
       end select
