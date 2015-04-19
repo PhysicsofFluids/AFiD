@@ -71,6 +71,21 @@
       end subroutine MpiMaxRealScalar
 !==============================================================================
 
+      subroutine MpiAllMaxRealScalar(var)
+      use mpih
+      implicit none
+      real, intent(inout) :: var
+      real :: buf
+      
+       call MPI_ALLREDUCE(var,buf,1, &
+        MPI_DOUBLE_PRECISION,MPI_MAX,MPI_COMM_WORLD,ierr)
+ 
+       var = buf
+
+      return
+      end subroutine MpiAllMaxRealScalar
+!==============================================================================
+
       subroutine MpiMinRealScalar(var)
       use mpih
       implicit none

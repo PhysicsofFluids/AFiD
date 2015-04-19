@@ -84,15 +84,15 @@ LIBS="${HDF5_LIBS}"
 AC_MSG_CHECKING([for parallel HDF5 Fortran library])
 AC_LINK_IFELSE(
   [AC_LANG_SOURCE([[
-    program conftest
-    use hdf5
-    implicit none
-    integer         :: classtype
-    integer         :: comm
-    integer (hid_t) :: plist_id
-    integer         :: hdferr
-    call h5pset_fapl_mpio_f(classtype,comm,plist_id,hdferr)
-    end]])],
+      program conftest
+      use hdf5
+      implicit none
+      integer         :: classtype
+      integer         :: comm
+      integer (hid_t) :: plist_id
+      integer         :: hdferr
+      call h5pset_fapl_mpio_f(classtype,comm,plist_id,hdferr)
+      end]])],
   [hdf5_works=yes],
   [hdf5_works=no AC_MSG_ERROR([Unable to find hdf5 Fortran library with parallel I/O])])
 AC_MSG_RESULT([$hdf5_works])
