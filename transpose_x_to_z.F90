@@ -31,7 +31,7 @@
 
 #if !defined(MPI3) && !defined(MPIX3)
     call MPI_Alltoallw(src,decomp%xcnts_xz,decomp%xdispls_xz,decomp%xtypes_xz, &
-      dst,decomp%zcnts_xz,decomp%zdispls_xz,decomp%ztypes_xz,MPI_COMM_WORLD,ierror)
+      dst,decomp%zcnts_xz,decomp%zdispls_xz,decomp%ztypes_xz,DECOMP_2D_COMM_CART_X,ierror)
 #endif
 
 #ifdef MPI3
