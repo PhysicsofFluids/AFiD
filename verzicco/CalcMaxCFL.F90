@@ -42,7 +42,7 @@
       enddo
 !$OMP END PARALLEL DO
             
-      call MpiMaxRealScalar(cflm)
+      call MpiAllMaxRealScalar(cflm)
 
       return  
       end
