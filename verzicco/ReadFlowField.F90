@@ -58,9 +58,9 @@
       call MpiBcastReal(time)
 
 !RO   Codes for passing to other routines which variable we are dealing with 
-      vzflag = 1
+      vxflag = 1
       vyflag = 2
-      vxflag = 3
+      vzflag = 3
       teflag = 4
       
 !EP   Check whether grid specifications have been updated
