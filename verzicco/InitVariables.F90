@@ -92,12 +92,12 @@
       !-------------------------------------------------
       ! Arrays with ghost cells
       !-------------------------------------------------
-      call AllocateReal3DArray(vy,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
-      call AllocateReal3DArray(vz,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
-      call AllocateReal3DArray(vx,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
-      call AllocateReal3DArray(pr,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
-      call AllocateReal3DArray(temp,1,nx,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
-      call AllocateReal3DArray(dphhalo,1,nxm,xstart(2)-1,xend(2)+1,xstart(3)-1,xend(3)+1)
+      call AllocateReal3DArray(vy,1,nx,xstart(2)-lvlhalo,xend(2)+lvlhalo,xstart(3)-lvlhalo,xend(3)+lvlhalo)
+      call AllocateReal3DArray(vz,1,nx,xstart(2)-lvlhalo,xend(2)+lvlhalo,xstart(3)-lvlhalo,xend(3)+lvlhalo)
+      call AllocateReal3DArray(vx,1,nx,xstart(2)-lvlhalo,xend(2)+lvlhalo,xstart(3)-lvlhalo,xend(3)+lvlhalo)
+      call AllocateReal3DArray(pr,1,nx,xstart(2)-lvlhalo,xend(2)+lvlhalo,xstart(3)-lvlhalo,xend(3)+lvlhalo)
+      call AllocateReal3DArray(temp,1,nx,xstart(2)-lvlhalo,xend(2)+lvlhalo,xstart(3)-lvlhalo,xend(3)+lvlhalo)
+      call AllocateReal3DArray(dphhalo,1,nxm,xstart(2)-lvlhalo,xend(2)+lvlhalo,xstart(3)-lvlhalo,xend(3)+lvlhalo)
 
       !-----------------------------------------------
       ! Arrays without ghost cells

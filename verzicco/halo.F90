@@ -24,7 +24,7 @@
     integer :: xs, ys, zs, xe, ye, ze
 
     integer :: s1, s2, s3, ierror
-    integer :: data_type
+    integer :: data_type, ilvl
 
     integer :: icount, ilength, ijump 
     integer :: halo12             

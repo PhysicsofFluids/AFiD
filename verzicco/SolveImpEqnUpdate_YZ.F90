@@ -13,8 +13,8 @@
       use param
       use decomp_2d, only: xstart,xend
       implicit none
-      real,intent(inout) :: q(1:nx,xstart(2)-1:xend(2)+1, &
-     &      xstart(3)-1:xend(3)+1)
+      real,intent(inout) :: q(1:nx,xstart(2)-lvlhalo:xend(2)+lvlhalo, &
+     &      xstart(3)-lvlhalo:xend(3)+lvlhalo)
       real,intent(inout) :: rhs(1:nx,xstart(2):xend(2), &
      &      xstart(3):xend(3))
       real, dimension(nx) :: amkl,apkl,ackl,fkl
