@@ -71,7 +71,7 @@
         logical :: resetlogstime=.false.
         logical :: variabletstep=.true.
 
-        integer :: lvlhalo=2
+        integer :: lvlhalo=1
 
       end module param
       
