@@ -31,7 +31,7 @@
       integer, intent(in) :: intvar,n1o,n2o,n3o
       integer, intent(in) :: xs2,xe2,xs3,xe3
       integer :: ndims
-      real, dimension(1:n3o,xs2-lvlhalo:xe2+lvlhalo, /
+      real, dimension(1:n3o,xs2-lvlhalo:xe2+lvlhalo, &
        xs3-lvlhalo:xe3+lvlhalo),intent(out)::qua
 
       character*70 :: filnam1

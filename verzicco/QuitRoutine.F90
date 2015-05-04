@@ -50,7 +50,7 @@
       else if(errorcode.eq.165) then
         write(6,164) 
 164     format(10x,'cfl too large  ')
-      else if(errorcode.eq.366) then
+      else if(errorcode.eq.266) then
         write(6,268)
 268     format(10x,'velocities diverged')
       else if(errorcode.eq.169) then

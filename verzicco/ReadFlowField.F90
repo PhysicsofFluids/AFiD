@@ -105,10 +105,12 @@
 
 
 !EP   vz
-      allocate(vzold(0:nxo+1,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+      allocate(vzold(0:nxo+1,xs2og-lvlhalo:xe2og+lvlhalo, &
+        xs3og-lvlhalo:xe3og+lvlhalo))
       
       call HdfReadContinua(nzo,nyo,nxo,xs2og,xe2og, &
-       xs3og,xe3og,vzflag,vzold(1:nxo,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+       xs3og,xe3og,vzflag,vzold(1:nxo,xs2og-lvlhalo:xe2og+lvlhalo, &
+       xs3og-lvlhalo:xe3og+lvlhalo))
 
       call interp(vzold,vz(1:nx,xstart(2):xend(2),xstart(3):xend(3)) &
        ,nzo,nyo,nxo,istro3,stro3,vzflag,xs2og,xe2og,xs3og,xe3og)
@@ -116,10 +118,12 @@
       deallocate(vzold)
 
 !EP   vy
-      allocate(vyold(0:nxo+1,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+      allocate(vyold(0:nxo+1,xs2og-lvlhalo:xe2og+lvlhalo, &
+     & xs3og-lvlhalo:xe3og+lvlhalo))
       
       call HdfReadContinua(nzo,nyo,nxo,xs2og,xe2og, &
-     & xs3og,xe3og,vyflag,vyold(1:nxo,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+     & xs3og,xe3og,vyflag,vyold(1:nxo,xs2og-lvlhalo:xe2og+lvlhalo, &
+     & xs3og-lvlhalo:xe3og+lvlhalo))
 
       call interp(vyold,vy(1:nx,xstart(2):xend(2),xstart(3):xend(3)) &
      & ,nzo,nyo,nxo,istro3,stro3,vyflag,xs2og,xe2og,xs3og,xe3og)
@@ -127,10 +131,12 @@
       deallocate(vyold)
 
 !EP   vx
-      allocate(vxold(0:nxo+1,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+      allocate(vxold(0:nxo+1,xs2og-lvlhalo:xe2og+lvlhalo, &
+     & xs3og-lvlhalo:xe3og+lvlhalo))
       
       call HdfReadContinua(nzo,nyo,nxo,xs2og,xe2og, &
-     & xs3og,xe3og,vxflag,vxold(1:nxo,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+     & xs3og,xe3og,vxflag,vxold(1:nxo,xs2og-lvlhalo:xe2og+lvlhalo,  &
+     & xs3og-lvlhalo:xe3og+lvlhalo))
 
       call interp(vxold,vx(1:nx,xstart(2):xend(2),xstart(3):xend(3)) &
      & ,nzo,nyo,nxo,istro3,stro3,vxflag,xs2og,xe2og,xs3og,xe3og)
@@ -138,10 +144,12 @@
       deallocate(vxold)
 
 !EP   temp
-      allocate(tempold(0:nxo+1,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+      allocate(tempold(0:nxo+1,xs2og-lvlhalo:xe2og+lvlhalo, &
+     & xs3og-lvlhalo:xe3og+lvlhalo))
       
       call HdfReadContinua(nzo,nyo,nxo,xs2og,xe2og, &
-       xs3og,xe3og,teflag,tempold(1:nxo,xs2og-1:xe2og+1,xs3og-1:xe3og+1))
+       xs3og,xe3og,teflag,tempold(1:nxo,xs2og-lvlhalo:xe2og+lvlhalo, &
+       xs3og-lvlhalo:xe3og+lvlhalo))
 
       call interp(tempold,temp(1:nx,xstart(2):xend(2),xstart(3):xend(3)) &
        ,nzo,nyo,nxo,istro3,stro3,teflag,xs2og,xe2og,xs3og,xe3og)
