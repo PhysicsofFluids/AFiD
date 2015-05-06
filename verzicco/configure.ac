@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([AFiD], [1.0], [john.donners@surfsara.nl])
-AC_CONFIG_HEADERS
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
 
