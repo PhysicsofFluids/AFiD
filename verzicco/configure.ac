@@ -24,6 +24,7 @@ AC_SUBST(FC_DEFINE)
 
 AC_PROG_AWK
 AC_PROG_GREP
+AC_PROG_SED
 
 AC_LANG([Fortran])
 #set the extension to f90, to compile the HDF5 test
@@ -61,9 +62,16 @@ done
 AX_BLAS([found_blas=yes],[AC_MSG_ERROR([Unable to find blas library.])])
 AX_LAPACK([found_lapack=yes],[AC_MSG_ERROR([Unable to find lapack library.])])
 
+AC_PATH_PROG(FFTW3_BIN,[fftw-wisdom])
+# Emulating unix commands as sed: http://sed.sourceforge.net/local/docs/emulating_unix.txt
+# Doubling up of [ and ] : http://lists.gnu.org/archive/html/autoconf/2011-02/msg00064.html
+# original sed command: sed 's,[^/]*/[^/]*$,,'
+FFTW3_ROOT=$(echo ${FFTW3_BIN}|$SED 's,[[^/]]*/[[^/]]*$,,')
+
 AC_ARG_WITH([fftw3], AS_HELP_STRING([--with-fftw3=<root>],
   [root path to the fftw3 library]),
-  [FFTW3_ROOT=$withval FFTW3_LDFLAGS=-L$FFTW3_ROOT/lib])
+  [FFTW3_ROOT=$withval])
+FFTW3_LDFLAGS=-L$FFTW3_ROOT/lib
 AC_CHECK_LIB([fftw3], [dfftw_plan_many_dft],[FFTW3_LIBS="${FFTW3_LDFLAGS} -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 library])],[${FFTW3_LDFLAGS}])
 if test "x$OPENMP_FCFLAGS" != "x"; then
   AC_CHECK_LIB([fftw3_omp], [dfftw_init_threads],[FFTW3_LIBS="${FFTW3_LDFLAGS} -lfftw3_omp -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 OpenMP-enabled library])],[${FFTW3_LIBS}])
