@@ -1,11 +1,11 @@
- NZ  NY  NX   NSST(>1=RK,else AB) NREAD 
- 33 65 65 3                 0
+ NXM  NYM  NZM   NSST(>1=RK,else AB) NREAD 
+ 65 65 129 3                 1
  NTST   WALLTIMEMAX    TPIN      TMAX     IRESET
- 4000     83000          1e-2      50.0      0
+ 5000     83000          1e-2      50.0      0
  ALX3D      ISTR3   STR3 
  1.0000       6     12.0
  YLEN ZLEN 
- 1.0   1.0   
+ 0.5   0.5   
    RA   PRA      DT      RESID    CFLMAX
  1e+6  1.0   1e-8   1.e-2    1.2
  STATON  BALANCEON  TSTA  STAREAD
