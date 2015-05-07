@@ -29,8 +29,10 @@ AC_PROG_SED
 AC_LANG([Fortran])
 #set the extension to f90, to compile the HDF5 test
 AC_FC_SRCEXT(f90)
-AC_OPENMP
-FCFLAGS="${FCFLAGS} ${OPENMP_FCFLAGS}"
+
+#Disable OpenMP as long as it is not efficient
+#AC_OPENMP
+#FCFLAGS="${FCFLAGS} ${OPENMP_FCFLAGS}"
 
 #check for option to promote 4-byte REALs to 8-byte DOUBLE PRECISIONs
 dnl Try these flags:
@@ -83,7 +85,8 @@ AC_ARG_WITH([hdf5], AS_HELP_STRING([--with-hdf5=<root>],
   [root path to the parallel HDF5 library]),
   [HDF5_ROOT=$withval])
 #look for HDF5 Fortran compiler wrapper. This is used to find installation point if HDF5_ROOT is not explicitly set.
-AC_PATH_PROGS([H5FC],[h5pfc h5fc],[${HDF5_ROOT}/bin:$PATH])
+AC_PATH_PROGS([H5FC],[h5pfc h5fc],,[${HDF5_ROOT}/bin:$PATH])
+test -n "$H5FC" || AC_MSG_ERROR([Unable to find HDF5 Fortran compiler wrapper.])
 # if HDF5_ROOT not set, look for it in a standard directory.
 if test "x${HDF5_ROOT}" == "x"; then
   HDF5_ROOT=$(eval $H5FC -showconfig \
