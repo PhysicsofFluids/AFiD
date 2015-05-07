@@ -14,6 +14,13 @@ AX_PROG_FC_MPI([true],
   ])
 
 AC_FC_MODULE_FLAG
+# Lookup extension for modules, used for 'make clean'
+AC_FC_MODULE_EXTENSION
+AC_SUBST(FC_MODEXT)
+
+# Lookup flag for passing preprocessor flags to the Fortran compiler. Used to define HAVE_CONFIG_H
+AC_FC_PP_DEFINE
+AC_SUBST(FC_DEFINE)
 
 AC_PROG_AWK
 AC_PROG_GREP
@@ -24,6 +31,31 @@ AC_FC_SRCEXT(f90)
 AC_OPENMP
 FCFLAGS="${FCFLAGS} ${OPENMP_FCFLAGS}"
 
+#check for option to promote 4-byte REALs to 8-byte DOUBLE PRECISIONs
+dnl Try these flags:
+dnl   GCC >= 4.2           -fdefault-real-8 -fdefault-double-8
+dnl   ifort                -r8
+dnl   PGI fortran          -Mr8
+dnl   xlf90                -qautodbl=dbl4
+dnl   Cray ftn             -s real64
+AC_MSG_CHECKING([for flag to promote REAL to DOUBLE PRECISION])
+dummy_FCFLAGS=$FCFLAGS
+for ax_option in -r8 -qautodbl=dbl4 "-fdefault-real-8 -fdefault-double-8" "-s real64" -Mr8; do
+  FCFLAGS="$ax_option $dummy_FCFLAGS"
+  AC_LINK_IFELSE(
+    [AC_LANG_SOURCE([[
+      program conftest
+      implicit none
+
+      print*,dsin(0.0)
+
+      end program]])],
+    [real_to_double=$ax_option])
+  if test "$real_to_double" != ""; then
+    AC_MSG_RESULT([$real_to_double])
+    break
+  fi
+done
 
 # Checks for libraries.
 AX_BLAS([found_blas=yes],[AC_MSG_ERROR([Unable to find blas library.])])
