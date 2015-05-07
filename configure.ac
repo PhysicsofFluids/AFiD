@@ -2,13 +2,14 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([AFiD], [1.1b], [john.donners@surfsara.nl])
+AC_INIT([AFiD], [1.0], [john.donners@surfsara.nl])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
 
 AC_PROG_AWK
 AC_PROG_GREP
+AC_PROG_SED
 
 AC_LANG([Fortran])
 AX_PROG_FC_MPI([true],
@@ -16,9 +17,15 @@ AX_PROG_FC_MPI([true],
   [AC_MSG_FAILURE([MPI compiler needed, but could not find MPI.],1)
   ])
 
-AC_FC_PP_DEFINE
 AC_FC_MODULE_FLAG
-AC_OPENMP
+
+# Lookup extension for modules, used for 'make clean'
+AC_FC_MODULE_EXTENSION
+AC_SUBST(FC_MODEXT)
+
+# Lookup flag for passing preprocessor flags to the Fortran compiler. Used to define HAVE_CONFIG_H
+AC_FC_PP_DEFINE
+AC_SUBST(FC_DEFINE)
 
 mpi3_wanted=yes
 AC_ARG_ENABLE([mpi3], AS_HELP_STRING([--disable-mpi3],
@@ -28,22 +35,56 @@ AC_ARG_ENABLE([mpi3], AS_HELP_STRING([--disable-mpi3],
 if test "x$mpi3_wanted" == "xyes"; then
 if test "x$_ax_prog_fc_mpi_mpi3_found" == "xyes"; then
   FCFLAGS="${FCFLAGS} ${FC_DEFINE}MPI3"
-elif test "x$_ax_prog_fc_mpi_mpix3_found" == "xyes"; then
-  FCFLAGS="${FCFLAGS} ${FC_DEFINE}MPIX3"
 fi
 fi
-FCFLAGS="${FCFLAGS} ${OPENMP_FCFLAGS}"
 
 #set the extension to f90, to compile the HDF5 test
 AC_FC_SRCEXT(f90)
+
+#Disable OpenMP as long as it is not efficient
+#AC_OPENMP
+#FCFLAGS="${FCFLAGS} ${OPENMP_FCFLAGS}"
+
+#check for option to promote 4-byte REALs to 8-byte DOUBLE PRECISIONs
+dnl Try these flags:
+dnl   GCC >= 4.2           -fdefault-real-8 -fdefault-double-8
+dnl   ifort                -r8
+dnl   PGI fortran          -Mr8
+dnl   xlf90                -qautodbl=dbl4
+dnl   Cray ftn             -s real64
+AC_MSG_CHECKING([for flag to promote REAL to DOUBLE PRECISION])
+dummy_FCFLAGS=$FCFLAGS
+for ax_option in -r8 -qautodbl=dbl4 "-fdefault-real-8 -fdefault-double-8" "-s real64" -Mr8; do
+  FCFLAGS="$ax_option $dummy_FCFLAGS"
+  AC_LINK_IFELSE(
+    [AC_LANG_SOURCE([[
+      program conftest
+      implicit none
+
+      print*,dsin(0.0)
+
+      end program]])],
+    [real_to_double=$ax_option])
+  if test "$real_to_double" != ""; then
+    AC_MSG_RESULT([$real_to_double])
+    break
+  fi
+done
 
 # Checks for libraries.
 AX_BLAS([found_blas=yes],[AC_MSG_ERROR([Unable to find blas library.])])
 AX_LAPACK([found_lapack=yes],[AC_MSG_ERROR([Unable to find lapack library.])])
 
+AC_PATH_PROG(FFTW3_BIN,[fftw-wisdom])
+# Emulating unix commands as sed: http://sed.sourceforge.net/local/docs/emulating_unix.txt
+# Doubling up of [ and ] : http://lists.gnu.org/archive/html/autoconf/2011-02/msg00064.html
+# original sed command: sed 's,[^/]*/[^/]*$,,'
+FFTW3_ROOT=$(echo ${FFTW3_BIN}|$SED 's,[[^/]]*/[[^/]]*$,,')
+
 AC_ARG_WITH([fftw3], AS_HELP_STRING([--with-fftw3=<root>],
   [root path to the fftw3 library]),
-  [FFTW3_ROOT=$withval FFTW3_LDFLAGS=-L$FFTW3_ROOT/lib])
+  [FFTW3_ROOT=$withval])
+FFTW3_LDFLAGS=-L$FFTW3_ROOT/lib
 AC_CHECK_LIB([fftw3], [dfftw_plan_many_dft],[FFTW3_LIBS="${FFTW3_LDFLAGS} -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 library])],[${FFTW3_LDFLAGS}])
 if test "x$OPENMP_FCFLAGS" != "x"; then
   AC_CHECK_LIB([fftw3_omp], [dfftw_init_threads],[FFTW3_LIBS="${FFTW3_LDFLAGS} -lfftw3_omp -lfftw3"],[AC_MSG_ERROR([Unable to find fftw3 OpenMP-enabled library])],[${FFTW3_LIBS}])
@@ -55,7 +96,8 @@ AC_ARG_WITH([hdf5], AS_HELP_STRING([--with-hdf5=<root>],
   [root path to the parallel HDF5 library]),
   [HDF5_ROOT=$withval])
 #look for HDF5 Fortran compiler wrapper. This is used to find installation point if HDF5_ROOT is not explicitly set.
-AC_PATH_PROGS([H5FC],[h5pfc h5fc],[${HDF5_ROOT}/bin:$PATH])
+AC_PATH_PROGS([H5FC],[h5pfc h5fc],,[${HDF5_ROOT}/bin:$PATH])
+test -n "$H5FC" || AC_MSG_ERROR([Unable to find HDF5 Fortran compiler wrapper.])
 # if HDF5_ROOT not set, look for it in a standard directory.
 if test "x${HDF5_ROOT}" == "x"; then
   HDF5_ROOT=$(eval $H5FC -showconfig \

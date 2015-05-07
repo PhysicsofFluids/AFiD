@@ -16,6 +16,16 @@ boutnp_LDADD = $(FFTW3_LIBS) $(LAPACK_LIBS) $(BLAS_LIBS) $(HDF5_LIBS)
 
 EXTRA_DIST = bou.in transpose_z_to_x.F90 transpose_x_to_z.F90 transpose_x_to_y.F90 transpose_y_to_x.F90 transpose_y_to_z.F90 transpose_z_to_y.F90 factor.F90 halo.F90 fft_common.F90 alloc.F90 halo_common.F90
 
+# Change preprocessor flag. This is specific to some Fortran compilers.
+# This hack shouldn't be used if C/C++ code is included!
+dist-hook:
+	chmod u+w $(distdir)/configure
+	sed -i 's/^DEFS=-DHAVE_CONFIG_H$$/DEFS=$${FC_DEFINE}HAVE_CONFIG_H/' $(distdir)/configure	
+
+# Clean module files
+mostlyclean-local:
+	-test -z "$(FC_MODEXT)" || rm -f *.$(FC_MODEXT)
+
 SolveImpEqnUpdate_X.o: SolveImpEqnUpdate_X.F90  param.o
 CalcDissipationNu.o: CalcDissipationNu.F90  param.o
 ExplicitTermsVZ.o: ExplicitTermsVZ.F90  param.o

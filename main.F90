@@ -123,11 +123,11 @@
       endif                                                             
 
 !EP   Update all relevant halos
-      call update_halo(vx,1)
-      call update_halo(vy,1)
-      call update_halo(vz,1)
-      call update_halo(temp,1)
-      call update_halo(pr,1)
+      call update_halo(vx,lvlhalo)
+      call update_halo(vy,lvlhalo)
+      call update_halo(vz,lvlhalo)
+      call update_halo(temp,lvlhalo)
+      call update_halo(pr,lvlhalo)
 
 !EP   Check divergence. Should be reduced to machine precision after the first
 !phcalc. Here it can still be high.

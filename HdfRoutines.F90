@@ -304,7 +304,8 @@
       implicit none
 
       integer, intent(in) :: n1o,n2o,n3o,st2,en2,st3,en3
-      real, intent(out), dimension(1:n3o,st2-1:en2+1,st3-1:en3+1)::qua
+      real, intent(out), dimension(1:n3o,st2-lvlhalo:en2+lvlhalo, &
+         st3-lvlhalo:en3+lvlhalo)::qua
 
       integer hdf_error
 
@@ -410,8 +411,9 @@
       integer :: comm, info
       integer :: ndims
 
-      real, intent(in), dimension(1:nx,xstart(2)-1:xend(2)+1, &
-     & xstart(3)-1:xend(3)+1)::qua
+      real, intent(in), dimension(1:nx, &
+       xstart(2)-lvlhalo:xend(2)+lvlhalo, &
+       xstart(3)-lvlhalo:xend(3)+lvlhalo)::qua
 
       character*30,intent(in) :: filnam1
 

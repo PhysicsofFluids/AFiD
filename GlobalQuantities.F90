@@ -84,6 +84,7 @@
       close(95)
 
       rradpr=dsqrt(ray/pra)
+      tempm=tempm*vol
       vx_rms_vol=dsqrt(vx_rms_vol*vol)*rradpr
       vy_rms_vol=dsqrt(vy_rms_vol*vol)*rradpr
       vz_rms_vol=dsqrt(vz_rms_vol*vol)*rradpr

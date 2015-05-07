@@ -39,8 +39,9 @@
         call ImplicitAndUpdateVZ
         call ImplicitAndUpdateTemp
 
-        call update_halo(vy,1)
-        call update_halo(vz,1)
+        call update_halo(vy,lvlhalo)
+        call update_halo(vz,lvlhalo)
+
 
         call CalcLocalDivergence
         call SolvePressureCorrection
@@ -59,16 +60,16 @@
           enddo
         enddo
 
-        call update_halo(dphhalo,1)
+        call update_halo(dphhalo,lvlhalo)
 
         call CorrectVelocity
         call CorrectPressure
 
-        call update_halo(vx,1)
-        call update_halo(vy,1)
-        call update_halo(vz,1)
-        call update_halo(pr,1)
-        call update_halo(temp,1)
+        call update_halo(vx,lvlhalo)
+        call update_halo(vy,lvlhalo)
+        call update_halo(vz,lvlhalo)
+        call update_halo(pr,lvlhalo)
+        call update_halo(temp,lvlhalo)
 
         enddo
 

@@ -15,7 +15,7 @@
 
       open(unit=15,file='bou.in',status='old')
         read(15,301) dummy
-        read(15,*) nz,ny,nx,nsst,nread
+        read(15,*) nxm,nym,nzm,nsst,nread
         read(15,301) dummy
         read(15,*) ntst,walltimemax,tout,tmax,ireset
         read(15,301) dummy
@@ -35,9 +35,9 @@
 301     format(a4)                
       close(15)
 
-      nzm=nz-1                                                          
-      nym=ny-1                                                          
-      nxm=nx-1
+      nx=nxm+1
+      ny=nym+1                                                          
+      nz=nzm+1                                                          
 
 !m============================================
 !
