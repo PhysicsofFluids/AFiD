@@ -53,7 +53,7 @@
       call MpiBcastInt(nxo)
       call MpiBcastInt(nyo)
       call MpiBcastInt(nzo)
-      call MpiBcastReal(istro3)
+      call MpiBcastInt(istro3)
       call MpiBcastReal(stro3)
       call MpiBcastReal(time)
 
