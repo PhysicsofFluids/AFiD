@@ -249,7 +249,7 @@
 
       enddo !EP main loop
 
-      call QuitRoutine(tin,1,errorcode)
+      call QuitRoutine(tin,.true.,errorcode)
       
       end                                                               
 
