@@ -129,7 +129,7 @@
        call HdfSerialWriteIntScalar(dsetname,filnam,nstatsamples)
 
        dsetname = trim('X_cordin')
-       call HdfSerialWriteReal1D(dsetname,filnam,xm,1,nxm)
+       call HdfSerialWriteReal1D(dsetname,filnam,xm,nxm)
 
        dsetname = trim('Rayleigh Number')
        call HdfSerialWriteRealScalar(dsetname,filnam,ray)
