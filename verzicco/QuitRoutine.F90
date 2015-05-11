@@ -18,6 +18,8 @@
       integer :: errorcode
       real :: tin(3)
 
+      if(errorcode.ne.100) then !EP skip if already finalized
+
       tin(3) = MPI_WTIME()
       if(ismaster) then
        call NotifyError(errorcode) 
@@ -35,6 +37,8 @@
       call HdfClose
       call decomp_2d_fft_finalize
       call decomp_2d_finalize
+
+      endif
 
       end subroutine QuitRoutine
 

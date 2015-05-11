@@ -216,7 +216,8 @@
           if(ismaster) then
           write(6,*) 'Maximum divergence = ', dmax
           write(6,*)ntime,time,vmax(1),vmax(2),vmax(3),dmax,tempm,tempmax,tempmin
-          write(6,'(a,f8.3,a)') 'Minimum Iteration Time = ', minwtdt, ' sec.'
+          write(6,'(a,f8.3,a)') 'Minimum Iteration Time = ', minwtdt, &
+                  ' sec.'
           endif
           minwtdt = huge(0.0d0)
         endif
@@ -246,6 +247,10 @@
         if(errorcode.eq.334) call QuitRoutine(tin,.true.,errorcode)
 
        endif
+
+      errorcode = 100 !EP already finalized
+      
+      exit
 
       enddo !EP main loop
 
