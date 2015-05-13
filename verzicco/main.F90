@@ -246,11 +246,11 @@
 !EP   walltime exceeded walltimemax, no error; normal quit
         if(errorcode.eq.334) call QuitRoutine(tin,.true.,errorcode)
 
-       endif
-
-      errorcode = 100 !EP already finalized
+        errorcode = 100 !EP already finalized
       
-      exit
+        exit
+
+      endif
 
       enddo !EP main loop
 
