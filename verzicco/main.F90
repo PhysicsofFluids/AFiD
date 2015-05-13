@@ -224,6 +224,7 @@
 
        if( (ti(2) - tin(1)) .gt. walltimemax) errorcode = 334
 
+      call MpiBcastInt(errorcode)
 
 !EP   Conditional exits
       if(errorcode.ne.0) then

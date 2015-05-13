@@ -17,7 +17,7 @@
       integer :: j,k,i
       real :: xxx,yyy,eps
 
-      eps=0.00001d0
+      eps=0.01d0
       do i=xstart(3),xend(3)
       do j=xstart(2),xend(2)
       do k=1,nxm
