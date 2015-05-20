@@ -1,5 +1,5 @@
-bin_PROGRAMS = boutnp
-boutnp_SOURCES = \
+bin_PROGRAMS = afid
+afid_SOURCES = \
 DeallocateVariables.F90       InitVariables.F90    ResetLogs.F90                \
 AuxiliaryRoutines.F90         DebugRoutines.F90        InitPressureSolver.F90     SetTempBCs.F90               \
 CalcDissipationNu.F90         decomp_2d.F90            interp.F90                 SlabDumpRoutines.F90         \
@@ -12,7 +12,7 @@ CorrectVelocity.F90           ImplicitAndUpdateVZ.F90        param.F90          
 CreateGrid.F90                QuitRoutine.F90            TimeMarcher.F90 \
 CreateInitialConditions.F90   GlobalQuantities.F90     InitTimeMarchScheme.F90  ReadInputFile.F90         ReadFlowField.F90 HdfReadContinua.F90
 
-boutnp_LDADD = $(FFTW3_LIBS) $(LAPACK_LIBS) $(BLAS_LIBS) $(HDF5_LIBS)
+afid_LDADD = $(FFTW3_LIBS) $(LAPACK_LIBS) $(BLAS_LIBS) $(HDF5_LIBS)
 
 EXTRA_DIST = bou.in transpose_z_to_x.F90 transpose_x_to_z.F90 transpose_x_to_y.F90 transpose_y_to_x.F90 transpose_y_to_z.F90 transpose_z_to_y.F90 factor.F90 halo.F90 fft_common.F90 alloc.F90 halo_common.F90
 
