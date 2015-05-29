@@ -86,7 +86,7 @@
           z2dp=float(2*kc-nx-1)/float(nxm)
           xc(kc)=(1+tanh(str3*z2dp)/tstr3)*0.5*alx3
           if(xc(kc).lt.0.or.xc(kc).gt.alx3)then
-           write(*,*)'Forza la griglia: ','zc(',kc,')=',xc(kc)
+           write(*,*)'Grid is too streched: ','zc(',kc,')=',xc(kc)
            stop
           endif
          end do

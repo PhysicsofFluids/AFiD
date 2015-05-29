@@ -17,7 +17,6 @@
         integer   :: starea,tsta
         real      :: dtmin,dtmax,limitCFL,limitVel
         integer   :: nson,idtv
-        real   :: tframe
 !=================================================
 !       end of input file
 !=================================================

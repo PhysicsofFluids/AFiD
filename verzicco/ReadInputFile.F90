@@ -31,7 +31,7 @@
         read(15,301) dummy       
         read(15,*) idtv,dtmin,dtmax,limitVel
         read(15,301) dummy       
-        read(15,*) tframe,stst3flag
+        read(15,*) stst3flag
 301     format(a4)                
       close(15)
 
