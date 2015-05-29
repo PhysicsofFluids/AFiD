@@ -77,16 +77,16 @@
       dsetname_vxme = trim('vx_mean')
       dsetname_vyme = trim('vy_mean')
       dsetname_vzme = trim('vz_mean')
-      dsetname_tempme = trim('temp_mean.h5')
+      dsetname_tempme = trim('temp_mean')
 
-      dsetname_vxrms = trim('vx_rms.h5')
-      dsetname_vyrms = trim('vy_rms.h5')
-      dsetname_vzrms = trim('vz_rms.h5')
-      dsetname_temprms = trim('temp_rms.h5')
+      dsetname_vxrms = trim('vx_rms')
+      dsetname_vyrms = trim('vy_rms')
+      dsetname_vzrms = trim('vz_rms')
+      dsetname_temprms = trim('temp_rms')
 
-      dsetname_tempvxme = trim('tempvx_mean.h5')
-      dsetname_dissth = trim('dissth.h5')
-      dsetname_disste = trim('disste.h5')
+      dsetname_tempvxme = trim('tempvx_mean')
+      dsetname_dissth = trim('dissth')
+      dsetname_disste = trim('disste')
 
       dsetname = trim('averaging_time')
 
