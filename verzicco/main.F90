@@ -204,7 +204,7 @@
 
             if(.not.variabletstep) instCFL=instCFL*dt
 
-            if(dmax.gt.resid) errorcode = 169
+            if(abs(dmax).gt.resid) errorcode = 169
 
         endif
 
