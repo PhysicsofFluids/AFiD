@@ -51,4 +51,9 @@ to configure the HDF5 library. You can override these using:
 ```
 
 It is recommended to use the vendor-optimized libraries for BLAS and (possibly) LAPACK (e.g. MKL, ESSL or LibSci). 
-Note that the FFTW3 library cannot be replaced with the MKL library, since it doesn't support the calls that are used in AFiD. 
+Note that the FFTW3 library cannot be replaced with the MKL library, since it doesn't support the calls that are used in AFiD.
+
+Usage
+-----
+See the [manual](MANUAL.md) for more information
+ 
