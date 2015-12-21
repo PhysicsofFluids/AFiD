@@ -22,32 +22,32 @@ The AFiD model has the following prerequisites:
 To install AFiD, please use the 'configure' script. Note that you'll need to set optimization and debugging options yourself. 
 A good, first guess at the configuration of AFiD would be
 
-`
- ./configure FCFLAGS="-O2 -g"
-`
+```
+./configure FCFLAGS="-O2 -g"
+```
 
 If the configuration was successful, simply run
 
 ```
-  make
-  make install prefix=/path/to/install/afid
+make
+make install prefix=/path/to/install/afid
 ```
 
 It tries to find and configure all prerequisites automatically, although it doesn't always succeed. 
 The most important configuration options are:
 
 ```
-  ./configure MPIFC=mpif90.gfortran              # set MPIFC to the MPI compiler wrapper for Fortran
-  ./configure --with-blas=/path/to/blas.lib      # library with blas routines
-  ./configure --with-lapack=/path/to/lapack.lib  # library with lapack routines 
+./configure MPIFC=mpif90.gfortran              # set MPIFC to your MPI compiler wrapper for Fortran
+./configure --with-blas=/path/to/blas.lib      # library with blas routines
+./configure --with-lapack=/path/to/lapack.lib  # library with lapack routines 
 ```
 
 The configure script locates the fftw-wisdom utility to find the root path of the FFTW3 library and it uses the h5pfc compiler wrapper 
 to configure the HDF5 library. You can override these using:
 
 ```
-  ./configure --with-fftw3=<root path to fftw3 installation>
-  ./configure --with-hdf5=<root path to hdf5 installation> 
+./configure --with-fftw3=<root path to fftw3 installation>
+./configure --with-hdf5=<root path to hdf5 installation> 
 ```
 
 It is recommended to use the vendor-optimized libraries for BLAS and (possibly) LAPACK (e.g. MKL, ESSL or LibSci). 
