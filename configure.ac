@@ -2,10 +2,14 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([AFiD], [1.0], [john.donners@surfsara.nl])
+AC_INIT([AFiD], [1.1], [r.j.a.m.stevens@utwente.nl])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
+
+if test "x$FCFLAGS" = "x"; then
+  FCFLAGS_isset="no"
+fi
 
 # AC_PROG_FC
 AX_PROG_FC_MPI([true],
@@ -29,6 +33,37 @@ AC_PROG_SED
 AC_LANG([Fortran])
 #set the extension to f90, to compile the HDF5 test
 AC_FC_SRCEXT(f90)
+
+dummy_FCFLAGS=$FCFLAGS
+#set default compiler optimization
+if test "x$FCFLAGS_isset" = "xno"; then
+#if test 0;then
+  FCFLAGS="-O2"
+  AC_MSG_CHECKING([for default optimization -O2])
+  AC_LINK_IFELSE(
+  [AC_LANG_SOURCE([[
+      program conftest
+      implicit none
+      end]])],
+  [o2_works=yes],
+  [o2_works=no])
+  AC_MSG_RESULT([$o2_works])
+  if test "x$o2_works" = "xno"; then
+    FCFLAGS=$dummy_FCFLAGS
+  fi
+fi
+
+mpi3_wanted=yes
+AC_ARG_ENABLE([mpi3], AS_HELP_STRING([--disable-mpi3],
+  [disable MPI-3 functions]),
+  [if test "x$enableval" == "xno"; then mpi3_wanted=no; fi],[])
+
+if test "x$mpi3_wanted" == "xyes"; then
+if test "x$_ax_prog_fc_mpi_mpi3_found" == "xyes"; then
+  FCFLAGS="${FCFLAGS} ${FC_DEFINE}MPI3"
+fi
+fi
+
 
 #Disable OpenMP as long as it is not efficient
 #AC_OPENMP

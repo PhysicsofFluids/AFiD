@@ -21,26 +21,24 @@ The AFiD model has the following prerequisites:
 
 It's recommended to download a release tarball of AFiD, which can be found ​[here](https://github.com/jdonners/afid/releases). To install AFiD, please 
 use the 'configure' script. Note that you'll need to set optimization and debugging options yourself. 
-A good, first guess at the configuration of AFiD would be
+The easiest way to configure and build AFiD would be 
 
 ```
-./configure FCFLAGS="-O2 -g"
-```
-
-If the configuration was successful, simply run
-
-```
+./configure
 make
 make install prefix=/path/to/install/afid
 ```
 
 It tries to find and configure all prerequisites automatically, although it doesn't always succeed. 
+By default it uses the -O2 optimization flag (if available).
 The most important configuration options are:
 
 ```
 ./configure MPIFC=mpif90.gfortran              # set MPIFC to your MPI compiler wrapper for Fortran
 ./configure --with-blas=/path/to/blas.lib      # library with blas routines
 ./configure --with-lapack=/path/to/lapack.lib  # library with lapack routines 
+./configure FCFLAGS=-O3                        # very high optimization
+./configure FCFLAGS="-g -O0"                   # debug info, no optimization
 ```
 
 The configure script locates the fftw-wisdom utility to find the root path of the FFTW3 library and it uses the h5pfc compiler wrapper 

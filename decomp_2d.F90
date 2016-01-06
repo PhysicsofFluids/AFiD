@@ -110,8 +110,16 @@ module decomp_2d
      ! This is only for the complex datatype
      integer,dimension(:),allocatable::zcnts_xz,ztypes_xz
      integer,dimension(:),allocatable::xcnts_xz,xtypes_xz
+#ifdef MPI3                               
+! use MPI_ADDRESS_KIND for MPI_Neighbor_alltoallw call
+     integer(kind=MPI_ADDRESS_KIND),dimension(:),allocatable::zdispls_xz,xdispls_xz
+     integer :: xtozNeighborComm,ztoxNeighborComm
+     integer,dimension(:),allocatable::xranks,zranks
+#else                                     
+! use default integer for MPI_Alltoallw call
      integer,dimension(:),allocatable::zdispls_xz,xdispls_xz
-
+#endif
+!#endif
      ! evenly distributed data
      logical :: even
 
@@ -582,10 +590,10 @@ contains
     deallocate(decomp%x1disp,decomp%y1disp,decomp%y2disp,decomp%z2disp)
     deallocate(decomp%z1disp,decomp%x2disp)
     do i=1,nproc
-      if (decomp%ztypes_xz(i).ne.MPI_DATATYPE_NULL) then
+      if (decomp%ztypes_xz(i).ne.MPI_INTEGER) then
         call MPI_Type_free(decomp%ztypes_xz(i),ierror)
       endif
-      if (decomp%xtypes_xz(i).ne.MPI_DATATYPE_NULL) then
+      if (decomp%xtypes_xz(i).ne.MPI_INTEGER) then
         call MPI_Type_free(decomp%xtypes_xz(i),ierror)
       endif
     enddo    
@@ -593,7 +601,9 @@ contains
     deallocate(decomp%xtypes_xz,decomp%ztypes_xz)
     deallocate(decomp%xdispls_xz)
     deallocate(decomp%zdispls_xz)
-
+#ifdef MPI3
+    deallocate(decomp%xranks,decomp%zranks)
+#endif
     return
   end subroutine decomp_info_finalize
 
@@ -732,7 +742,11 @@ contains
     integer :: rank_x, rank_z
     integer :: subsize_y, offset_y
     integer :: ierror
-
+#ifdef MPI3
+    integer,dimension(nproc) :: xranks,zranks
+    integer,dimension(nproc) :: xweights,zweights
+    integer :: index_src, index_dest
+#endif
     ! MPI_ALLTOALLV buffer information
 
     do i=0, dims(1)-1
@@ -790,8 +804,12 @@ contains
     decomp%zdispls_xz(:)=0
     decomp%xcnts_xz(:)=0
     decomp%zcnts_xz(:)=0
-    decomp%xtypes_xz(:)=MPI_DATATYPE_NULL
-    decomp%ztypes_xz(:)=MPI_DATATYPE_NULL
+    decomp%xtypes_xz(:)=MPI_INTEGER
+    decomp%ztypes_xz(:)=MPI_INTEGER
+#ifdef MPI3
+    index_src=0
+    index_dest=0
+#endif
     do k=0,dims(1)-1
     do i=0,dims(2)-1
 ! Actually, rank_x and rank_z are the same..
@@ -805,6 +823,11 @@ contains
              decomp%zcnts_xz(rank_z+1)=1
              subsize_y=min(decomp%zen(2),decomp%y1en(k))-max(decomp%zst(2),decomp%y1st(k))+1
              offset_y =max(decomp%zst(2),decomp%y1st(k))-decomp%zst(2)
+#ifdef MPI3
+             index_src=index_src+1
+             zranks(index_src)=rank_z
+             zweights(index_src)=decomp%zsz(1)*subsize_y*decomp%z2dist(i)
+#endif
              call MPI_Type_create_subarray(3,decomp%zsz, &
                (/decomp%zsz(1),subsize_y,decomp%z2dist(i)/), &
                (/0,offset_y,decomp%z2st(i)-decomp%zst(3)/), &
@@ -824,6 +847,11 @@ contains
              decomp%xcnts_xz(rank_x+1)=1
              subsize_y=min(decomp%xen(2),decomp%y2en(i))-max(decomp%xst(2),decomp%y2st(i))+1
              offset_y =max(decomp%xst(2),decomp%y2st(i))-decomp%xst(2)
+#ifdef MPI3
+             index_dest=index_dest+1
+             xranks(index_dest)=rank_x
+             xweights(index_dest)=decomp%x1dist(k)*subsize_y*decomp%xsz(3)
+#endif
              call MPI_Type_create_subarray(3,decomp%xsz, &
                (/decomp%x1dist(k),subsize_y,decomp%xsz(3)/), &
                (/decomp%x1st(k)-decomp%xst(1),offset_y,0/), &
@@ -839,6 +867,23 @@ contains
            endif
          enddo
          enddo
+
+#ifdef MPI3
+    allocate(decomp%xranks(index_dest))
+    allocate(decomp%zranks(index_src))
+
+    decomp%xranks=xranks(1:index_dest)+1
+    decomp%zranks=zranks(1:index_src)+1
+
+    call MPI_Dist_graph_create_adjacent(DECOMP_2D_COMM_CART_X, &
+      index_src,zranks(1:index_src),zweights(1:index_src), &
+      index_dest,xranks(1:index_dest),xweights(1:index_dest), &
+      MPI_INFO_NULL,.true.,decomp%xtozNeighborComm,ierror)
+    call MPI_Dist_graph_create_adjacent(DECOMP_2D_COMM_CART_X, &
+      index_dest,xranks(1:index_dest),xweights(1:index_dest), &
+      index_src,zranks(1:index_src),zweights(1:index_src), &
+      MPI_INFO_NULL,.true.,decomp%ztoxNeighborComm,ierror)
+#endif
 
     return
   end subroutine prepare_buffer  

@@ -29,8 +29,17 @@
        decomp = decomp_main
     end if
 
-      call MPI_Alltoallw(src,decomp%zcnts_xz,decomp%zdispls_xz,decomp%ztypes_xz, &
-        dst,decomp%xcnts_xz,decomp%xdispls_xz,decomp%xtypes_xz,MPI_COMM_WORLD,ierror)
+#if !defined(MPI3)
+    call MPI_Alltoallw(src,decomp%zcnts_xz,decomp%zdispls_xz,decomp%ztypes_xz, &
+      dst,decomp%xcnts_xz,decomp%xdispls_xz,decomp%xtypes_xz,MPI_COMM_WORLD,ierror)
+#endif
+
+#ifdef MPI3
+    call MPI_Neighbor_alltoallw( &
+      src,decomp%zcnts_xz(decomp%zranks),decomp%zdispls_xz(decomp%zranks),decomp%ztypes_xz(decomp%zranks), &
+      dst,decomp%xcnts_xz(decomp%xranks),decomp%xdispls_xz(decomp%xranks),decomp%xtypes_xz(decomp%xranks), &
+      decomp%ztoxNeighborComm,ierror)
+#endif
 
     return
   end subroutine transpose_z_to_x_complex
