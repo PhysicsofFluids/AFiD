@@ -54,8 +54,7 @@ to configure the HDF5 library. You can override these using:
 It is recommended to use the vendor-optimized libraries for BLAS and (possibly) LAPACK (e.g. MKL, ESSL or LibSci). 
 Note that the FFTW3 library cannot be replaced with the MKL library, since it doesn't support the calls that are used in AFiD.
 
-Should you want to build from the repository, you'll need recent versions of the GNU autotools as well.
-You can create the configure script from the repository with the command
+Should you want to build from the repository (when you download the source file from directly using "Download ZIP") you first need to create the configure script. For this you need a recent versions of the GNU autotools and the configure script is created using the command 
 
 ```
 autoreconf
@@ -63,5 +62,5 @@ autoreconf
 
 Usage
 -----
-See the [manual](MANUAL.md) for more information
+See the [manual](MANUAL.md) for more a description of the input parameters of the code and some example cases to ge started.
  
