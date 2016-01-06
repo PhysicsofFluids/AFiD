@@ -94,5 +94,6 @@ DTMAX           : Maximum time step for variable time stepping
 VLIM            : Maximum allowable local velocity in simulation
 
 SLABDUMP(STST3) : Output wall normal slabs at locations specified in stst3.in
+                  If this option is active, you need to create a directory named 'stst3'
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ```

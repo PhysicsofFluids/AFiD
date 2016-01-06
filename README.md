@@ -19,7 +19,8 @@ The AFiD model has the following prerequisites:
  * FFTW3
  * HDF5 with parallel I/O 
 
-To install AFiD, please use the 'configure' script. Note that you'll need to set optimization and debugging options yourself. 
+It's recommended to download a release tarball of AFiD. To install AFiD, please use the 'configure' script. 
+Note that you'll need to set optimization and debugging options yourself. 
 A good, first guess at the configuration of AFiD would be
 
 ```
@@ -52,6 +53,13 @@ to configure the HDF5 library. You can override these using:
 
 It is recommended to use the vendor-optimized libraries for BLAS and (possibly) LAPACK (e.g. MKL, ESSL or LibSci). 
 Note that the FFTW3 library cannot be replaced with the MKL library, since it doesn't support the calls that are used in AFiD.
+
+Should you want to build from the repository, you'll need recent versions of the GNU autotools as well.
+You can create the configure script from the repository with the command
+
+```
+autoreconf
+```
 
 Usage
 -----
