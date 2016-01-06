@@ -62,5 +62,4 @@ autoreconf
 
 Usage
 -----
-See the [manual](MANUAL.md) for more a description of the input parameters of the code and some example cases to ge started.
- 
+See the [manual](MANUAL.md) for more a description of the input parameters of the code. An example of the usage of the code can be found ​[here](https://github.com/jdonners/afid/tree/master/Example). 
