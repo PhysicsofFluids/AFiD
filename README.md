@@ -21,7 +21,7 @@ The AFiD model has the following prerequisites:
 
 It's recommended to download a release tarball of AFiD, which can be found ​[here](https://github.com/jdonners/afid/releases). To install AFiD, please 
 use the 'configure' script. Note that you'll need to set optimization and debugging options yourself. 
-The easiest way to configure and build AFiD would be 
+The easiest way to configure and build AFiD is
 
 ```
 ./configure
