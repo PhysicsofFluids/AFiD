@@ -67,6 +67,8 @@
       else if(errorcode.eq.334) then
          write(*,*) "walltime greater than walltimemax"
          write(*,*) "statistics and continuation updated"
+      else if(errorcode.eq.444) then
+         write(*,*) "FFT size in ny or nz is not efficient"
       else 
          write(*,*) "Maximum number of timesteps reached"
       end if

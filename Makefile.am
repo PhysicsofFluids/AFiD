@@ -10,7 +10,7 @@ CheckDivergence.F90           ExplicitTermsVY.F90      ImplicitAndUpdateVX.F90  
 CorrectPressure.F90           ExplicitTermsVZ.F90      ImplicitAndUpdateVY.F90        StatReadReduceWrite.F90 \
 CorrectVelocity.F90           ImplicitAndUpdateVZ.F90        param.F90                  StatRoutines.F90 \
 CreateGrid.F90                QuitRoutine.F90            TimeMarcher.F90 \
-CreateInitialConditions.F90   GlobalQuantities.F90     InitTimeMarchScheme.F90  ReadInputFile.F90         ReadFlowField.F90 HdfReadContinua.F90
+CreateInitialConditions.F90   GlobalQuantities.F90     InitTimeMarchScheme.F90  ReadInputFile.F90  factorize.F90       ReadFlowField.F90 HdfReadContinua.F90
 
 afid_LDADD = $(FFTW3_LIBS) $(LAPACK_LIBS) $(BLAS_LIBS) $(HDF5_LIBS)
 
@@ -77,4 +77,4 @@ transpose_y_to_x.o: transpose_y_to_x.F90
 ImplicitAndUpdateTemp.o: ImplicitAndUpdateTemp.F90  param.o
 decomp_2d.o: decomp_2d.F90 transpose_z_to_x.F90 transpose_x_to_z.F90 transpose_x_to_y.F90 transpose_y_to_x.F90 transpose_y_to_z.F90 transpose_z_to_y.F90
 interp.o: interp.F90  param.o
-
+factorize.o: factorize.F90

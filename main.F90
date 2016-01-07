@@ -13,6 +13,7 @@
       real    :: ti(2), tin(3), minwtdt
       real :: ts
       integer :: prow=0,pcol=0
+      integer :: lfactor,lfactor2
       character(100) :: arg
 
 !*******************************************************
@@ -151,6 +152,18 @@
 !  ********* starts the time dependent calculation ***
       errorcode = 0 !EP set errocode to 0 (OK)
       minwtdt = huge(0.0d0) !EP initialize minimum time step walltime
+
+      ! Check input for efficient FFT
+      ! factorize input FFT directions. The largest factor should
+      ! be relatively small to have efficient FFT's
+      lfactor=2 ! initialize
+      call Factorize(nym,lfactor2) ! check nym
+      lfactor=max(lfactor,lfactor2)
+      call Factorize(nzm,lfactor2)
+      lfactor=max(lfactor,lfactor2)
+      ! if largest factor larger than 7 quit the simulation     
+      if (lfactor>7) errorcode=444
+
       do ntime=0,ntst                                           
         ti(1) = MPI_WTIME()
 
@@ -215,7 +228,9 @@
         if(mod(time,tout).lt.dt) then
           if(ismaster) then
           write(6,*) 'Maximum divergence = ', dmax
-          write(6,*)ntime,time,vmax(1),vmax(2),vmax(3),dmax,tempm,tempmax,tempmin
+          write(6,*)'ntime - time - vmax(1) - vmax(2) - vmax(3)  -&
+                     tempm - tempmax - tempmin'
+          write(6,*)ntime,time,vmax(1),vmax(2),vmax(3),tempm,tempmax,tempmin
           write(6,'(a,f8.3,a)') 'Minimum Iteration Time = ', minwtdt, &
                   ' sec.'
           endif
@@ -246,6 +261,10 @@
 
 !EP   walltime exceeded walltimemax, no error; normal quit
         if(errorcode.eq.334) call QuitRoutine(tin,.true.,errorcode)
+
+!RS   FFT input not correct
+        if(errorcode.eq.444) call QuitRoutine(tin,.true.,errorcode)
+
 
         errorcode = 100 !EP already finalized
       
