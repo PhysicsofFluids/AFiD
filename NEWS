@@ -1,0 +1,10 @@
+This file describes changes in recent versions of AFiD. It primarily
+documents those changes that are of interest to users.
+
+Changes in AFiD 1.1 (2016-01-08)
+================================
+ * Added example and manual
+ * Support for MPI-3
+ * Default optimization -O2 
+ * Check if input grid resolution can be factorized in small prime factors
+ * Fixed input file bou.in
