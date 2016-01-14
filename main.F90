@@ -239,6 +239,8 @@
 
        if( (ti(2) - tin(1)) .gt. walltimemax) errorcode = 334
 
+       if( ntime .eq. ntst ) errorcode = 555 
+
       call MpiBcastInt(errorcode)
 
 !EP   Conditional exits
@@ -263,8 +265,10 @@
         if(errorcode.eq.334) call QuitRoutine(tin,.true.,errorcode)
 
 !RS   FFT input not correct
-        if(errorcode.eq.444) call QuitRoutine(tin,.true.,errorcode)
+        if(errorcode.eq.444) call QuitRoutine(tin,.false.,errorcode)
 
+!RS   maximum number of timesteps reached, no error; normal quit
+        if(errorcode.eq.555) call QuitRoutine(tin,.true.,errorcode)
 
         errorcode = 100 !EP already finalized
       
