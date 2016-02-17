@@ -35,18 +35,22 @@
         enddo
       enddo
 
+      !assign linear temperature profile in the nodes k=2 to k=nxm
       do i=xstart(3),xend(3)
       do j=xstart(2),xend(2)
       do k=2,nxm
-             temp(k,j,i)= tempbp(j,i) - (tempbp(j,i) - temptp(j,i)) &
-                         *xc(k)
-           enddo
-          end do 
-        end do
-      
+      temp(k,j,i)=tempbp(j,i)-(tempbp(j,i)-temptp(j,i))*xc(k)/xc(nx)
+      enddo
+      enddo
+      enddo
 
-        temp(1,:,:)=1.0d0
-        temp(nx,:,:)=0.0d0
+      !assign the boundary conditions at k=1 and k=nx
+      do ic=xstart(3),xend(3)
+      do jc=xstart(2),xend(2)
+      temp(1 ,jc,ic) = tempbp(jc,ic)
+      temp(nx,jc,ic) = temptp(jc,ic)
+      end do
+      end do
 
       return                                                            
       end                                                               
