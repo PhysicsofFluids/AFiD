@@ -58,7 +58,7 @@
         kmm=kmv(k)
 
        udx3_m=1.0/(xm(kpp)-xm(kmm))
-       udx3_c=1.0/(xc(kp)-xc(kmm))
+       udx3_c=1.0/(xc(kpp)-xc(kmm))
 
 !
 !      Viscous dissipation rate

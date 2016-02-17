@@ -13,8 +13,8 @@
       use local_arrays, only : temp,rhs
       use decomp_2d, only: xstart,xend
       implicit none
-      real, dimension(nx) :: amkl,apkl,ackl
-      integer :: jc,kc,info,ipkv(nx),ic,nrhs
+      real, dimension(nx) :: amkl,apkl,ackl, fkl
+      integer :: jc,kc,info,ipkv(nx),ic
       real :: betadx,ackl_b
       real :: amkT(nx-1),ackT(nx),apkT(nx-1),appk(nx-2)
 
@@ -45,25 +45,30 @@
 !     No solving is done in this call.
 
       call dgttrf(nx,amkT,ackT,apkT,appk,ipkv,info)
-     
-      nrhs=(xend(3)-xstart(3)+1)*(xend(2)-xstart(2)+1)
-      do ic=xstart(3),xend(3)
-        do jc=xstart(2),xend(2)
-           do kc=2,nxm
-              ackl_b=1.0/(1.0-ac3ssk(kc)*betadx)
-              rhs(kc,jc,ic)=rhs(kc,jc,ic)*ackl_b
-           end do
-        end do
-      end do
-      
-      call dgttrs('N',nx,nrhs,amkT,ackT,apkT,appk,ipkv,rhs,nx,info)
 
-       do ic=xstart(3),xend(3)
-         do jc=xstart(2),xend(2)
-            do kc=2,nxm
-              temp(kc,jc,ic)=temp(kc,jc,ic) + rhs(kc,jc,ic)
-             end do
-          end do
+      do ic=xstart(3),xend(3)
+       do jc=xstart(2),xend(2)
+
+!     Normalize RHS of equation
+
+        fkl(1)= 0.d0
+        do kc=2,nxm
+         ackl_b=1.0/(1.-ac3ssk(kc)*betadx)
+         fkl(kc)=rhs(kc,jc,ic)*ackl_b
+        end do
+        fkl(nx)= 0.d0
+          
+!     Solve equation using LAPACK library
+
+        call dgttrs('N',nx,1,amkT,ackT,apkT,appk,ipkv,fkl,nx,info)
+          
+!      Update temperature field
+
+        do kc=2,nxm
+          temp(kc,jc,ic) = temp(kc,jc,ic) + fkl(kc)
+        end do
+
+       enddo
       end do
 
       return
