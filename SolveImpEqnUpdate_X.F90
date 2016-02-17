@@ -14,11 +14,11 @@
       use local_arrays, only : vx,rhs
       use decomp_2d, only: xstart,xend
       implicit none
-      real, dimension(nx) :: amkl,apkl,ackl, fkl
+      real, dimension(nx) :: amkl,apkl,ackl
       real :: amkT(nx-1),apkT(nx-1)
       real :: appk(nx-2)
       real :: ackT(nx)
-      integer :: jc,kc,info,ic
+      integer :: jc,kc,info,ic,nrhs
       integer :: ipkv(nx)
       real :: betadx,ackl_b
 
@@ -43,21 +43,24 @@
 
       call dgttrf(nx,amkT,ackT,apkT,appk,ipkv,info)
 
+      nrhs=(xend(3)-xstart(3)+1)*(xend(2)-xstart(2)+1)
       do ic=xstart(3),xend(3)
-          do jc=xstart(2),xend(2)
-            fkl(1)= 0.d0
-          do kc=2,nxm
-            ackl_b=1.0d0/(1.0d0-ac3ck(kc)*betadx)
-            fkl(kc) = rhs(kc,jc,ic)*ackl_b
-          enddo
-            fkl(nx)= 0.d0
-          
-          call dgttrs('N',nx,1,amkT,ackT,apkT,appk,ipkv,fkl,nx,info)
+         do jc=xstart(2),xend(2)
+            do kc=2,nxm
+              ackl_b=1.0/(1.0-ac3ck(kc)*betadx)
+              rhs(kc,jc,ic)=rhs(kc,jc,ic)*ackl_b
+            end do
+         end do
+      end do
 
-          do kc=2,nxm
-            vx(kc,jc,ic)=vx(kc,jc,ic) + fkl(kc)
-          enddo
-          enddo
+      call dgttrs('N',nx,nrhs,amkT,ackT,apkT,appk,ipkv,rhs,nx,info)
+
+       do ic=xstart(3),xend(3)
+         do jc=xstart(2),xend(2)
+            do kc=2,nxm
+              vx(kc,jc,ic)=vx(kc,jc,ic) + rhs(kc,jc,ic)
+             end do
+          end do
       end do
 
       return
