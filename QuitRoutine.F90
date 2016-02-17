@@ -59,7 +59,11 @@
 268     format(10x,'velocities diverged')
       else if(errorcode.eq.169) then
         write(6,178) 
+        write(6,179) 
+        write(6,180)                 
 178     format(10x,'too large local residue for mass conservation at:')
+179     format(10x,'Probably the matrix in SolvePressureCorrection becomes singular')
+180     format(10x,'Try changing nxm or str3')
         call LocateLargeDivergence
       else if(errorcode.eq.333) then
          write(*,*) "time greater than tmax"
