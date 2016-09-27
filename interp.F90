@@ -181,7 +181,7 @@
        sccf = arrold(bifk,bicj,bici)
        scff = arrold(bifk,bifj,bici)
 
-       sfcc = arrold(bifk,bicj,bifi)
+       sfcc = arrold(bick,bicj,bifi)
        sffc = arrold(bifk,bifj,bifi)
        sccc = arrold(bifk,bicj,bici)
        scfc = arrold(bifk,bifj,bici)
