@@ -19,7 +19,7 @@ The AFiD model has the following prerequisites:
  * FFTW3
  * HDF5 with parallel I/O 
 
-It's recommended to download a release tarball of AFiD, which can be found ​[here](https://github.com/jdonners/afid/releases). To install AFiD, please 
+It's recommended to download a release tarball of AFiD, which can be found [here](https://github.com/jdonners/afid/releases). To install AFiD, please 
 use the 'configure' script. Note that you'll need to set optimization and debugging options yourself. 
 The easiest way to configure and build AFiD is
 
@@ -60,4 +60,4 @@ autoreconf
 
 Usage
 -----
-See the [manual](MANUAL.md) for more a description of the input parameters of the code. An example of the usage of the code can be found ​[here](https://github.com/jdonners/afid/tree/master/Example). 
+See the [manual](MANUAL.md) for more a description of the input parameters of the code. An example of the usage of the code can be found [here](https://github.com/jdonners/afid/tree/master/Example). 
