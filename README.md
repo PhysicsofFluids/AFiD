@@ -1,7 +1,7 @@
 AFiD
 ====
 AFiD is a highly parallel application for Rayleigh-Benard and Taylor-Couette flows. 
-See ​[van der Poel et al (2015)](http://dx.doi.org/10.1016/j.compfluid.2015.04.007)
+See [van der Poel et al (2015)](http://dx.doi.org/10.1016/j.compfluid.2015.04.007)
 for more details. 
 
 It is developed by Twente University, SURFsara and University of Rome "Tor Vergata". 
