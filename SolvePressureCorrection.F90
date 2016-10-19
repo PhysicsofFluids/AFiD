@@ -127,6 +127,12 @@
 
          call zgttrf(nxm, amph(2), acphT, apph(1), appph, phpiv, info)
 
+         if (info.gt.0) then
+           print*,'Singular value found in LAPACK routine zgttrf: info=',info
+           print*,'Please try to adjust either NX or STR3 in bou.in'
+           call MPI_Abort(MPI_COMM_WORLD,1,ierr)
+         endif
+
          call zgttrs('N',nxm,1,amph(2),acphT,apph(1),appph,phpiv,      &
                        dphc(1,j,i), nxm, info)
 

@@ -45,10 +45,10 @@
       enddo
 
       !assign the boundary conditions at k=1 and k=nx
-      do ic=xstart(3),xend(3)
-      do jc=xstart(2),xend(2)
-      temp(1 ,jc,ic) = tempbp(jc,ic)
-      temp(nx,jc,ic) = temptp(jc,ic)
+      do i=xstart(3),xend(3)
+      do j=xstart(2),xend(2)
+      temp(1 ,j,i) = tempbp(j,i)
+      temp(nx,j,i) = temptp(j,i)
       end do
       end do
 
