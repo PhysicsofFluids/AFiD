@@ -55,7 +55,7 @@ Note that the FFTW3 library cannot be replaced with the MKL library, since it do
 Should you want to build from the repository (when you download the source file from directly using "Download ZIP") you first need to create the configure script. For this you need a recent versions of the GNU autotools and the configure script is created using the command 
 
 ```
-autoreconf
+autoreconf -i
 ```
 
 Usage
